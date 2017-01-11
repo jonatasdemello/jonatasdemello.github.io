@@ -2,6 +2,8 @@
 layout: post
 title: Software Development Blog
 date: 2016-01-08
+author: Jonatas
+lenght: 1
 ---
 
 # Learn a New Skill
