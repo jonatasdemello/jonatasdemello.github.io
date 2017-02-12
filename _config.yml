@@ -1,3 +1,4 @@
 theme: jekyll-theme-slate
 permalink: /blog/:year/:month/:day/:title
-#repository: jonatasdemello/jonatasdemello.github.io
+repository: jonatasdemello/jonatasdemello.github.io
+gems: ['jekyll-github-metadata']

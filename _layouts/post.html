@@ -5,19 +5,17 @@ comments: true
 
 <h1>{{ page.title }}</h1>
 
-<h2 class="date">
+<div class="date">
 	<info datetime="{{ page.date }}">
 	{{ page.date | date_to_string }} 
 	{% if page.length %} - {{ page.length }} minute read {% endif %}
 	{% if page.author %} - by {{ page.author }} {% endif %}
 	</info>
-</h2>
-
+</div>
 
 <div class="notebody">
 <article>
 	<p><small><span class="eta"></span> (<span class="words"></span> words)</small></p>
-
 	{{ content }}
 </article>
 </div>
@@ -27,28 +25,12 @@ comments: true
 <div class="notecomments">
 	{ % include disqus.html % }	 
 </div>
+
 <script>
 //$('article').readingTime();
 $(function() {
 	$('article').readingTime({
 		wordCountTarget: '.words',
 	});
-/*
-    var $article = $('article');
-    $article.readingTime({
-        readingTimeTarget: $article.find('.eta'),
-        wordCountTarget: $article.find('.word-count'),
-        wordsPerMinute: 200,
-        round: false,
-        lang: 'en',
-        success: function() {
-            console.log('It worked!');
-        },
-        error: function(message) {
-            console.log(message);
-            $article.find('.reading-time').remove();
-        }
-    });
-*/
 })
 </script>
