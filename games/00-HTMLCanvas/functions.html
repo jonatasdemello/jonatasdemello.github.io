@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Canvas Test</title>
+<style>
+    canvas {
+        border: 1px dashed black;
+        /*background-color:  black;*/
+    }
+</style>
+</head>
+<body>
+    <form id="form1">
+        <p>
+        <input type="button" id="bt0" value="Clear" onclick="clearCanvas()" /> &nbsp;
+        <input type="button" id="bt1" value="F1" onclick="drawType(1)" /> &nbsp;
+        <input type="button" id="bt2" value="F2" onclick="drawType(2)" /> &nbsp;
+        <input type="button" id="bt3" value="F3" onclick="drawType(3)" /> &nbsp;
+        <input type="button" id="bt4" value="F4" onclick="drawType(4)" /> &nbsp;
+        </p>
+    </form>
+
+    <canvas id="drawingCanvas" width="640" height="480"></canvas>
+    <p>F1 = (Math.sin(x) + Math.cos(z)) / 60;</p>
+    <p>F2 = Math.sin(x + z) / 24;</p>
+    <p>F3 = c = 50 - (x * x) - (z * z); return Math.sqrt(c * (_sgn(c) + 1)) / 30;</p>
+    <p>F4 = c = (x * x) + (z * z) + .00001; return ((sgn(parseInt(13.0/c)))/3.0) + ((sgn(parseInt(35.0/c)))/15.0);</p>
+    
+<script>
+
+    var canvas = document.getElementById("drawingCanvas");
+    var ctx = canvas.getContext("2d");
+
+    var color = "#21618C";
+    ctx.fillStyle = color;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    
+    var s_width = 280;
+    var s_height = 190;
+    var va = -1;
+    var x_fal = 5;
+    var z_fal = 3;
+    var s_length = parseInt(s_width / x_fal / 2); // 280 / 5 / 2 = 28
+    var s_depth = parseInt(s_height / z_fal / 3); // 190 / 3 / 3 = 21
+    var inicio = 5;
+    
+    var row = 29; // s_length
+    var column = 22; // s_depth
+    
+    // create empty array g[row][column]
+    var g = [];
+    for (var i = 0; i < row; i++) {
+        g[i] = [];
+        for (var j = 0; j < column; j++) {
+            g[i][j] = 0;
+        }
+    }
+    console.log(g);
+
+    var drawType = function(nType) {
+
+        clearCanvas();
+
+        // calculate point for graph
+        for(var a = -(s_depth / 2); a < (s_depth / 2) + 1; a++)
+        {
+            for(var b = -(s_length / 2); b < ((s_length / 2) + 1); b++)
+            {
+                var x = 0, y = 0, z = 0;
+                
+                x = (a * 18) / s_length;
+                z = (b * 18) / s_depth;
+                  
+                switch(nType){
+                    case 1:
+                        y = F1(x, z);
+                        break;
+                    case 2:
+                        y = F2(x, z);
+                        break;
+                    case 3:
+                        y = F3(x, z);
+                        break;
+                    case 4:
+                        y = F4(x, z);
+                        break;
+                }
+                
+                var d1 = parseInt(b + (s_length / 2));
+                var d2 =  parseInt(a + (s_depth / 2));
+        
+                g[d1][d2] = y * va * s_height;
+                //console.log(dim1 +' - '+ dim2);
+            }
+         }
+        
+        // x-y
+        for(var z = 1; z < s_depth + 1; z++)
+        {
+            x = 1;
+            x_base = x_fal * z;
+            z_base = (s_height / 2) + (z * z_fal) + (inicio * va);
+            x_old = x_base + x_fal;
+            z_old = 191 - z_base + (x * z_fal) + g[parseInt(x)][parseInt(z)];
+            for(x = 1; x < s_length + 1; x++)
+            {
+                x_new = x_base + (x * x_fal);
+                z_new = 191 - z_base + (parseInt(x * z_fal)) + g[parseInt(x)][parseInt(z)];
+                
+                drawLine(x_old, z_old, x_new, z_new);
+                
+                x_old = x_new;
+                z_old = z_new;
+            }
+        }
+
+        // z-y
+        for(var x = 1; x < s_length+1; x++)
+        {
+            x_base = (x_fal * x) + (s_depth * x_fal);
+            z_base = (s_height / 2) - (x * z_fal) + (s_depth * z_fal) + (inicio * va);
+            x_old = x_base - x_fal;
+            z_old = 191 - z_base + z_fal + g[parseInt(x)][parseInt(s_depth - 1)];
+            for(z = 0; z < s_depth - 1 + 1; z++)
+            {
+                x_new = x_base - (z * x_fal);
+                z_new = 191 - z_base + (z * z_fal) + g[parseInt(x)][parseInt(s_depth - z)];
+                
+                drawLine(x_old, z_old, x_new, z_new);
+                
+                x_old = x_new;
+                z_old = z_new;
+            }
+        }
+
+    };
+    
+    function drawLine(x1, y1, x2, y2)
+    {
+        var scale = 2.5;
+        ctx.moveTo(x1 * scale, y1 * scale);
+        ctx.lineTo(x2 * scale, y2 * scale);
+        ctx.stroke();
+    }
+
+    function clearCanvas()
+    {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.stroke();
+    }
+
+    function _sgn( x)
+    {
+        if (x > 0) return 1;
+        if (x < 0) return -1;
+        return 0;
+    }
+
+    // graphic functions
+    function F1 (x, z)
+    {
+        return (Math.sin(x) + Math.cos(z)) / 60;
+    }
+
+    function F2 (x, z)
+    {
+        return Math.sin(x + z) / 24;
+    }
+
+    function F3 (x, z)
+    {
+        var c = 50 - (x * x) - (z * z);
+        return Math.sqrt(c * (_sgn(c) + 1)) / 30;
+    }
+
+    function F4 (x, z)
+    {
+        var c = (x * x) + (z * z) + .00001;
+        var r = ((_sgn(parseInt(13.0/c)))/3.0) + ((_sgn(parseInt(35.0/c)))/15.0);
+        return r;
+    }
+
+</script>
+</body>
+</html>
