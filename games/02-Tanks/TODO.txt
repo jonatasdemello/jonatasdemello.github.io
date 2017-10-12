@@ -1,0 +1,8 @@
+Ideas for improvements
+
+Taking inspiration from both the original and genre evolutions like Worms you could add all manner of fun:
+
+- An AI opponent to shoot back at you!
+- Add a random wind effect, throwing your bullet off course
+- New weapons (Holy hand grenades anyone?)
+- Randomly create the landscape instead of using a PNG

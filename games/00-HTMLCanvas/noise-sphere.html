@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Graphics</title>
+<style></style>
+</head>
+<body>
+
+<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas>	
+
+<script type="text/javascript">
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	ctx.moveTo(0,0);
+	ctx.lineTo(200,100);
+	ctx.stroke();
+	// circle
+	ctx.beginPath();
+	ctx.arc(95,50,40,0,2*Math.PI);
+	ctx.stroke();
+	// text 
+	ctx.font = "30px Arial";
+	ctx.fillText("Hello World",10,50);
+/*
+// Create gradient
+var grd = ctx.createLinearGradient(0,0,200,0);
+grd.addColorStop(0,"red");
+grd.addColorStop(1,"white");
+
+// Fill with gradient
+ctx.fillStyle = grd;
+ctx.fillRect(10,10,150,80);
+
+
+// Create gradient
+var grd = ctx.createRadialGradient(75,50,5,90,60,100);
+grd.addColorStop(0,"red");
+grd.addColorStop(1,"white");
+
+// Fill with gradient
+ctx.fillStyle = grd;
+ctx.fillRect(10,10,150,80);
+
+var img = document.getElementById("scream");
+ctx.drawImage(img,10,10);
+*/
+</script>
+
+<script type="text/javascript">
+/*
+  Pickover, Clifford A. 1995. "Random number generators: pretty good ones are easy to find."  The Visual Computer (1005) 11:369-377.
+  See also Pickover, nd., "Keys to Infinity." Chapter 31.
+*/
+
+// define global variables
+var M_PI = 3.14159267;
+
+/* Convert degrees to radians */
+function rads(x) {
+  return ((x * 2.0) * M_PI / 360.0);  
+} 
+var SAMPLE = 0;
+var SHIFTS = 8;
+var stats= []; //1000
+
+var defcolor = "LIGHTGRAY";
+var triple = 0;
+var RZ = 0;
+var RX = 0
+var RY = 0;
+var MidA, MidB, MidC, MidY, Scale;
+var X = [];//3
+var SRANGE;
+var qtd = 0.0;
+var error,
+	n = 0, 
+	tmp, 
+	ScreenInit = 1,
+	lag = 1,
+	mode = 0,  // 0 = 8-bit samples, 1 = 16 bit samples
+	sr = 0, 
+	skip = 0; // plot only every skipth point
+
+var size = -1;  // if size>0, plot only size points
+
+var _byte;
+var inpu;
+
+var C = { x: 0.0, y: 0.0, z: 0.0, color: 0 }; // Cartesian
+var P = { r:0.0, theta:0.0, phi:0.0 }; // Polar
+
+//struct Cartesian C;
+//struct Polar P;
+
+function trunc(d){ 
+	return (d>0) ? Math.floor(d) : Math.ceil(d) ; 
+}
+
+
+function random(numqtd, name)
+{
+	// random number generator 
+	var n;
+	var xi;
+	var rnd;
+
+	var x = 0.1; // seed
+	var num = 1.0e3; // 6
+	num = numqtd;
+	for (n = 0; n<num; n++) {
+		x = 100 * Math.log(x); // natural log
+		xi = trunc(x);
+		x = Math.abs(x-xi); // absolute value
+//		fprintf (pFile, "%.16f\n",x);
+	}
+}
+
+/* Initialize the graphics screen (Borland C specific)  and sets the midpoints and scale for the screen */
+/*
+int InitScreen(void)
+{
+	int GraphMode, GraphDriver;
+	GraphDriver = VGA;
+	GraphMode = VGAHI;
+	detectgraph(&GraphDriver, &GraphMode);
+	initgraph(&GraphDriver, &GraphMode, "\\tc\\bgi");
+	return graphresult();
+}
+*/
+function getmaxx() {
+	return 0;
+}
+function getmaxy() {
+	return 0;
+}
+
+function InitPoints()
+{
+	if (triple)
+	{
+		/* Changed to plot in quadrants, Math.since the resolution is slightly larger */
+		Scale = getmaxx() / 4;
+		MidA = MidC = Scale, MidB = 3 * Scale;
+		MidY = getmaxy() / 4;
+	} 
+	else
+	{
+		Scale = getmaxx() / 2; //2
+		MidA = Scale;
+		MidY = getmaxy() / 2; //2
+	}
+	if (MidY < Scale) 
+		Scale = MidY;
+
+	//Scale = 700;
+}
+
+/* Rotate C along X, Y and Z axes */
+function rotate(C) //Cartesian
+{
+	var x,y,z;
+	if (RZ)
+	{
+	    z = rads(RZ);
+	    x = (C.x * Math.cos(z)) + (C.y * Math.sin(z));
+	    y = (C.y * Math.cos(z)) - (C.x * Math.sin(z));
+	    C.x = x; C.y = y;
+	}
+	if (RX)
+	{
+	    x = rads(RX);
+	    y = (C.y * Math.cos(x)) + (C.z * Math.sin(x));
+	    z = (C.z * Math.cos(x)) - (C.y * Math.sin(x));
+	    C.z = z; C.y = y;
+	}
+	if (RY)
+	{
+	    y = rads(RY);
+	    x = (C.x * Math.cos(y)) + (C.z * Math.sin(y));
+	    z = (C.z * Math.cos(y)) - (C.x * Math.sin(y));
+	    C.z = z; C.x = x;
+	}
+}
+
+function project(x){
+	return (Math.ceil(Scale * x));	
+} 
+
+/* Projects 3d coordinates to a 2d screen */
+function Plot(C) // Cartesian
+{
+	rotate(C);
+	
+	putpixel(MidA + project(C.x), MidY - project(C.y), C.Color);
+
+	if (triple)
+	{
+		putpixel(MidB + project(C.y), MidY - project(C.z), C.Color);
+		putpixel(MidC + project(C.z), (3 * MidY) - project(C.x), C.Color);
+	}
+}
+
+function putpixel(x, y, color) {
+	return 0
+}
+
+/* Converts 3-d polar coordinates to cartesian coordinates */
+function PolarToCartesian(P,C) // struct Polar P, struct Cartesian *C
+{
+	C.x = P.r * Math.sin(P.phi) * Math.cos(P.theta);
+	C.y = P.r * Math.sin(P.phi) * Math.sin(P.theta);
+	C.z = P.r * Math.cos(P.phi);
+	/* We can assign colors based on C.x, C.y, C.z, or P.r, P.theta / pi or P.phi / (2 * pi) */
+	C.Color = ScaleColor(C.z);
+}
+
+function ScaleColor(color){
+	return 0;
+}
+function usage()
+{
+	console.log("usage: \n" +
+		"noisesph -r N filename => Generate N ramdom numbers in file.\n"+
+		"noisesph [-3 -b|w -x n -y n -z n -m n -s n] file [[opts] file...]\n" +
+	     "Plots a noise sphere based on the data in file.\n" +
+	     "-3\tplot projections along (x,y), (z,y) and (x,z) planes\n" +
+	     "-b\tfile contains 8-bit samples (default)\n" +
+	     "-w\tfile contains 16-bit samples\n" +
+	     "-x n\trotate around x-axis n degrees\n" +
+	     "-y n\trotate around y-axis n degrees\n" +
+	     "-z n\trotate around z-axis n degrees\n" +
+	     "-m n\tplot only the first n samples in file\n" +
+	     "-s n\tplot only every nth point\n" +
+	     "-c n\tplot in color n (system specific)\n" +
+	     "-l n\tlag = n (discard every nth sample)\n"  );
+}
+
+function plot_file(name)
+{
+	var i, j;
+
+	var dbl = 0.0;
+
+	InitPoints();
+	
+ 	if (mode) 
+		SRANGE = 65536.0; // 2 bytes = 16 bits
+	else 
+		SRANGE = 256.0;	 // 1 byte = 8 bits
+	
+	// read the first 3 values
+	for (i = 0; i < 3; i++)
+	{
+		for (j=0; j<lag; j++) 
+		{
+			//fscanf(inpu, "%f", dbl); read dbl from file			
+			X[i] = dbl;
+		}
+	}
+	do
+	{
+		P.r = Math.sqrt(X[(n + 2) % 3]);
+		P.theta = M_PI * X[(n + 1) % 3];
+		P.phi = 2 * M_PI * X[n];
+	
+//#ifdef STAT
+//		++stats[ floor(X[n]*10) + (10*floor(X[(n + 1) % 3]*10)) + (100*floor(X[(n + 2) % 3]*10)) ];
+	
+		if (!sr) 
+			PolarToCartesian(P, C); 
+		
+		Plot(C);
+		
+		if (skip) 
+		{
+			sr++;
+			if (sr==skip) 
+				sr = 0;
+		}
+		
+		for (j=0; j<lag; j++) 
+		{
+			/*
+			tmp = fgetc(inpu);
+			_byte = tmp;
+			
+			if ((mode) && (tmp!=EOF))
+			{
+				// assumes little-endian data files and little-endian machines
+				tmp = fgetc(inpu);
+				_byte |= ((SAMPLE)(tmp) << SHIFTS);
+			}
+			
+			X[n] = _byte / SRANGE;
+			*/
+			// fscanf(inpu, "%f", &dbl); // read from file
+			X[n] = dbl;
+
+			n = ++n % 3;
+
+			if (size>0) 
+				size = size - (1<<mode);
+		}
+		}
+	while (inpu.length >0);
+}
+
+function main() //int argc, char* argv[]
+{
+//#ifdef STAT
+//	for (var i=0;i<1000;i++) 
+//		stats[i]=0;
+
+// initialize Screen/Canvas	
+// generate numbers
+// plot graph
+
+/*
+if (argv[i][0] != '-') plot_file(argv[i]);
+else if (strcmp(argv[i], "-w") == 0) mode = 1;
+else if (strcmp(argv[i], "-b") == 0) mode = 0;
+else if (strcmp(argv[i], "-3") == 0) triple = 1;
+else if (strcmp(argv[i], "-x") == 0) RX = atoi(argv[++i]);
+else if (strcmp(argv[i], "-y") == 0) RY = atoi(argv[++i]);
+else if (strcmp(argv[i], "-z") == 0) RZ = atoi(argv[++i]);
+else if (strcmp(argv[i], "-s") == 0) skip = atoi(argv[++i]);
+else if (strcmp(argv[i], "-m") == 0) size = atol(argv[++i]);
+else if (strcmp(argv[i], "-c") == 0) defcolor = atol(argv[++i]);
+else if (strcmp(argv[i], "-l") == 0) lag = atoi(argv[++i]);
+*/
+
+}
+</script>
+
+</body>
+</html>
