@@ -58,7 +58,7 @@
         </pre>
 	</form>
 	</div>
-    <div id="msg">msg:</div>
+    <div id="msg"></div>
 
 <script type="text/javascript">
     // move Axis center to middle of canvas
@@ -149,6 +149,8 @@
         performance.clearMarks();
         performance.mark("startPerf");
 
+        ctx.beginPath();
+        
         for (i=0; i<=360; i=i+paramC)
         {
             theta = i * pi / 180.0;
@@ -195,14 +197,9 @@
 
     function showResults()
     {
-        var txtmsg = "";
-        var msg = $('#msg');
         var items = window.performance.getEntriesByType('measure');
         for (var i = 0; i < items.length; i++) {
-          var req = items[i];
-          txtmsg = '( '+ paramA + ', '+ paramB +' ) - XHR ' + req.name.toString() + ' took ' + req.duration.toString() + 'ms';
-          //msg.append(txtmsg + '<br />');
-          msg.html('<p>' + txtmsg + '</p />');
+            document.getElementById("msg").innerHTML = '( '+ paramA + ', '+ paramB +' ) - XHR ' + items[i].name.toString() + ' took ' + items[i].duration.toString() + 'ms';
         }
     }
 </script>

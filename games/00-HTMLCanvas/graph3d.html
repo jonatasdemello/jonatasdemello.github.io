@@ -15,15 +15,23 @@
 <body>
     <canvas id="drawingCanvas" width="640" height="480"></canvas>
 
+    <div id="msg"></div>
 <script>
     window.onload = function() {
         var canvas = document.getElementById("drawingCanvas");
         var ctx = canvas.getContext("2d");
         
+    
         ctx.font = "11px Arial";
         ctx.fillStyle = "rgb(0,0,0)";
 
         drawAxes(canvas, ctx);
+        
+        // Delete all Marks
+        performance.clearMarks();
+        performance.mark("startPerf");
+        
+        ctx.beginPath();
         
         for (var X = 15; X < 235; X++)
         {
@@ -39,8 +47,20 @@
                 if ( Z > mMin ) mMin = Z;
             }
         }
-    };
+        ctx.stroke();
+        
+        performance.mark("endPerf");
+        performance.measure("durationPerf", "startPerf", "endPerf");
 
+        showResults();
+    };
+    
+    function plot(x, y, ctx)
+    {
+        ctx.fillStyle = "rgb(" + x + "," + y + ",40)";
+        ctx.fillRect(x * 2, (200-y) * 2, 1, 1);
+    }
+    
     function drawAxes(canvas, ctx)
     {
         for (var x = 0; x < canvas.width; x += 50)
@@ -54,11 +74,14 @@
         }
     }
     
-    function plot(x, y, ctx)
+    function showResults()
     {
-        ctx.fillStyle = "rgb(" + x + "," + y + ",40)";
-        ctx.fillRect(x * 2, (200-y) * 2, 1, 1);
+        var items = window.performance.getEntriesByType('measure');
+        for (var i = 0; i < items.length; i++) {
+            document.getElementById("msg").innerHTML = items[i].name.toString() + ' took ' + items[i].duration.toString() + 'ms';
+        }
     }
+
 
     /* PROG GRAPH3D.BAS
     10 FOR X=40 TO 215
