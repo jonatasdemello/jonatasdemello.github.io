@@ -1,577 +1,340 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<title>Cube</title>
-<style type="text/css">
-body {
-  background-color: #666;
-}
-#canvas {
-  background-color: #fff;
-}
-</style>
-</head>
-<body>
-<canvas id="myCanvas" width="700" height="500" style="border: dotted; 1px;"></canvas>
-    
-<script>
-"use strict";
-
-function drawline(x1, y1, x2, y2, color)
-{
-  //clearCanvas();
-  
-  var canvas = document.getElementById("myCanvas");
-  var ctx = canvas.getContext("2d");
-  
-  ctx.lineWidth=1;
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
-  //ctx.fillStyle = "#FF0000";
-  ctx.strokeStyle = color;
-  // ctx.stroke(); // moved outside function
-}
-
-function clearCanvas()
-{
-  
-  var canvas = document.getElementById("myCanvas");
-  var ctx = canvas.getContext("2d");
-  
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.beginPath();
-
-  drawAxes();
-  ctx.stroke();
-}
-
-// var nums = Array.matrix(5,5,0);
-// var names = Array.matrix(3,3,"");
-Array.matrix = function(numrows, numcols, initial) {
-    var arr = [];
-    for (var i = 0; i < numrows; ++i) {
-        var columns = [];
-        for (var j = 0; j < numcols; ++j) {
-            columns[j] = initial;
+    <meta charset="utf-8">
+    <title>Cube</title>
+    <style type="text/css">
+        body {
+            background-color: #666;
         }
-        arr[i] = columns;
-    }
-    return arr;
-}
-
-/*
-=====================================
-Programa que desenha um cubo em 3D
-
-Elaborado em C ANSI, agora deve ser
-convertido em C++ orientado a objetos
-
-Desenvolvido e testado em Borland C++
-versão 3.1 para DOS
-=====================================
-*/
-/*
-#include "graphics.h"
-#include <stdio.h>
-#include <conio.h>
-#include <dos.h>
-#include <math.h>
-#include <stdlib.h>
-*/
-
-/*  
-criar um tipo PONTO que é um vetor de 4 posicoes [x y z 1]
-criar um tipo CUBO que é um vetor de 8 PONTOS[4]
-criar um tipo MAT que é uma matriz 4x4 (float)
-*/
-
-/* Definicao dos novos tipos */
-
-/*
-typedef float PONTO[4];  
-typedef PONTO CUBO[8];
-typedef float MAT[4][4];
-*/
-
-/* Criacao de variaveis globais */
-
-// a terceira coordenada 1 é para normalizacao 
-
-var cubo = [
-	[ 45, 45, 45, 1],  // P0
-	[ 45, 45,-45, 1],  // P1
-	[ 45,-45,-45, 1],  // P2
-	[ 45,-45, 45, 1],  // P3
-	[-45, 45, 45, 1],  // P4
-	[-45, 45,-45, 1],  // P5
-	[-45,-45,-45, 1],  // P6
-	[-45,-45, 45, 1]]; // P7
-
-
-/*
-no espaço fica:
-
-        P5----P1
-      / |    /|
-    P4-----P0 |
-    |   |  |  |
-    |   P6-|--P2
-    |  /   | /
-    P7-----P3
-
-ponto na face da frente: p1, p4, p5, p8
-*/
-
-// prototipos das funcoes
-/*
-function MultPtoMat(PONTO P, MAT M, PONTO P1);
-function TransladaPonto(PONTO P, int DX, int DY, int DZ, PONTO P1);
-function TransladaCubo(CUBO CB, int DX, int DY, int DZ, CUBO CB1);
-function EscalaPonto(PONTO P, int S, PONTO P1);
-function EscalaCubo(CUBO C, int S, CUBO C1);
-function MultMat(MAT M1, MAT M2, MAT M3);
-function CriaMX(MAT M, float angulo);
-function CriaMY(MAT M, float angulo);
-function CriaMZ(MAT M, float angulo);
-function RotacionaCubo(CUBO CB, float RX, float RY, float RZ, CUBO CB1);
-function linha(int x, int y, int x1, int y1);
-function DesenhaCubo(CUBO C);
-//function far line (int PT1, int PT2);
-*/
-// definicao das Funcoes
-
-// Funcoes de desenho e posicionamento
-
-// desenhar uma linha
-function linha(x, y, x1, y1) // (int x, int y, int x1, int y1)
-{
-   // deslocar a escala porque o 
-   // canto superior esquerdo da tela é (0, 0)
-  // e o canto inferior direito e 640, 480 - meio (320, 240) 
-	//moveto( 320+x, 240-y);
-	//lineto( 320+x1, 240-y1);
-
-  var canvas = document.getElementById("myCanvas");
-  var ctx = canvas.getContext("2d");
-  
-  ctx.lineWidth=1;
-  ctx.moveTo(320+x, 240-y);
-  ctx.lineTo(320+x1, 240-y1);
-  //ctx.fillStyle = "#FF0000";
-  ctx.strokeStyle = "#00FF00";
-  ctx.stroke();
-
-}
-
-// Função Básica de Multiplicação de Matrizes
-
-// Multiplicar um ponto por uma matriz
-function MultPtoMat(P, M, P1) //(PONTO P, MAT M, PONTO P1)
-{
-	// multiplicar um ponto P[4] por uma matriz M[4][4]
-	// e devolver o resultado em P1[4]
-	// o resultado P[1][4] x M[4][4] é P1[1][4], ou seja, um ponto
-
-   //PONTO AUX;
-
-   var AUX = [0, 0, 0, 0];
-   var AUX2;
-   var j, k;
-
-   for(j=0; j<4; j++)
-   {
-      AUX2=0;
-      for(k=0; k<4; k++)
-	      AUX2=AUX2+(P[k]*M[k][j]);
-      AUX[j] = AUX2;
-   }
-
-   for(j=0; j<4; j++)
-      P1[j] = AUX[j];
-}
-
-// Transladar um ponto
-function TransladaPonto(P, DX, DY, DZ, P1) //(PONTO P, int DX, int DY, int DZ, PONTO P1)
-{
-	// translada um ponto 
-	// multiplica um ponto P[4] pela matriz de deslocamento MT
-	// deslocamento no eixo X => DX
-	// deslocamento no eixo Y => DY
-	// deslocamento no eixo Z => DZ
-	// devolve o resultado em P1[4]
-
-	var MT=[
-		[1,  0,  0,  0], 
-		[0,  1,  0,  0], 
-		[0,  0,  1,  0], 
-		[DX, DY, DZ, 1]];
-
-	MultPtoMat(P, MT, P1);
-}
-
-function TransladaCubo(CB, DX, DY, DZ, CB1) //(CUBO CB, int DX, int DY, int DZ, CUBO CB1)
-{
-	// Para transladar o cubo é necessário
-	// transladar os 8 pontos do cubo
-	// nas direções X, Y, Z
-	// devolve o resultado em um novo cubo CB1
-
-   var PTO;
-   // o cubo tem 8 pontos no espaço
-   for(PTO=0; PTO<8; PTO++)
-      TransladaPonto(CB[PTO], DX, DY, DZ, CB1[PTO]);
-
-}
-
-// Escalar um ponto
-function EscalaPonto(P, S, P1) //(PONTO P, int S, PONTO P1)
-{
-	// escala um ponto
-	// multiplicar o ponto P[4] 
-	// por um fator de escala S  
-	// representado por uma matriz de escala MTZ
-	// e devolver o resultado em P1[4]
-
-	// OBS: o ponto é escalado nas mesmas proporções no eixo X, Y e Z.
-	// se os fatores forem diferentes, distorce a imagem
-
-	var MTZ=[
-			[S, 0, 0, 0], 
-			[0, S, 0, 0], 
-			[0, 0, S, 0], 
-			[0, 0, 0, 1]];
-
-	MultPtoMat(P, MTZ, P1);
-}
-
-// Escala um cubo
-function EscalaCubo(C, S, C1) //(CUBO C, int S, CUBO C1)
-{
-   // para escalar o cubo é necessário
-   // escalar todos os 8 pontos do cubo
-
-   var ponto;
-
-   for(ponto=0; ponto<8; ponto++)
-      EscalaPonto(C[ponto], S, C1[ponto]);
-}
-
-// Função principal de Multiplicar Matrizes
-function MultMat(M1, M2, M3) //(MAT M1, MAT M2, MAT M3)
-{
-   // Multiplica 2 matrizes 4x4 
-   // M1 x M2 e coloca o resultado em M3
-
-     //MAT AUX; // cria uma matriz auxiliar para armazenar o resultado
-     var AUX = Array.matrix(4,4,0);
-     var i, j, k; // variaveis de controle
-
-     for(i=0; i<4; i++)
-        for(j=0; j<4; j++)
-		{
-		   AUX[i][j]=0;
-		   for(k=0; k<4; k++)
-			   AUX[i][j] = AUX[i][j] + (M1[i][k] * M2[k][j]);
-		}
-
-	// copiar a matriz resultante (AUX) para a matriz de retorno M3
-     for(i=0; i<4; i++)
-       for(j=0; j<4; j++)
-			M3[i][j] = AUX[i][j];
-
-}
-
-function CriaMX(M, angulo) //(MAT M, float angulo)
-{
-   // Inicializa matriz de rotacao no eixo Z
-
-  //var M = Array.matrix(4,4,0);
-   M[0][0]= 1;
-   M[0][1]= 0;
-   M[0][2]= 0;
-   M[0][3]= 0;
-
-   M[1][0]= 0;
-   M[1][1]= Math.cos(angulo);
-   M[1][2]= Math.sin(angulo);
-   M[1][3]= 0;
-
-   M[2][0]= 0;
-   M[2][1]= -Math.sin(angulo);
-   M[2][2]= Math.cos(angulo);
-   M[2][3]= 0;
-
-   M[3][0]= 0;
-   M[3][1]= 0;
-   M[3][2]= 0;
-   M[3][3]= 1;
-
-   return M;
-}
-
-function CriaMY(M, angulo) //(MAT M, float angulo)
-{
-   // Inicializa matriz de rotacao no eixo Y
-  //var M = Array.matrix(4,4,0);
-
-   M[0][0]= Math.cos(angulo);
-   M[0][1]= 0;
-   M[0][2]= Math.sin(angulo);
-   M[0][3]= 0;
-
-   M[1][0]= 0;
-   M[1][1]= 1;
-   M[1][2]= 0;
-   M[1][3]= 0;
-
-   M[2][0]= -Math.sin(angulo);
-   M[2][1]= 0;
-   M[2][2]= Math.cos(angulo);
-   M[2][3]= 0;
-
-   M[3][0]= 0;
-   M[3][1]= 0;
-   M[3][2]= 0;
-   M[3][3]= 1;
-
-   return M;
-}
-
-function CriaMZ(M, angulo) //(MAT M, float angulo)
-{
-   // Inicializa matriz de rotacao no eixo Z
-   //var M = Array.matrix(4,4,0);
-
-   M[0][0]= Math.cos(angulo);  
-   M[0][1]= -Math.sin(angulo);
-   M[0][2]= 0;
-   M[0][3]= 0;
-
-   M[1][0]= Math.sin(angulo);
-   M[1][1]= Math.cos(angulo);
-   M[1][2]= 0;
-   M[1][3]= 0;
-
-   M[2][0]= 0;
-   M[2][1]= 0;
-   M[2][2]= 1;
-   M[2][3]= 0;
-
-   M[3][0]= 0;
-   M[3][1]= 0;
-   M[3][2]= 0;
-   M[3][3]= 1;
-
-   return M;
-}
-
-// Rotaciona um cubo
-function RotacionaCubo(CB, RX, RY, RZ, CB1) //(CUBO CB, float RX, float RY, float RZ, CUBO CB1)
-{
-	// Para rotacionar o cubo nos ângulos RX, RY e RZ:
-	// primeiro criar as matrizes de rotação nos eixos X, Y e Z
-	// depois efetuar a composição de movimentos:
-	// multiplicar a matriz MX pela matriz MY e colocar na matriz M
-	// depois, multiplicar a matriz M obitda, pela matriz MZ e colocar o resultado em M
-	// com isto obtemos uma matriz M, que combina os movimentos de rotação no eixo X, Y e Z
-	// e por último, multiplicar os 8 pontos do cubo CB pela matriz M
-	// devolvendo o resultado em CB1
-
-	var i;
-  var M = Array.matrix(4,4,0);
-  var MX = Array.matrix(4,4,0);
-  var MY = Array.matrix(4,4,0);
-  var MZ = Array.matrix(4,4,0);
-
-	CriaMX(MX, RX);
-	CriaMY(MY, RY);
-	CriaMZ(MZ, RZ);
-
-	MultMat(MX, MY, M);
-	MultMat(M, MZ, M);
-
-	for(i=0; i<8; i++)
-		MultPtoMat(CB[i], M, CB1[i]);
-}
-
-
-// Desenhar o Cubo
-function DesenhaCubo(C) //(CUBO C)
-{
-   // Para desenhar o cubo é necessário desenhar as arestas que compõem do cubo
-   // como estamos desenhando em uma tela de 2 dimensoes
-   // usamos apenas as cooredenadas X e Y e ignoramos Z
-
-/*
-no espaço fica:
-
-        P5-----P1
-      / |     /|
-    P4-----P0  |
-    |   |  |   |
-    |   P6-|---P2
-    |  /   |  /
-    P7-----P3
-
-ponto na face da frente: p1, p4, p5, p0
-*/
-
-   // face da frente
-   linha(C[4][0], C[4][1], C[0][0], C[0][1]); // p4 -> p0
-   linha(C[7][0], C[7][1], C[3][0], C[3][1]); // p7 -> p3
-   linha(C[4][0], C[4][1], C[7][0], C[7][1]); // p4 -> p7
-   linha(C[0][0], C[0][1], C[3][0], C[3][1]); // p0 -> p3
-
-   // face de tras
-   linha(C[5][0], C[5][1], C[1][0], C[1][1]); // p5 -> p1 
-   linha(C[6][0], C[6][1], C[2][0], C[2][1]); // p6 -> p2
-   linha(C[5][0], C[5][1], C[6][0], C[6][1]); // p5 -> p6
-   linha(C[1][0], C[1][1], C[2][0], C[2][1]); // p1 -> p2
-   
-   // ligar a primeira com a segunda face
-   linha(C[0][0], C[0][1], C[1][0], C[1][1]); // p0 -> p1
-   linha(C[3][0], C[3][1], C[2][0], C[2][1]); // p3 -> p2
-   linha(C[4][0], C[4][1], C[5][0], C[5][1]); // p4 -> p5
-   linha(C[7][0], C[7][1], C[6][0], C[6][1]); // p7 -> p6
-}
-
-/*  Declaracao da funcao main() */
-
-
-window.onload = function () {
-//Our code here...
-
-  DesenhaCubo(cubo);
-  /*
-  for (var i=1; i<5; i+=1)
-  {
-    RotacionaCubo(cubo, i, i, i, cubo);
-    DesenhaCubo(cubo);
-  }
-  */
-  /*
-  var canvas = document.getElementById('myCanvas');
-  canvas.addEventListener('mousedown', function (event) {
-  console.log("mouse down");
-  }, false);
-  canvas.addEventListener('mouseup', function (event) {
-  console.log("mouse up");
-  }, false);
-  */
-};
-
-function escalaMais()
-{
-  EscalaCubo(cubo, 1.1, cubo);
-  DesenhaCubo(cubo);
-}
-function escalaMenos()
-{
-  EscalaCubo(cubo, 0.9, cubo);
-  DesenhaCubo(cubo);
-}
-function rotDir()
-{
-  RotacionaCubo(cubo, 5, 5, 5, cubo); 
-  DesenhaCubo(cubo);
-}
-function rotEsq()
-{
-  RotacionaCubo(cubo, -5, -5, -5, cubo);
-  DesenhaCubo(cubo);
-}
-function moveUp()
-{
-  TransladaCubo(cubo, 0, 5, 0, cubo); 
-  DesenhaCubo(cubo);
-}
-function moveDown()
-{
-  TransladaCubo(cubo, 0, -5, 0, cubo);
-  DesenhaCubo(cubo);
-}
-function moveLeft()
-{
-  TransladaCubo(cubo, -5, 0, 0, cubo);
-  DesenhaCubo(cubo);
-}
-function moveRight()
-{
-  TransladaCubo(cubo, 5, 0, 0, cubo);
-  DesenhaCubo(cubo);
-}
-
-function main()
-{
-   var i;
-/*
-   // inicializar o modo grafico
-   //int gdriver = DETECT, gmode //, errorcode
-   //initgraph(&gdriver, &gmode, "\\TC\\bgi");
-   //initgraph(&gdriver, &gmode, "\\borlandc\\bgi");
-   // errorcode = graphresult();
-*/
-  
-
-   for (i=1;i<5;i+=0.1)
-   {
-      RotacionaCubo(cubo, i, i, i, cubo);
-      setcolor(5);
-      DesenhaCubo(cubo);
-      setcolor(0);
-      delay(400);
-      DesenhaCubo(cubo);
-   }
-
-   for (i=1;i<30;i+=5)
-   {
-      TransladaCubo(cubo, i, i, i, cubo);
-      setcolor(5);
-      DesenhaCubo(cubo);
-      setcolor(0);
-      delay(400);
-      DesenhaCubo(cubo);
-   }
-
-   EscalaCubo(cubo, 2, cubo);
-   setcolor(5);
-   DesenhaCubo(cubo);
-   setcolor(0);
-   delay(500);
-   DesenhaCubo(cubo);
-
-   for (i=1;i<5;i+=0.1)
-   {
-      RotacionaCubo(cubo, i, i, i, cubo);
-      setcolor(5);
-      DesenhaCubo(cubo);
-      setcolor(0);
-      delay(400);
-      DesenhaCubo(cubo);
-   }
-  
-	//cleardevice();
-	//closegraph ();
-}
-
-</script>
-<br>
-<div id="controls">
-  <input type="button" value="Clear" onclick="clearCanvas();" />
-
-  <input type="button" value="E+" onclick="escalaMais();" />
-  <input type="button" value="E-" onclick="escalaMenos();" />
-
-  <input type="button" value="R+" onclick="rotDir();" />
-  <input type="button" value="R-" onclick="rotEsq();" />
-
-  <input type="button" value="Up" onclick="moveUp();" />
-  <input type="button" value="Down" onclick="moveDown();" />
-
-  <input type="button" value="Left" onclick="moveLeft();" />
-  <input type="button" value="Right" onclick="moveRight();" />
-</div>
+
+        #myCanvas {
+            background-color: #000;
+        }
+
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="700" height="500" style="border: dotted; 1px;"></canvas>
+
+    <script>
+        "use strict";
+
+        // var numbr = Array.matrix(5,5,0);
+        // var names = Array.matrix(3,3,"");
+        Array.matrix = function(numrows, numcols, initial) {
+            var arr = [];
+            for (var i = 0; i < numrows; ++i) {
+                var columns = [];
+                for (var j = 0; j < numcols; ++j) {
+                    columns[j] = initial;
+                }
+                arr[i] = columns;
+            }
+            return arr;
+        }
+
+        /*
+        typedef float PONTO[4];   //[x y z 1]
+        typedef PONTO CUBO[8];
+        typedef float MAT[4][4];
+        */
+        // a terceira coordenada 1 é para normalizacao 
+
+        var cubo = [
+            [45,    45,    45,  1], // P0
+            [45,    45,   -45,  1], // P1
+            [45,   -45,   -45,  1], // P2
+            [45,   -45,    45,  1], // P3
+            [-45,   45,    45,  1], // P4
+            [-45,   45,   -45,  1], // P5
+            [-45,  -45,   -45,  1], // P6
+            [-45,  -45,    45,  1]  // P7
+        ];
+
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+
+        function DrawLine(x1, y1, x2, y2, color) {
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+
+            ctx.fillStyle = color;
+            ctx.strokeStyle = "#00FF00";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(320 + x1, 240 - y1);
+            ctx.lineTo(320 + x2, 240 - y2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        function ClearCanvas() {
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            //ctx.closePath();
+            //ctx.stroke();
+
+            //DrawCube(cubo);
+
+            //ctx.beginPath();
+            //drawAxes();
+            //ctx.stroke();
+        }
+
+        function DrawCube(cube) {
+            //
+            //    P5-----P1
+            //   / |    / |
+            //  P4-----P0 |
+            //  |  |   |  |
+            //  |  P6--|--P2
+            //  | /    | /
+            //  P7-----P3
+            // 
+            // front face: p1, p4, p5, p0
+
+            // face da frente
+            DrawLine(cube[4][0], cube[4][1], cube[0][0], cube[0][1]); // p4 -> p0
+            DrawLine(cube[7][0], cube[7][1], cube[3][0], cube[3][1]); // p7 -> p3
+            DrawLine(cube[4][0], cube[4][1], cube[7][0], cube[7][1]); // p4 -> p7
+            DrawLine(cube[0][0], cube[0][1], cube[3][0], cube[3][1]); // p0 -> p3
+
+            // face de tras
+            DrawLine(cube[5][0], cube[5][1], cube[1][0], cube[1][1]); // p5 -> p1 
+            DrawLine(cube[6][0], cube[6][1], cube[2][0], cube[2][1]); // p6 -> p2
+            DrawLine(cube[5][0], cube[5][1], cube[6][0], cube[6][1]); // p5 -> p6
+            DrawLine(cube[1][0], cube[1][1], cube[2][0], cube[2][1]); // p1 -> p2
+
+            // ligar a primeira com a segunda face
+            DrawLine(cube[0][0], cube[0][1], cube[1][0], cube[1][1]); // p0 -> p1
+            DrawLine(cube[3][0], cube[3][1], cube[2][0], cube[2][1]); // p3 -> p2
+            DrawLine(cube[4][0], cube[4][1], cube[5][0], cube[5][1]); // p4 -> p5
+            DrawLine(cube[7][0], cube[7][1], cube[6][0], cube[6][1]); // p7 -> p6
+        }
+
+
+        function MultPtoMat(Pto, Mtx) {
+            // multiplicar um ponto P[4] por uma matriz M[4][4]
+            // o resultado P[1][4] x M[4][4] é P1[1][4], ou seja, um ponto
+
+            var AUX = [0, 0, 0, 0];
+            var AUX2;
+            var j, k;
+
+            for (j = 0; j < 4; j++) {
+                AUX2 = 0;
+                for (k = 0; k < 4; k++)
+                    AUX2 = AUX2 + (Pto[k] * Mtx[k][j]);
+                AUX[j] = AUX2;
+            }
+
+            for (j = 0; j < 4; j++)
+                Pto[j] = AUX[j];
+        }
+
+        // Transladar um ponto
+        function TransladaPonto(P, DX, DY, DZ)
+        {
+            // translada um ponto 
+            // multiplica um ponto P[4] pela matriz de deslocamento MT
+            // deslocamento no eixo X => DX
+            // deslocamento no eixo Y => DY
+            // deslocamento no eixo Z => DZ
+            // devolve o resultado em P1[4]
+
+            var MT = [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [DX, DY, DZ, 1]
+            ];
+
+            MultPtoMat(P, MT);
+        }
+
+        function TransladaCubo(CB, DX, DY, DZ)
+        {
+            for (var pto = 0; pto < 8; pto++){
+                TransladaPonto(CB[pto], DX, DY, DZ);
+            }
+        }
+
+        function EscalaPonto(pto, scale) {
+            // scale matrix
+            var mtxZ = [
+                [scale, 0, 0, 0],
+                [0, scale, 0, 0],
+                [0, 0, scale, 0],
+                [0, 0, 0, scale]
+            ];
+            MultPtoMat(pto, mtxZ);
+        }
+
+        function EscalaCubo(cube, scale) {
+            for (var pto = 0; pto < 8; pto++) {
+                EscalaPonto(cube[pto], scale);
+            }
+        }
+
+        function MultMat(M1, M2, M3)
+        {
+            // M1 x M2 = M3
+
+            //MAT AUX; // cria uma matriz auxiliar para armazenar o resultado
+            var AUX = Array.matrix(4, 4, 0);
+            var i, j, k; // variaveis de controle
+
+            for (i = 0; i < 4; i++){
+                for (j = 0; j < 4; j++) {
+                    AUX[i][j] = 0;
+                    for (k = 0; k < 4; k++) {
+                        AUX[i][j] = AUX[i][j] + (M1[i][k] * M2[k][j]);
+                    }
+                }
+            }
+            // copiar a matriz resultante (AUX) para a matriz de retorno M3
+            for (i = 0; i < 4; i++){
+                for (j = 0; j < 4; j++) {
+                    M3[i][j] = AUX[i][j];                    
+                }
+            }
+        }
+
+
+        // Rotaciona um cubo
+        function RotacionaCubo(CB, RX, RY, RZ)
+        {
+            // Para rotacionar o cubo nos ângulos RX, RY e RZ:
+            // primeiro criar as matrizes de rotação nos eixos X, Y e Z
+            // depois efetuar a composição de movimentos:
+            // multiplicar a matriz MX pela matriz MY e colocar na matriz M
+            // depois, multiplicar a matriz M obitda, pela matriz MZ e colocar o resultado em M
+            // com isto obtemos uma matriz M, que combina os movimentos de rotação no eixo X, Y e Z
+            // e por último, multiplicar os 8 pontos do cubo CB pela matriz M
+            // devolvendo o resultado em CB1
+
+            var i;
+            //var M = Array.matrix(4, 4, 0);
+            
+            var M = [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+            ];
+            
+            var angulo = RX;
+
+            var Mx = [
+                [1, 0, 0, 0],
+                [0, Math.cos(angulo), Math.sin(angulo), 0],
+                [0, -Math.sin(angulo), Math.cos(angulo), 0],
+                [0, 0, 0, 1]
+            ];
+
+            angulo = RY;
+            var My = [
+                [Math.cos(angulo), 0, Math.sin(angulo), 0],
+                [0, 1, 0, 0],
+                [-Math.sin(angulo), 0, Math.cos(angulo), 0],
+                [0, 0, 0, 1]
+            ];
+
+            angulo = RZ;
+            var Mz = [
+                [Math.cos(angulo), -Math.sin(angulo), 0, 0],
+                [Math.sin(angulo), Math.cos(angulo), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
+            ];
+
+            MultMat(Mx, My, M);
+            MultMat(M, Mz, M);
+
+            for (i = 0; i < 8; i++) {
+                MultPtoMat(CB[i], M);                
+            }
+        }
+
+        function scaleUp() {
+            ClearCanvas();
+            EscalaCubo(cubo, 1.2);
+            DrawCube(cubo);
+        }
+
+        function scaleDown() {
+            ClearCanvas();
+            EscalaCubo(cubo, 0.8);
+            DrawCube(cubo);
+        }
+
+        function rotate() {
+            var rx = document.getElementById("rx").value;
+            var ry = document.getElementById("ry").value;
+            var rz = document.getElementById("rz").value;
+
+            ClearCanvas();
+            RotacionaCubo(cubo, rx, ry, rz);
+            DrawCube(cubo);
+        }
+
+
+        function moveUp() {
+            ClearCanvas();
+            TransladaCubo(cubo, 0, 10, 0);
+            DrawCube(cubo);
+        }
+
+        function moveDown() {
+            ClearCanvas();
+            TransladaCubo(cubo, 0, -10, 0);
+            DrawCube(cubo);
+        }
+
+        function moveLeft() {
+            ClearCanvas();
+            TransladaCubo(cubo, -10, 0, 0);
+            DrawCube(cubo);
+        }
+
+        function moveRight() {
+            ClearCanvas();
+            TransladaCubo(cubo, 10, 0, 0);
+            DrawCube(cubo);
+        }
+
+        window.onload = function() {
+
+            DrawCube(cubo);
+
+        };
+    </script>
+
+    <br>
+    <div id="controls">
+        <input type="button" value="Clear" onclick="ClearCanvas();" />
+
+        <input type="button" value="E+" onclick="scaleUp();" />
+        <input type="button" value="E-" onclick="scaleDown();" />
+
+        <input type="button" value="Up" onclick="moveUp();" />
+        <input type="button" value="Down" onclick="moveDown();" />
+
+        <input type="button" value="Left" onclick="moveLeft();" />
+        <input type="button" value="Right" onclick="moveRight();" />
+        
+        <br />
+        x:<input type="text" name="rx" id="rx" value="5" size="3" />
+        y:<input type="text" name="ry" id="ry" value="5" size="3" />
+        z:<input type="text" name="rz" id="rz" value="5" size="3" />
+        <input type="button" value="Rotate" onclick="rotate();" />
+    </div>
 
 </body>
 </html>

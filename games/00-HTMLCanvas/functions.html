@@ -20,8 +20,11 @@
         <input type="button" id="bt4" value="F4" onclick="drawType(4)" /> &nbsp;
         </p>
     </form>
-
+    
     <canvas id="drawingCanvas" width="640" height="480"></canvas>
+    
+    <div id="msg"></div>
+    
     <p>F1 = (Math.sin(x) + Math.cos(z)) / 60;</p>
     <p>F2 = Math.sin(x + z) / 24;</p>
     <p>F3 = c = 50 - (x * x) - (z * z); return Math.sqrt(c * (_sgn(c) + 1)) / 30;</p>
@@ -62,7 +65,13 @@
     var drawType = function(nType) {
 
         clearCanvas();
+        ctx.beginPath();
+        
+        // Delete all Marks
+        performance.clearMarks();
+        performance.mark("startPerf");
 
+        
         // calculate point for graph
         for(var a = -(s_depth / 2); a < (s_depth / 2) + 1; a++)
         {
@@ -134,6 +143,12 @@
                 z_old = z_new;
             }
         }
+        
+        performance.mark("endPerf");
+        performance.measure("durationPerf", "startPerf", "endPerf");
+        showResults();
+        
+        ctx.stroke();
 
     };
     
@@ -142,9 +157,17 @@
         var scale = 2.5;
         ctx.moveTo(x1 * scale, y1 * scale);
         ctx.lineTo(x2 * scale, y2 * scale);
-        ctx.stroke();
+        //ctx.stroke();
     }
 
+    function showResults()
+    {
+        var items = window.performance.getEntriesByType('measure');
+        for (var i = 0; i < items.length; i++) {
+            document.getElementById("msg").innerHTML = items[i].name.toString() + ' took ' + items[i].duration.toString() + 'ms';
+        }
+    }
+    
     function clearCanvas()
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);

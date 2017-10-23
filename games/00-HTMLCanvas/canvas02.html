@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Canvas Test</title>
+    <style>
+        canvas {
+            border: 1px dashed black;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+
+            var canvas = document.getElementById("drawingCanvas");
+            var ctx = canvas.getContext("2d");
+
+            // Set the color (brick red) using an HTML color code:
+            ctx.strokeStyle = "#c0f800";
+            ctx.lineWidth = 20;
+            // Top-Left is (0, 0)
+            ctx.beginPath();
+            ctx.moveTo(450, 10);
+            ctx.lineTo(450, 200);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Draw a line to the new position.
+            //ctx.lineTo(x, y);
+            //ctx.stroke();
+
+            var context = canvas.getContext("2d");
+            // Set the line width and color (for all the lines).
+            context.lineWidth = 5;
+            context.strokeStyle = "rgb(205,40,40)";
+            // Draw the first line, with the standard butt ending.
+            context.beginPath();
+            context.moveTo(10, 50);
+            context.lineTo(400, 50);
+            context.lineCap = "butt";
+            context.stroke();
+            // Draw the second line, with a round cap.
+            context.strokeStyle = "#D35400";
+            context.beginPath();
+            context.moveTo(10, 120);
+            context.lineTo(400, 120);
+            context.lineCap = "round";
+            context.stroke();
+            // Draw the third line, with a square cap.
+            context.strokeStyle = "rgb(46,204,113)";
+            context.beginPath();
+            context.moveTo(10, 190);
+            context.lineTo(400, 190);
+            context.lineCap = "square";
+            context.stroke();
+            
+            /*
+            context.moveTo(250,50);
+            context.lineTo(50,250);
+            context.lineTo(450,250);
+            context.closePath();
+            // Paint the inside.
+            context.fillStyle = "blue";
+            context.fill();
+            // Draw the outline.
+            context.lineWidth = 10;
+            context.strokeStyle = "red";
+            context.stroke();
+            */
+
+            // Create variables to store each detail about the arc.
+            context.beginPath();
+            var centerX = 150;
+            var centerY = 300;
+            var radius = 100;
+            
+            var startingAngle = 1.25 * Math.PI;
+            var endingAngle = 1.75 * Math.PI;
+            
+            // Use this information to draw the arc.
+            context.arc(centerX, centerY, radius, startingAngle, endingAngle);
+            context.closePath();
+            context.stroke();
+            
+            
+            // circle
+            context.beginPath();
+            
+            radius = 150;
+            var startingAngle = 0;
+            var endingAngle = 2 * Math.PI;
+            
+            // Use this information to draw the arc.
+            context.arc(centerX, centerY, radius, startingAngle, endingAngle);
+            context.stroke();
+            
+        };
+    </script>
+</head>
+
+<body>
+    <canvas id="drawingCanvas" width="640" height="480"></canvas>
+</body>
+
+</html>
