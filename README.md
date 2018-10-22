@@ -1,5 +1,5 @@
 # jonatasdemello.github.io
-Software Developers' Page
+Software Developer
 
 I'm using this project to create my personal blog using GitHub Pages and Jekyll.
 

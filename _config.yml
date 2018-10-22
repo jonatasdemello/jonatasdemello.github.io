@@ -1,4 +1,37 @@
-theme: jekyll-theme-slate
+#theme: jekyll-theme-slate
 permalink: /blog/:year/:month/:day/:title
 repository: jonatasdemello/jonatasdemello.github.io
 gems: ['jekyll-github-metadata']
+encoding: utf-8
+
+# Dependencies
+markdown:         kramdown
+highlighter:      rouge
+
+# Setup
+title:            jonatasmello
+tagline:          Jonatas de Mello
+description:      "A software developer's notes..."
+url:              https://github.com/jonatasdemello/jonatasdemello.github.io
+baseurl:          /
+                  # the optional subpath of your site, e.g. "/my-jekyll-site/"
+                  # This will apply to all pages in your Jekyll site.
+
+author:
+  name:           jonatas
+  url:            https://www.linkedin.com/in/jonatasdemello/
+
+paginate:         5
+# paginate_path:    '/page:num'
+                    # Or '/my-jekyll-site/page:num' if you want to move your index pages
+
+plugins:
+  - jekyll-feed
+  - jekyll-gist
+  - jekyll-paginate
+
+# Custom vars
+version:            2.0.1
+
+github:
+  repo:             https://github.com/jonatasdemello/jonatasdemello.github.io
