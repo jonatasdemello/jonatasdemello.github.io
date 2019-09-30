@@ -7,7 +7,6 @@ lenght: 1
 ---
 
 # Learn a New Skill
-<div class="date"> {{ page.date | date_to_string }} </div>
 
 Here are some steps to help you learn a new skill:
 
