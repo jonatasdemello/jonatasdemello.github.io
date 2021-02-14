@@ -1,12 +1,19 @@
 ---
 layout: default
-title: Software Development Blog
-date: 2016-01-08
+title: Blog
+description: Blog
 ---
-	<h1>List of Posts</h1>
+<div class="blog">
+
+	<h1 class="page-heading">Blog</h1>
+
 	<p>Posts: </p>
+
 	<ul class="posts">
-	  {% for post in site.posts %}
-	    <li><span>{{ post.date | date_to_string }}</span> - <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
-	  {% endfor %}
+		{% for post in site.posts %}
+		<li><span>{{ post.date | date_to_string }}</span> - <a href="{{ post.url }}"
+				title="{{ post.title }}">{{ post.title }}</a></li>
+		{% endfor %}
 	</ul>
+
+</div>

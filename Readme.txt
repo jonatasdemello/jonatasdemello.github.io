@@ -28,7 +28,7 @@ jekyll serve - Does the same thing except it rebuilds any time you make a change
 
 Instructions
 
-1. Install a full Ruby development environment 
+1. Install a full Ruby development environment
 	https://jekyllrb.com/docs/installation/
 	
 	Ruby version 2.4.0 or above, including all development headers (ruby version can be checked by running ruby -v)
@@ -50,8 +50,8 @@ Instructions
 6. Now browse to http://localhost:4000
 
 
-minima is the current default theme, and 
-bundle show minima 
+minima is the current default theme, and
+bundle show minima
 will show you where minima theme's files are stored on your computer.
 
 
@@ -121,10 +121,13 @@ Build and run your BlackDoc site.
 $ jekyll serve
 
 
+$ bundle exec jekyll serve
+
+
 
 
 ERROR:  Error installing psych:
-        The last version of psych (= 3.0.3) to support your Ruby & RubyGems was 3.0.3. 
+        The last version of psych (= 3.0.3) to support your Ruby & RubyGems was 3.0.3.
 		Try installing it with `gem install psych -v 3.0.3`
         psych requires Ruby version < 2.5, >= 2.2. The current ruby version is 2.5.0.
 		
