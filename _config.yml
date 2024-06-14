@@ -7,7 +7,11 @@
 #
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-
+#
+# If you need help with YAML syntax, here are some quick references for you:
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
 #theme: jekyll-theme-slate
 permalink: /blog/:year/:month/:day/:title
 repository: jonatasdemello/jonatasdemello.github.io
@@ -19,32 +23,43 @@ encoding: utf-8
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
+
 title: Jonatas de Mello
 email: jonatasmello@hotmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Jonatas de Mello - Full Stack Software Engineer.
-  This is my Github page using Jekyll.
+  Jonatas de Mello - Software Engineer / Engineering Manager.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jonatasmello
 github_username:  jonatasdemello
 
 # Build settings
-markdown: kramdown
-theme: minima
+# markdown: kramdown
+#theme: minima
+theme: jekyll-theme-cayman
+#remote_theme: pages-themes/cayman@v0.2.0
 plugins:
   - jekyll-feed
+#  - jekyll-remote-theme # add this line to the plugins list if you already have one
 
 github:
   repo: https://github.com/jonatasdemello/jonatasdemello.github.io
 
 # Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
 # exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
 #   - Gemfile
 #   - Gemfile.lock
-#   - node_modules
+#   - node_modules/
 #   - vendor/bundle/
 #   - vendor/cache/
 #   - vendor/gems/
