@@ -1,10 +1,8 @@
-# GitHub Pages
-
-My personal site in GitHub Pages.
-
-Go to <a href="https://jonatasdemello.github.io">https://jonatasdemello.github.io</a>.
-
-This version is using Jekyll.
+---
+layout: page
+title: About
+permalink: /about/
+---
 
 This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
 
