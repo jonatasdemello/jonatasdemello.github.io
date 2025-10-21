@@ -6,7 +6,8 @@ name: Deploy to GitHub Pages (gh-pages.yml)
 on:
   push:
     branches:
-      - main
+      - eleventy
+      # - main
   pull_request:
 
 jobs:
@@ -42,10 +43,11 @@ jobs:
       - name: Step Build build-ghpages (npm)
         run: npm run build-ghpages
 
-      - name: Deploy
+      - name: Step Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/eleventy'
+        # 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
-          enable_jekyll: false # writes .nojekyll so assets aren’t hidden
+          # enable_jekyll: false # writes .nojekyll so assets aren’t hidden
