@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="pretty-atom-feed.xsl" type="text/xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>Blog Title</title>
+  <subtitle>This is a longer description about your blog.</subtitle>
+  <link href="https://example.com/jonatasdemello.github.io/feed/feed.xml" rel="self" />
+  <link href="https://example.com/jonatasdemello.github.io/" />
+  <updated>2019-10-06T00:00:00Z</updated>
+  <id>https://example.com/jonatasdemello.github.io/</id>
+  <author>
+    <name>Your Name</name>
+  </author>
+  <entry>
+    <title>SOLID Principles</title>
+    <link href="https://example.com/jonatasdemello.github.io/blog/2019-10-06-SOLID/" />
+    <updated>2019-10-06T00:00:00Z</updated>
+    <id>https://example.com/jonatasdemello.github.io/blog/2019-10-06-SOLID/</id>
+    <content type="html">&lt;h1 id=&quot;solid-principles&quot;&gt;SOLID Principles&lt;/h1&gt;
+&lt;h2 id=&quot;single-responsibility-principle-s-r-p&quot;&gt;Single Responsibility Principle (S.R.P)&lt;/h2&gt;
+&lt;p&gt;A class should have one, and only one, reason to change.&lt;/p&gt;
+&lt;p&gt;A Class should be responsible for a single task.&lt;/p&gt;
+&lt;p&gt;A Class should have only a single responsibility.&lt;/p&gt;
+&lt;h2 id=&quot;open-closed-principle&quot;&gt;Open-Closed Principle&lt;/h2&gt;
+&lt;p&gt;You should be able to extend a class’s behavior, without modifying it.&lt;/p&gt;
+&lt;p&gt;Open for extension but closed for modification.&lt;/p&gt;
+&lt;p&gt;A Class should be open to extension and close to modification.&lt;/p&gt;
+&lt;p&gt;Software entities … should be open for extension, but closed for modification.&lt;/p&gt;
+&lt;h2 id=&quot;liskov-substitution-principle&quot;&gt;Liskov Substitution Principle&lt;/h2&gt;
+&lt;p&gt;Derived classes must be substitutable for their base classes.&lt;/p&gt;
+&lt;p&gt;A derived Class can be substituted at places where base Class is used.&lt;/p&gt;
+&lt;p&gt;Objects in a program should be replaceable with instances of their sub-types without altering the correctness of that program.&lt;/p&gt;
+&lt;h2 id=&quot;interface-segregation-principle&quot;&gt;Interface Segregation Principle&lt;/h2&gt;
+&lt;p&gt;Make fine grained interfaces that are client specific.&lt;/p&gt;
+&lt;p&gt;Clients should not be forced to implement interfaces they do not use.&lt;/p&gt;
+&lt;p&gt;Don’t make FAT Interfaces. i.e. Classes don’t have to override extra agreements that are not needed for that Class simply because it is there in interface.&lt;/p&gt;
+&lt;p&gt;Many client-specific interfaces are better than one general-purpose interface.&lt;/p&gt;
+&lt;h2 id=&quot;dependency-inversion-principle&quot;&gt;Dependency Inversion Principle&lt;/h2&gt;
+&lt;p&gt;Depend on abstractions, not on concretions. Not only high level Classes but low level Classes also depend on the abstractions in order to decouple the code.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A. High level modules should not depend upon low level modules. Both should depend upon abstractions.&lt;/li&gt;
+&lt;li&gt;B. Abstractions should not depend upon details. Details should depend upon abstractions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;But don&#39;t get confused with the terms:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dependency Injection,&lt;/li&gt;
+&lt;li&gt;Dependency Inversion,&lt;/li&gt;
+&lt;li&gt;Inversion of Control,&lt;/li&gt;
+&lt;li&gt;IoC Container.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;One should “depend upon abstractions, [not] concretions.”&lt;/p&gt;
+&lt;h1 id=&quot;examples&quot;&gt;Examples&lt;/h1&gt;
+&lt;h2 id=&quot;single-responsibility-principle&quot;&gt;Single Responsibility Principle&lt;/h2&gt;
+&lt;p&gt;If one class does more than one thing, it should be split into multiple classes.
+For example, an User class:&lt;/p&gt;
+&lt;pre class=&quot;language-C#&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-C#&quot;&gt;class User {
+	public bool validateUser(user){
+	...
+	}
+	public user formatUser(user){
+	...
+	}
+	public user getUserFromDb(id){
+	...
+	}
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;open-close-principle&quot;&gt;Open-Close Principle&lt;/h2&gt;
+&lt;p&gt;For example, an authentication module which requires username and password to login.
+You code a login module and perform login for that user.&lt;/p&gt;
+&lt;pre class=&quot;language-C#&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-C#&quot;&gt;class LoginModule
+{
+	public bool loginUser(user)
+	{
+		if(normalUser) {
+			authenticateNormalUser(user);
+		}
+		else if (thirdPartyUser) {
+			authenticateGoogleUser(user);
+		}
+	}
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In this case to add a new type of authentication, the original class has to change.&lt;/p&gt;
+&lt;p&gt;What to do?&lt;/p&gt;
+&lt;p&gt;Separate the login behaviour behind an interface and create separate Classes for normal login and third party login to flip the dependencies.&lt;/p&gt;
+&lt;p&gt;Any new person who wants to write a whole different login module functionality for a different set of users will create their own login module’s Class and implement the login interface (the functions that Login interface has as agreements).&lt;/p&gt;
+&lt;pre class=&quot;language-C#&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-C#&quot;&gt;interface LoginInterface
+{
+	public AuthenticateUser(user);
+}
+
+class NormalLogin : LoginInterface
+{
+	public bool AuthenticateUser(user)
+	{ ... }
+}
+class ThirdpartyLogin : LoginInterface
+{
+	public bool AuthenticateUser(user)
+	{ ... }
+}
+
+class LoginModule
+{
+	public bool login(user)
+	{
+		user.AuthenticateUser(user);
+	}
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;liskov-substitution&quot;&gt;Liskov Substitution&lt;/h2&gt;
+&lt;p&gt;For example, a child class return a different type than its parent class.&lt;/p&gt;
+&lt;h2 id=&quot;interface-segregation-principle-2&quot;&gt;Interface Segregation Principle&lt;/h2&gt;
+&lt;p&gt;It states that a client must not be forced to implement an interface that it doesn’t use.
+The result is fined grained interfaces&lt;/p&gt;
+&lt;h2 id=&quot;dependency-inversion-principle-2&quot;&gt;Dependency Inversion Principle&lt;/h2&gt;
+&lt;p&gt;It states that High level modules should never depend on Low level modules, instead the High level module can depend upon an abstraction and the Low level module depends on that same abstraction.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>WebService vs WebApi</title>
+    <link href="https://example.com/jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/" />
+    <updated>2018-10-21T00:00:00Z</updated>
+    <id>https://example.com/jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/</id>
+    <content type="html">&lt;h1 id=&quot;web-service-vs-web-api&quot;&gt;Web Service vs Web API&lt;/h1&gt;
+&lt;p&gt;What are the differences between a WebService and Web API?&lt;/p&gt;
+&lt;p&gt;Both are means of communication between consumers and providers over a network.&lt;/p&gt;
+&lt;h2 id=&quot;web-service&quot;&gt;Web Service&lt;/h2&gt;
+&lt;p&gt;Definition from W3C:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A Web service is a software system designed to support interoperable machine-to-machine interaction over a network. It has an interface described in a machine-processable format (specifically WSDL). Other systems interact with the Web service in a manner prescribed by its description using SOAP-messages, typically conveyed using HTTP with an XML serialization in conjunction with other Web-related standards.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Main points:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Web Service communicate using XML.&lt;/li&gt;
+&lt;li&gt;A client invokes a web service by sending a XML request message&lt;/li&gt;
+&lt;li&gt;The service sends back an XML response&lt;/li&gt;
+&lt;li&gt;SOA (service oriented architecture), rely on XML-RPC and SOAP (Simple Object Access Protocol)&lt;/li&gt;
+&lt;li&gt;Highly coupled - the client calls a remote procedure&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.w3schools.com/xml/tempconvert.asmx?WSDL&quot;&gt;w3schools&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.dneonline.com/calculator.asmx?WSDL&quot;&gt;dne&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;web-api&quot;&gt;Web Api&lt;/h2&gt;
+&lt;p&gt;The term &amp;quot;API&amp;quot; stands for Application Programming Interface.&lt;/p&gt;
+&lt;p&gt;In practice, an API is &amp;quot;a set of functions and procedures&amp;quot; that allow you to access and build upon the data and functionality of an existing application.&lt;/p&gt;
+&lt;p&gt;Web APIs expose an application’s data and functionality over the internet.
+Web APIs usually send data back and forth using HTTP requests. These requests often return textual data in the form of a JSON or XML response.&lt;/p&gt;
+&lt;p&gt;Main points:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Uses HTTP protocol&lt;/li&gt;
+&lt;li&gt;The client doesn&#39;t need to know what procedure to call on the server&lt;/li&gt;
+&lt;li&gt;HTTP verbs (GET, PUT, POST, DELETE)&lt;/li&gt;
+&lt;li&gt;Loosely coupled&lt;/li&gt;
+&lt;li&gt;RESTful APIs&lt;/li&gt;
+&lt;li&gt;Data payloads can be of multiple types such as JSON or XML&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Example of endpoints:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://api.plos.org/search?q=title:DNA&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://api.plos.org/search?q=title:Drosophila&amp;amp;fl=id,abstract&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;WebAPI does not expose it&#39;s methods, I used Swagger (https://swagger.io) to generate my API documentation&lt;/p&gt;
+&lt;p&gt;Unfortunately, most of these APIs do not come with any specification that developers (and machines) can rely on to automatically understand and integrate them. Instead, most of the time we have to rely on reading its ad-hoc documentation web pages, despite the existence of languages to model Web APIs like Swagger or, more recently, OpenAPI that developers could use to formally describe their APIs.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;calling-a-webservice-in-c&quot;&gt;Calling a WebService in C#&lt;/h3&gt;
+&lt;p&gt;Using Visual Studio, you add a Service Reference to the WebService URL:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://www.dneonline.com/calculator.asmx&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This will add references to .csproj file and web.config or app.config. It will also create a file in the project:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;&amp;quot;&#92;Service References&#92;CalculatorSvc&#92;Reference.cs&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;describing all the methods no inside the code we instanciate the object and call the method:&lt;/p&gt;
+&lt;pre class=&quot;language-java&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;using &lt;span class=&quot;token class-name&quot;&gt;WebTest&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;CalculatorSvc&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+namespace &lt;span class=&quot;token class-name&quot;&gt;WebTest&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Program&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;string&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; args&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; calc &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CalculatorSoapClient&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; res1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;calc&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;Add&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token class-name&quot;&gt;Console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Result: &quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here we have to call the method&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;quot;Add(int intA, int intB)&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&quot;calling-a-web-api-in-c&quot;&gt;Calling a Web API in C#&lt;/h3&gt;
+&lt;p&gt;To call a web API from a .NET application, there are several ways using:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HttpWebRequest/Response Class&lt;/li&gt;
+&lt;li&gt;WebClient Class&lt;/li&gt;
+&lt;li&gt;HttpClient Class&lt;/li&gt;
+&lt;li&gt;RestSharp NuGet Package&lt;/li&gt;
+&lt;li&gt;ServiceStack Http Utils&lt;/li&gt;
+&lt;li&gt;Flurl&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;https://code-maze.com/different-ways-consume-restful-api-csharp/&quot;&gt;example&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Using System.Net.Http.HttpClient, endpoint:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;https://reqres.in/api/users&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre class=&quot;language-java&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;namespace &lt;span class=&quot;token class-name&quot;&gt;WebTest&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;TestApi&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; readonly &lt;span class=&quot;token class-name&quot;&gt;HttpClient&lt;/span&gt; client &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; string &lt;span class=&quot;token class-name&quot;&gt;GetUsers&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            string &lt;span class=&quot;token class-name&quot;&gt;Url&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;https://reqres.in/api/users/2&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; result &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;token comment&quot;&gt;// Add an Accept header for JSON format.&lt;/span&gt;
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;client&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;DefaultRequestHeaders&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Accept&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Clear&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;client&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;DefaultRequestHeaders&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Accept&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Add&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;MediaTypeWithQualityHeaderValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;application/json&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; response &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;client&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;GetStringAsync&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Url&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Result&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;//blocking, I know...&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; response&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;aditional-information&quot;&gt;Aditional Information&lt;/h2&gt;
+&lt;p&gt;Url:
+https://www.xtm-cloud.com/project-manager-gui/services/v2/customer/XTMWebService?wsdl&lt;/p&gt;
+&lt;p&gt;Notice the &amp;quot;?wsdl&amp;quot; at the end:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;WSDL stands for Web Services Description Language.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;An WSDL document describes a web service. It specifies the location of the service, and the methods of the service, using these major elements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;types&amp;gt;&lt;/code&gt;	Defines the (XML Schema) data types used by the web service&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;message&amp;gt;&lt;/code&gt;	Defines the data elements for each operation&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;portType&amp;gt;&lt;/code&gt;	Describes the operations that can be performed and the messages involved.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;binding&amp;gt;&lt;/code&gt;	Defines the protocol and data format for each port type&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.w3schools.com/xml/xml_wsdl.asp&quot;&gt;W3Schools&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Web_Services_Description_Language&quot;&gt;Wikipedia&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;wsdl&quot;&gt;WSDL&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.w3.org/TR/2001/NOTE-wsdl-20010315&quot;&gt;WSDL&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;WSDL is an XML format for describing network services as a set of endpoints operating on messages containing either document-oriented or procedure-oriented information. The operations and messages are described abstractly, and then bound to a concrete network protocol and message format to define an endpoint. Related concrete endpoints are combined into abstract endpoints (services). WSDL is extensible to allow description of endpoints and their messages regardless of what message formats or network protocols are used to communicate, however, the only bindings described in this document describe how to use WSDL in conjunction with SOAP 1.1, HTTP GET/POST, and MIME.&lt;/p&gt;
+&lt;h3 id=&quot;soap&quot;&gt;SOAP&lt;/h3&gt;
+&lt;p&gt;https://en.wikipedia.org/wiki/SOAP&lt;/p&gt;
+&lt;p&gt;SOAP (originally Simple Object Access Protocol) is a messaging protocol specification for exchanging structured information in the implementation of web services in computer networks. Its purpose is to induce extensibility, neutrality and independence. It uses XML Information Set for its message format, and relies on application layer protocols, most often Hypertext Transfer Protocol (HTTP) or Simple Mail Transfer Protocol (SMTP), for message negotiation and transmission.&lt;/p&gt;
+&lt;p&gt;SOAP allows processes running on disparate operating systems (such as Windows and Linux) to communicate using Extensible Markup Language (XML). Since Web protocols like HTTP are installed and running on all operating systems, SOAP allows clients to invoke web services and receive responses independent of language and platforms.&lt;/p&gt;
+&lt;h3 id=&quot;rest&quot;&gt;REST&lt;/h3&gt;
+&lt;p&gt;https://en.wikipedia.org/wiki/Representational_state_transfer&lt;/p&gt;
+&lt;p&gt;Representational State Transfer (REST) is an architectural style that defines a set of constraints to be used for creating web services. Web services that conform to the REST architectural style, or RESTful web services, provide interoperability between computer systems on the Internet. REST-compliant web services allow the requesting systems to access and manipulate textual representations of web resources by using a uniform and predefined set of stateless operations. Other kinds of web services, such as SOAP web services, expose their own arbitrary sets of operations.[1]&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://api.example.com/resources/
+	GET 	List the URIs and perhaps other details of the collection&#39;s members.
+	PUT		Replace the entire collection with another collection.
+	PATCH	Not generally used
+	POST	Create a new entry in the collection. The new entry&#39;s URI is assigned automatically and is usually returned by the operation.[17]
+	DELETE	Delete the entire collection.
+
+https://api.example.com/resources/item17
+	GET 		Retrieve a representation of the addressed member of the collection, expressed in an appropriate Internet media type.
+	PUT			Replace the addressed member of the collection, or if it does not exist, create it.
+	PATCH		Update the addressed member of the collection.
+	POST		Not generally used. Treat the addressed member as a collection in its own right and create a new entry within it.[17]
+	DELETE		Delete the addressed member of the collection.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;xml-rpc&quot;&gt;XML-RPC&lt;/h3&gt;
+&lt;p&gt;https://en.wikipedia.org/wiki/XML-RPC&lt;/p&gt;
+&lt;p&gt;XML-RPC is a remote procedure call (RPC) protocol which uses XML to encode its calls and HTTP as a transport mechanism.[1] &amp;quot;XML-RPC&amp;quot; also refers generically to the use of XML for remote procedure call, independently of the specific protocol. This article is about the protocol named &amp;quot;XML-RPC&amp;quot;.&lt;/p&gt;
+&lt;h3 id=&quot;rsdl&quot;&gt;RSDL&lt;/h3&gt;
+&lt;p&gt;http://www.balisage.net/Proceedings/vol10/html/Robie01/BalisageVol10-Robie01.html&lt;/p&gt;
+&lt;p&gt;RESTful Service Description Language (RSDL) provides a description of the structure and elements in the the REST API in one whole XML specification. Invoke the RSDL using the following request.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;GET /api?rsdl HTTP/1.1
+Accept: application/xml
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Links&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.1/html/Developer_Guide/sect-Developer_Guide.entry_Point-RSDL.html&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;https://modeling-languages.com/automatic-discovery-web-api-specifications/&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;https://swagger.io/resources/articles/best-practices-in-api-documentation/
+https://modeling-languages.com/modeling-web-api-comparing/&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;References&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;https://blogs.mulesoft.com/dev/api-dev/apis-versus-web-services/&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/calling-a-web-api-from-a-net-client&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Learn a New Skill</title>
+    <link href="https://example.com/jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/" />
+    <updated>2016-01-08T00:00:00Z</updated>
+    <id>https://example.com/jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/</id>
+    <content type="html">&lt;h1 id=&quot;learn-a-new-skill&quot;&gt;Learn a New Skill&lt;/h1&gt;
+&lt;p&gt;Here are some steps to help you learn a new skill:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Deconstruct the skill&lt;/li&gt;
+&lt;li&gt;Learn enough to self-correct&lt;/li&gt;
+&lt;li&gt;Remove practice barriers&lt;/li&gt;
+&lt;li&gt;Practice at least 20 hours&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;So, before you pick a skill to focus on this month, your first step should be identifying those that will be most important for your future. Ask yourself:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What gaps in knowledge do I have for my job (or the job I want)?&lt;/li&gt;
+&lt;li&gt;What skills do those around me (and above me) have that I don&#39;t?&lt;/li&gt;
+&lt;li&gt;What gaps in knowledge are there on my team that I could fill?&lt;/li&gt;
+&lt;li&gt;What characteristics does my boss value most?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ref: &lt;a href=&quot;http://www.lifehack.org/324939/how-deconstruct-any-skill-you-want-learn-faster&quot;&gt;link&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+</feed>
