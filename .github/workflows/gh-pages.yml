@@ -1,7 +1,7 @@
 # If you’d like to deploy this to GitHub pages, rename this
 # file to `gh-pages.yml` and read the mini-tutorial on
 # https://www.11ty.dev/docs/deployment/#deploy-an-eleventy-project-to-github-pages
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (gh-pages.yml)
 
 on:
   push:
@@ -19,27 +19,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Step Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Cache npm
+      - name: Step Cache npm
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
 
-      - name: Cache Eleventy .cache
+      - name: Step Cache Eleventy .cache
         uses: actions/cache@v3
         with:
           path: ./.cache
           key: ${{ runner.os }}-eleventy-fetch-cache
 
-      - name: Install Dependencies (npm)
+      - name: Step Install Dependencies (npm)
         run: npm install
 
-      - name: Build build-ghpages (npm)
+      - name: Step Build build-ghpages (npm)
         run: npm run build-ghpages
 
       - name: Deploy
