@@ -3,18 +3,18 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <title>Blog Title</title>
   <subtitle>This is a longer description about your blog.</subtitle>
-  <link href="https://example.com/jonatasdemello.github.io/feed/feed.xml" rel="self" />
-  <link href="https://example.com/jonatasdemello.github.io/" />
+  <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/feed/feed.xml" rel="self" />
+  <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/" />
   <updated>2019-10-06T00:00:00Z</updated>
-  <id>https://example.com/jonatasdemello.github.io/</id>
+  <id>https://jonatasdemello.github.io/jonatasdemello.github.io/</id>
   <author>
-    <name>Your Name</name>
+    <name>Jonatas</name>
   </author>
   <entry>
     <title>SOLID Principles</title>
-    <link href="https://example.com/jonatasdemello.github.io/blog/2019-10-06-SOLID/" />
+    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2019-10-06-SOLID/" />
     <updated>2019-10-06T00:00:00Z</updated>
-    <id>https://example.com/jonatasdemello.github.io/blog/2019-10-06-SOLID/</id>
+    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2019-10-06-SOLID/</id>
     <content type="html">&lt;h1 id=&quot;solid-principles&quot;&gt;SOLID Principles&lt;/h1&gt;
 &lt;h2 id=&quot;single-responsibility-principle-s-r-p&quot;&gt;Single Responsibility Principle (S.R.P)&lt;/h2&gt;
 &lt;p&gt;A class should have one, and only one, reason to change.&lt;/p&gt;
@@ -116,9 +116,9 @@ The result is fined grained interfaces&lt;/p&gt;
   </entry>
   <entry>
     <title>WebService vs WebApi</title>
-    <link href="https://example.com/jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/" />
+    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/" />
     <updated>2018-10-21T00:00:00Z</updated>
-    <id>https://example.com/jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/</id>
+    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/</id>
     <content type="html">&lt;h1 id=&quot;web-service-vs-web-api&quot;&gt;Web Service vs Web API&lt;/h1&gt;
 &lt;p&gt;What are the differences between a WebService and Web API?&lt;/p&gt;
 &lt;p&gt;Both are means of communication between consumers and providers over a network.&lt;/p&gt;
@@ -286,9 +286,9 @@ https://modeling-languages.com/modeling-web-api-comparing/&lt;/p&gt;
   </entry>
   <entry>
     <title>Learn a New Skill</title>
-    <link href="https://example.com/jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/" />
+    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/" />
     <updated>2016-01-08T00:00:00Z</updated>
-    <id>https://example.com/jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/</id>
+    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/</id>
     <content type="html">&lt;h1 id=&quot;learn-a-new-skill&quot;&gt;Learn a New Skill&lt;/h1&gt;
 &lt;p&gt;Here are some steps to help you learn a new skill:&lt;/p&gt;
 &lt;ol&gt;
