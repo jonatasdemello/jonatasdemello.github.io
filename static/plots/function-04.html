@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+	<link rel="stylesheet" href="../include/vendor/prism.css">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <script type="text/javascript" src="../js/utils.js"></script>
+    <title>Canvas</title>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>Simple Canvas example</h1>
+        <p>Play with different parameters and see the results!</p>
+        <canvas id="myCanvas" width="640" height="480"></canvas>
+    </main>
+
+    <div class="container">
+        <form id="myForm">
+            <div>
+                <label class="form-label">Param A:</label> <input id="paramA" type="text" value="20" size="3" />
+                <label class="form-label">Param B:</label> <input id="paramB" type="text" value="30" size="3" />
+                <label class="form-label">Param C:</label> <input id="paramC" type="text" value="1.5" size="3" />
+
+                <input class="btn btn-primary" type="button" id="drawP" value="Draw Points" /> &nbsp;
+                <input class="btn btn-primary" type="button" id="drawL" value="Draw Lines" /> &nbsp;
+                <input class="btn btn-primary" type="button" id="clear" value="Clear" />
+            </div>
+        </form>
+    </div>
+
+<div class="container">
+<pre><code class="language-javascript line-numbers">
+function drawPoint(a, b, c) {
+    let v = 0, h = 0, x = 0, y = 0;
+    for (let t = 0; t &lt; 12.56; t += .05) {
+        x = a * Math.cos(t) + b * Math.cos(c * t);
+        y = a * Math.sin(t) - b * Math.sin(c * t);
+        v = (dx - y * 2) * ez;
+        h = (dx + x * 2) * ez;
+        myContext.fillRect(h, v, 2, 2);
+    }
+}
+</code></pre>
+</div>
+
+    <script>
+        // add actions to buttons
+        document.getElementById('drawP').addEventListener('click', () => { drawGraphic(0); });
+        document.getElementById('drawL').addEventListener('click', () => { drawGraphic(1); });
+        document.getElementById('clear').addEventListener('click', () => { clearCanvas(canvas, myContext); });
+
+        // move Axis center to middle of canvas
+        var dx = 150;
+        var dy = 150;
+        var ez = 2;
+
+        // get canvas and context
+        var myCanvas = document.getElementById("myCanvas");
+        var myContext = myCanvas.getContext("2d");
+
+        myCanvas.width = 600;
+        myCanvas.height = 600;
+
+        var color = "#00ff00"; // lime
+        myContext.fillStyle = color;
+        myContext.strokeStyle = color;
+        myContext.lineWidth = 1.0;
+
+        // show the fist time:
+        drawGraphic(0);
+
+        function drawGraphic(lineStyle) {
+            let paramA = document.getElementById('paramA').value;
+            let paramB = document.getElementById('paramB').value;
+            let paramC = document.getElementById('paramC').value;
+            //console.log(paramA, paramB, paramC);
+
+            clearCanvas(myCanvas, myContext);
+
+            if (lineStyle == 0) {
+                drawPoint(paramA, paramB, paramC);
+            }
+            if (lineStyle == 1) {
+                drawLine(paramA, paramB, paramC);
+            }
+        }
+
+        function drawPoint(a, b, c) {
+            myContext.beginPath();
+
+            let v = 0, h = 0, x = 0, y = 0;
+            for (let t = 0; t < 12.56; t += .05) {
+                x = a * Math.cos(t) + b * Math.cos(c * t);
+                y = a * Math.sin(t) - b * Math.sin(c * t);
+                v = (dx - y * 2) * ez;
+                h = (dx + x * 2) * ez;
+                myContext.fillRect(h, v, 2, 2);
+            }
+            myContext.stroke();
+        }
+
+        function drawLine(a, b, c) {
+            myContext.beginPath();
+
+            let start = 0;
+            let v = 0, h = 0, x = 0, y = 0;
+            for (let t = 0; t < 12.56; t += .05) {
+                x = a * Math.cos(t) + b * Math.cos(c * t);
+                y = a * Math.sin(t) - b * Math.sin(c * t);
+                v = (dx - y * 2) * ez;
+                h = (dx + x * 2) * ez;
+
+                if (start == 0) {
+                    myContext.moveTo(h, v);
+                    start = 1;
+                }
+                myContext.lineTo(h, v);
+            }
+            myContext.stroke();
+        }
+
+    </script>
+    <script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>

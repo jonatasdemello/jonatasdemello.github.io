@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="../include/vendor/prism.css">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <script type="text/javascript" src="../js/utils.js"></script>
+    <title>Canvas</title>
+    <style>
+        canvas {
+            /* Scale up the 320x200 canvas so the pixels are visible */
+            width: 640px;   /* 2x scale */
+            height: 400px;
+            image-rendering: pixelated;
+            border: 1px solid #555;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>Simple Canvas example</h1>
+        <canvas id="myCanvas" width="320" height="200"></canvas>
+    </main>
+
+<div class="container">
+<pre><code class="language-basic line-numbers">
+0 SCREEN 7 : GOTO 10
+1 R=SQR(X*X+Y*Y)*1.5 : IF R=0 THEN F=90: GOTO 3
+2 F=ABS(90*SIN(R)/R)
+3 A=INT(10*X+160-5*Y)
+4 B=INT(5*Y+2.5*X+93)
+5 RETURN
+10 FOR Y=-10 TO 10 STEP 0.2
+30 FOR X=-10 TO 10 STEP 0.3
+40 GOSUB 1
+46 PSET(A,B-F), 15
+50 NEXT X
+60 NEXT Y
+</code></pre>
+
+[Applesoft Basic version]
+<pre><code class="language-basic line-numbers">
+0 HGR2 : HCOLOR=1 : GOTO 10
+1 R=SQR(X*X+Y*Y)*1.5 : IF R=0 THEN F=90: GOTO 3
+2 F=ABS(90*SIN(R)/R)
+3 A=INT(10*X+160-5*Y)
+4 B=INT(5*Y+2.5*X+93)
+5 RETURN
+10 FOR Y=-10 TO 10 STEP 0.2
+30 FOR X=-10 TO 10 STEP 0.3
+40 GOSUB 1
+46 IF A < 279 THEN HPLOT A, B-F
+50 NEXT X
+60 NEXT Y
+</code></pre>
+    </div>
+
+    <script>
+        window.onload = main;
+
+        function main() {
+            // get canvas and context
+            const canvas = document.getElementById('myCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Fill background (like SCREEN 7 default)
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Color 15 in SCREEN 7 ~ white
+            ctx.fillStyle = 'green';
+
+            function compute(x, y) {
+            // R = SQR(X*X+Y*Y)*1.5
+            const r = Math.sqrt(x * x + y * y) * 1.5;
+
+            // IF R=0 THEN F=90 ELSE F=ABS(90*SIN(R)/R)
+            let f;
+            if (Math.abs(r) < 1e-9) {
+                f = 90;
+            } else {
+                f = Math.abs(90 * Math.sin(r) / r);
+            }
+
+            // A = INT(10*X + 160 - 5*Y)
+            // B = INT(5*Y + 2.5*X + 93)
+            const a = Math.trunc(10 * x + 160 - 5 * y);
+            const b = Math.trunc(5 * y + 2.5 * x + 93);
+
+            return { a, b, f };
+            }
+
+            // FOR Y=-10 TO 10 STEP 0.2
+            // FOR X=-10 TO 10 STEP 0.3
+            for (let y = -10; y <= 10 + 1e-9; y += 0.2) {
+                for (let x = -10; x <= 10 + 1e-9; x += 0.3) {
+                    const { a, b, f } = compute(x, y);
+
+                    // BASIC: PSET (A, B - F), 15
+                    const px = a;
+                    const py = Math.trunc(b - f);
+
+                    // Clip to canvas bounds (SCREEN 7 is 320x200)
+                    if (px >= 0 && px < canvas.width && py >= 0 && py < canvas.height) {
+                    ctx.fillRect(px, py, 1, 1);
+                    }
+                }
+            }
+        };
+
+        function plot(x, y, myContext) {
+            //myContext.fillStyle = "rgb(" + x + "," + y + ",40)";
+            v = x * 2.5;
+            h = (200 - y) * 2;
+            myContext.fillRect(v, h, 2, 2);
+        }
+
+    </script>
+    <script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>

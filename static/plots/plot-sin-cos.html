@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="../include/vendor/prism.css">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <script type="text/javascript" src="../js/utils.js"></script>
+    <title>Canvas</title>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>Simple Canvas example</h1>
+        <p>
+            green = sin(x)<br>
+            yellow = cos(x)</p>
+        <canvas id="myCanvas" width="640" height="480"></canvas>
+    </main>
+
+<div class="container">
+<pre><code class="language-javascript line-numbers">
+    window.onload = function () {
+        // get canvas and context
+        var myCanvas = document.getElementById("myCanvas");
+        var myContext = myCanvas.getContext("2d");
+
+        drawAxes(myCanvas, myContext);
+        let frq = 32;
+        let amp = 40;
+
+        myContext.fillStyle = "green";
+        for (var x = 0; x < 180; x++) {
+            var y =  amp * Math.sin(x / frq * 3.1415);
+            plot(x, y, myContext);
+        }
+
+        myContext.fillStyle = "yellow";
+        for (var x = 0; x < 180; x++) {
+            var y =  amp * Math.cos(x / frq * 3.1415);
+            plot(x, y, myContext);
+        }
+    };
+
+    function plot(x, y, myContext) {
+        let dx = 50;
+        let dy = 100;
+        let es = 2.5;
+        myContext.fillRect((dx + x) * es, (dy - y) * es, 2, 2);
+    }
+</code></pre>
+</div>
+
+    <script>
+        window.onload = main;
+
+        function main () {
+            // get canvas and context
+            var myCanvas = document.getElementById("myCanvas");
+            var myContext = myCanvas.getContext("2d");
+
+            drawAxes(myCanvas, myContext);
+            let frq = 32;
+            let amp = 40;
+
+            myContext.fillStyle = "green";
+            for (var x = 0; x < 180; x++) {
+                var y =  amp * Math.sin(x / frq * 3.1415);
+                plot(x, y, myContext);
+            }
+
+            myContext.fillStyle = "yellow";
+            for (var x = 0; x < 180; x++) {
+                var y =  amp * Math.cos(x / frq * 3.1415);
+                plot(x, y, myContext);
+            }
+        };
+
+        function plot(x, y, myContext) {
+            let dx = 50;
+            let dy = 100;
+            let es = 2.5;
+            myContext.fillRect((dx + x) * es, (dy - y) * es, 2, 2);
+        }
+    </script>
+    <script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>

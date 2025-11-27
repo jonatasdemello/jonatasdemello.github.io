@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+	<link rel="stylesheet" href="../include/vendor/prism.css">
+
+	<script type="text/javascript" src="../js/utils.js"></script>
+	<title>Canvas</title>
+	<style type="text/css">
+		body {
+			margin: 10px;
+		}
+
+		canvas {
+			border: 1px solid black;
+			/* background-color: black; */
+		}
+	</style>
+</head>
+
+<body>
+	<main class="container">
+		<nav class="nav">
+			<a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+		</nav>
+
+		<h1>Noise Sphere</h1>
+		<p>
+			<em>Visualize the noise sphere of a set of random numbers.</em><br>
+			<blockquote>
+				Pickover, Clifford A. 1995. <br>
+				Article: "Random number generators: pretty good ones are easy to find." <br>
+				The Visual Computer (1995) 11:369-377.<br>
+				Book "Keys to Infinity", Pickover, Chapter 31. <br>
+				<a href="./readme.html">See this readme for more details.</a>
+			</blockquote>
+		</p>
+
+		<canvas id="myCanvas" width="640" height="480"></canvas>
+	</main>
+
+	<div class="container">
+		<p>use arrow keys to rotate about the axis</p>
+		<form id="form1">
+			<div>
+				maxPoints: <input id="maxPoints" type="text" value="3000" size="5" />
+				<input type="button" id="process" value="Refresh" onclick="return Process();" />
+			</div>
+			<div>
+				skipPoints: <input id="skipPoints" type="text" value="0" size="5" />
+				<input type="button" id="skip" value="Refresh" onclick="return Process();" />
+			</div>
+		</form>
+	</div>
+
+	<script>
+		"use strict";
+		var constants = {
+			scale: 200,
+			maxPoints: 3000,
+
+			canvasWidth: 600, // In pixels. ADJUST
+			canvasHeight: 600, // In pixels. ADJUST
+			leftArrow: 37,
+			upArrow: 38,
+			rightArrow: 39,
+			downArrow: 40,
+			xMin: -9, // These four max/min values define a square on the xy-plane that the surface will be plotted over.
+			xMax: 9,
+			yMin: -9,
+			yMax: 9,
+			xDelta: 0.2, // Make smaller for more surface points. ADJUST
+			yDelta: 0.2, // Make smaller for more surface points. ADJUST
+			// There are eleven possible "vertical" color values for the surface,
+			// based on the last row of http://www.cs.siena.edu/~lederman/truck/AdvanceDesignTrucks/html_color_chart.gif
+			colorMap: ["#060", "#090", "#0C0", "#0F0", "#9F0", "#9C0", "#990", "#960", "#930", "#900", "#C00"],
+			pointWidth: 2, // The size of a rendered surface point (i.e., rectangle width and height) in pixels.
+			dTheta: 0.05, // The angle delta, in radians, by which to rotate the surface per key press.
+			surfaceScale: 24 // An empirically derived constant that makes the surface a good size for the given canvas size. ADJUST
+		};
+
+		var C = { x: 0.0, y: 0.0, z: 0.0, color: 0 }; // Cartesian
+		var P = { r: 0.0, theta: 0.0, phi: 0.0 }; // Polar
+
+		// arrays to hold random numbers and points
+		let randomNumbers = [];
+		let pointsXYZ = [];
+
+		// get canvas and context
+		var myCanvas = document.getElementById("myCanvas");
+		var myContext = myCanvas.getContext("2d");
+
+		function ResizeCanvas() {
+			myCanvas.width = constants.canvasWidth;
+			myCanvas.height = constants.canvasHeight;
+
+			// Translate the surface's origin to the center of the canvas.
+			myCanvas.getContext('2d').translate(constants.canvasWidth / 2, constants.canvasHeight / 2);
+		}
+
+		function ClearCanvas() {
+			myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+			myContext.clearRect(-constants.canvasWidth / 2, -constants.canvasHeight / 2, myCanvas.width, myCanvas.height);
+		}
+
+		/* Convert degrees to radians */
+		function rads(x) {
+			return ((x * 2.0) * Math.PI / 360.0);
+		}
+
+		/* Rotate C(x,y,z) along X, Y and Z axes */
+		function RotateZ(C, angle) {
+			var x, y, z;
+			z = rads(angle);
+			x = (C.x * Math.cos(z)) + (C.y * Math.sin(z));
+			y = (C.y * Math.cos(z)) - (C.x * Math.sin(z));
+			C.x = x; C.y = y;
+		}
+		function RotateX(C, angle) {
+			var x, y, z;
+			x = rads(angle);
+			y = (C.y * Math.cos(x)) + (C.z * Math.sin(x));
+			z = (C.z * Math.cos(x)) - (C.y * Math.sin(x));
+			C.z = z; C.y = y;
+		}
+		function RotateY(C, angle) {
+			var x, y, z;
+			y = rads(angle);
+			x = (C.x * Math.cos(y)) + (C.z * Math.sin(y));
+			z = (C.z * Math.cos(y)) - (C.x * Math.sin(y));
+			C.z = z; C.x = x;
+		}
+
+		function Rotate(ax, angle) {
+			for (var i = 0; i < pointsXYZ.length; i++) {
+				if (ax = "x")
+					RotateX(pointsXYZ[i], angle);
+				if (ax = "y")
+					RotateY(pointsXYZ[i], angle);
+				if (ax = "z")
+					RotateZ(pointsXYZ[i], angle);
+			}
+			ClearCanvas();
+			PlotPoints();
+		}
+
+		/* Projects 3d coordinates to a 2d screen */
+		function ProjectPoint(x) {
+			return (Math.ceil(constants.scale * x));
+		}
+
+		/* draw the point on screen */
+		function Plot(C) // Cartesian
+		{
+			rotate(C);
+			putpixel(MidA + ProjectPoint(C.x), MidY - ProjectPoint(C.y), C.Color);
+
+			// 3 plots
+			// putpixel(MidA + ProjectPoint(C.y), MidY - ProjectPoint(C.z), C.Color);
+			// putpixel(MidB + ProjectPoint(C.x), MidY - ProjectPoint(C.y), C.Color);
+			// putpixel(MidC + ProjectPoint(C.z), MidY - ProjectPoint(C.x), C.Color);
+		}
+
+		function drawCircle(x, y, radius, color) {
+			myContext.fillStyle = color;
+			myContext.beginPath();
+			myContext.arc(x, y, radius, 0, 2 * Math.PI, true);
+			myContext.closePath();
+			myContext.fill();
+		};
+
+		/* draw all points on canvas */
+		function PlotPoints() {
+
+			for (var i = 0; i < pointsXYZ.length; i++) {
+				myContext.fillStyle = pointsXYZ[i].color;
+
+				let x = ProjectPoint(pointsXYZ[i].x);
+				let y = ProjectPoint(pointsXYZ[i].y);
+
+				//myContext.fillRect(x, y, constants.pointWidth, constants.pointWidth);
+				drawCircle(x, y, 5, pointsXYZ[i].color);
+			}
+		}
+
+		/* Converts 3-d polar coordinates to cartesian coordinates */
+		function PolarToCartesian(P)
+		{
+			/*
+			Spherical Coordinates: https://mathworld.wolfram.com/SphericalCoordinates.html
+			Coordinates: Spherical (r,theta,phi) are related to the Cartesian (x,y,z) by:
+				x =	r * cos(theta) * sin(phi)
+				y =	r * sin(theta) * sin(phi)
+				z =	r * cos(phi)
+			*/
+			let C = { x: 0.0, y: 0.0, z: 0.0, color: 0 }; // Cartesian
+
+			C.x = P.r * Math.sin(P.phi) * Math.cos(P.theta);
+			C.y = P.r * Math.sin(P.phi) * Math.sin(P.theta);
+			C.z = P.r * Math.cos(P.phi);
+
+			/* We can assign colors based
+			  on x, y, z,
+			  or r, theta / pi
+			  or phi / (2 * pi) */
+			C.color = rankColors(P.r);
+
+			return C;
+		}
+
+		/* convert 3 points PT = [n, n+1, n+2] to polar(r, theta, phi) */
+		function PointToPolar(PT, n) {
+			/*
+			Noise Sphere: https://mathworld.wolfram.com/NoiseSphere.html
+			A mapping of random number triples to points in spherical coordinates according to:
+				radial distance: r     = sqrt( X[n+2] )
+				polar angle:     theta = PI * X[n+1]
+				azimuthal angle: phi   = 2 * PI * X[n]
+			*/
+			/* get the next point */
+			let polar = { r: 0.0, theta: 0.0, phi: 0.0 };
+
+			polar.r = Math.sqrt(PT[(n + 2) % 3]); /* pt 2 */
+			polar.theta = Math.PI * PT[(n + 1) % 3]; /* pt 1 */
+			polar.phi = 2 * Math.PI * PT[n]; /* pt 0 */
+
+			return polar;
+		}
+
+		function ConvertAndPlotPoint(X, n)
+		{
+			let P = { r: 0.0, theta: 0.0, phi: 0.0 }; // Polar
+			let C = { x: 0.0, y: 0.0, z: 0.0, color: 0 }; // Cartesian
+
+			/* convert X[3] to polar */
+			P = PointToPolar(X, n)
+
+			/* convert polar to cartesian point */
+			C = PolarToCartesian(P);
+
+			// add Cartesian point C(x,y,z) to points array
+			pointsXYZ.push(C);
+		}
+
+		function ConvertArrayToPoint() {
+			/*
+			from an array of randomNumbers[]
+			take the nex 3 values: PT[3](n, n+1, n+2)
+			convert to polar points(t, theta, phi)
+			then convert Polar To Cartesian C(x, y, z)
+			*/
+
+			let X = [0, 0, 0];
+
+			// get first 3 points
+			for (var i = 0; i < 3; i++) {
+				X[i] = randomNumbers[i];
+			}
+			let n = 0;
+			for (var i = 0; i < randomNumbers.length; i++) {
+
+				ConvertAndPlotPoint(X, n);
+
+				// get next point from array
+				X[n] = randomNumbers[i];
+
+				/* rotate n: (0,1,2) => (1,2,0) => (2,0,1) => (0,1,2) */
+				n = (n + 1) % 3; /* pt 1 */
+			}
+		}
+
+		// Generate and array of RandomNumbers[]
+		function GenerateRandomNumbers(maxPts, skipPts) {
+			var n, x, xi;
+			x = 0.1; // seed
+			console.log("Generating " + maxPts + " random numbers, skipping every " + skipPts + " points.");
+			skipPts = skipPts == 0 ? maxPts + 1 : skipPts;
+			for (n = 0; n < maxPts; n++) {
+				// this will generate a different shape: x = Math.log(x);
+				x = 100 * Math.log(x);
+				xi = Math.trunc(x);
+				x = Math.abs(x - xi);
+
+				// add numbers to array
+				//console.log(n, n % skipPts);
+				//if (n % skipPts == 0)
+				randomNumbers.push(x);
+			}
+		}
+
+		function ReadInputField(field) {
+			var result = 0;
+			var val = document.getElementById(field).value;
+			result = Number(val);
+			if (isNaN(result)) {
+				result = null;
+			}
+			return result;
+		}
+
+		function processKeyDown(evt) {
+			if (evt.ctrlKey) {
+				switch (evt.keyCode) {
+					case constants.upArrow:
+						// No operation other than preventing the default behavior of the arrow key.
+						evt.preventDefault(); // This prevents the default behavior of the arrow keys, which is to scroll the browser window when scroll bars are present. The user can still scroll the window with the mouse.
+						break;
+					case constants.downArrow:
+						// No operation other than preventing the default behavior of the arrow key.
+						evt.preventDefault();
+						break;
+					case constants.leftArrow:
+						// console.log("ctrl+leftArrow");
+						Rotate("z", -1); // The sign determines if the surface rotates "clockwise" or "counterclockwise".
+						evt.preventDefault();
+						break;
+					case constants.rightArrow:
+						// console.log("ctrl+rightArrow");
+						Rotate("z", 1);
+						evt.preventDefault();
+						break;
+				}
+				return; // When the control key is pressed, only the left and right arrows have meaning, no need to process any other key strokes (i.e., bail now).
+			}
+			// Assert: The control key is not pressed.
+			switch (evt.keyCode) {
+				case constants.upArrow:
+					// console.log("upArrow");
+					Rotate("x", 1);
+					evt.preventDefault();
+					break;
+				case constants.downArrow:
+					// console.log("downArrow");
+					Rotate("x", -1);
+					evt.preventDefault();
+					break;
+				case constants.leftArrow:
+					// console.log("leftArrow");
+					Rotate("y", -1);
+					evt.preventDefault();
+					break;
+				case constants.rightArrow:
+					// console.log("rightArrow");
+					Rotate("y", 1);
+					evt.preventDefault();
+					break;
+			}
+		}
+
+		function Process() {
+			// reset previous points
+			randomNumbers = [];
+			pointsXYZ = [];
+
+			// try to get max number from input box
+			let maxPoints = ReadInputField("maxPoints") ?? constants.maxPoints;
+			let skipPoints = ReadInputField("skipPoints") ?? 0;
+
+			GenerateRandomNumbers(maxPoints, skipPoints);
+
+			ConvertArrayToPoint();
+
+			ClearCanvas();
+
+			PlotPoints();
+		}
+
+		function onloadInit() {
+			// Used to detect if the control key has been pressed.
+			document.addEventListener('keydown', processKeyDown, false);
+
+			// Create and append the canvas element to the DOM.
+			ResizeCanvas();
+
+			Process();
+		}
+		// call onloadInit() when the page finishes loading
+		window.addEventListener('load', onloadInit, false);
+	</script>
+</body>
+
+</html>

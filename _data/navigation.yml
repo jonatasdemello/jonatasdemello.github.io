@@ -1,0 +1,6 @@
+- name: Home
+  link: /
+# - name: Graphics
+#   link: /static/
+- name: About
+  link: /about/

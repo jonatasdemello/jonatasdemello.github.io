@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="../include/vendor/prism.css">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <script type="text/javascript" src="../js/utils.js"></script>
+    <title>Canvas</title>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>Simple Canvas example</h1>
+        <canvas id="myCanvas" width="640" height="480"></canvas>
+    </main>
+
+<div class="container">
+<pre><code class="language-basic line-numbers">
+10 FOR X = 40 TO 215
+20 LET MMAX=999: LET MMIN=0
+30 FOR Y = 16 TO 144 STEP 4
+40 LET R = SQR((X-127) * (X-127) + (Y-80) * (Y-80)) / 15
+50 LET Z = INT(Y + 90 * EXP(-R/3) * COS(R))
+60 IF Z &lt; MMAX OR Z &gt; MMIN THEN PLOT X,Z
+70 IF Z &lt; MMAX THEN LET MMAX=Z
+80 IF Z &gt; MMIN THEN LET MMIN=Z
+90 NEXT Y
+100 NEXT X
+
+ponto (0,0) inferior esquerdo tela
+(0,0) bottom left, (255,0) bottom right, (0,175) top left, (255,175) top right
+plot (0,0) to (255, 175) = 45.056 pontos
+
+R = SQR(X^2 + Y^2) / 15
+Z = Y + 90 * e ^ (-R/3) * COS(R)
+
+r = distancia do centro do plano X-Y ate o ponto desenhado
+EXP( aexpr ) = raise "e" to number "aexpr"
+e = 2.718281828459045
+Math.exp ( x ) = e ^ x
+</code></pre>
+    </div>
+
+    <script>
+        window.onload = main;
+
+        function main() {
+            // get canvas and context
+            var myCanvas = document.getElementById("myCanvas");
+            var myContext = myCanvas.getContext("2d");
+
+            myContext.beginPath();
+            myContext.fillStyle = "yellow";
+
+            let xOff = 130; // x-offset left
+            let yOff = 85; // y-offset down
+
+            for (var X = 15; X < 235; X++) {
+                var mMax = 999, mMin = 0;
+
+                for (var Y = 16; Y < 144; Y += 2) {
+
+                    var R = Math.sqrt((X - xOff) * (X - xOff) + (Y - yOff) * (Y - yOff)) / 15;
+                    var Z = Math.round(Y + 100 * Math.exp(-R / 4) * Math.cos(R));
+
+                    if (Z < mMax || Z > mMin) {
+                        plot(X, Z, myContext);
+                    }
+                    if (Z < mMax) mMax = Z;
+                    if (Z > mMin) mMin = Z;
+                }
+            }
+            myContext.stroke();
+            drawAxes(canvas, myContext);
+        };
+
+        function plot(x, y, myContext) {
+            //myContext.fillStyle = "rgb(" + x + "," + y + ",40)";
+            v = x * 2.5;
+            h = (200 - y) * 2;
+            myContext.fillRect(v, h, 2, 2);
+        }
+
+    </script>
+    <script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>

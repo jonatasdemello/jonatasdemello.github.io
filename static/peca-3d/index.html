@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+	<link rel="stylesheet" href="../include/vendor/prism.css">
+
+	<title>Canvas</title>
+	<style>
+		canvas {
+			border: 1px dashed black;
+			padding: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<main class="container">
+		<nav class="nav">
+			<a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+		</nav>
+
+		<h1>3D Object</h1>
+		<p>
+			Source: <a href="https://datassette.org/livros/apple-ii/guia-pratico-de-sistemas-graficos-apple-ii">Link</a><br>
+			Book: "Guia Pr&#225;tico de Sistemas Gr&#225;ficos Apple II"<br>
+			Autor: &#193;lvaro Luiz Cruz<br>
+			Editora: Livros T&#233;cnicos e Cient&#237;ficos Editora S.A.<br>
+			Ano: 1986 / P&#225;ginas: 96 / ISBN: 85-216-0474-2<br>
+
+			Check this page <a href="./readme.html">for details and more information</a>.
+		</p>
+
+		<canvas id="myCanvas" width="800" height="600"></canvas>
+	</main>
+
+	<div class="container">
+		<button id="Xp" type="button" onclick="rotate(10, 0, 0)">X+</button>
+		<button id="Xm" type="button" onclick="rotate(-10, 0, 0)">X-</button>
+		<button id="Yp" type="button" onclick="rotate(0, 10, 0)">Y+</button>
+		<button id="Ym" type="button" onclick="rotate(0, -10, 0)">Y-</button>
+		<button id="Zp" type="button" onclick="rotate(0, 0, 10)">Z+</button>
+		<button id="Zm" type="button" onclick="rotate(0, 0, -10)">Z-</button>
+		<button id="Ep" type="button" onclick="rotate(10, 10, 10)">E+</button>
+		<button id="Em" type="button" onclick="rotate(-10, -10, -10)">E-</button>
+	</div>
+
+	<script>
+		"use strict";
+		// get canvas and context
+		var myCanvas = document.getElementById("myCanvas");
+		var myContext = myCanvas.getContext("2d");
+
+		const nv = 48;
+		const na = 72;
+
+		let xv;
+		let yv;
+		let zv;
+
+		let X = []; // nv
+		let Y = []; // nv
+		let Z = []; // nv
+
+		let xt = []; // nv
+		let yt = []; // nv
+
+		let V1 = []; // na
+		let V2 = []; // na
+
+		// lines[na][5]; // 72 lines, 4 pontos (x1, y1 - x2, y2), 1 cor
+		let lines = [ [0, 0, 0, 0, 0] ];
+
+		// [nv][3] = 48 vertices (X, Y, Z)
+		let pontos = [
+			[0, 0, 0], [10, 0, 0], [10, 6, 0], [0, 6, 0], [0, 0, 1], [10, 0, 1], [10, 6, 1], [0, 6, 1],
+			[4.3, 1.2, 1], [5.7, 1.2, 1], [6.8, 2.2, 1], [6.8, 3.8, 1], [5.7, 4.8, 1], [4.3, 4.8, 1], [3.2, 3.8, 1], [3.2, 2.2, 1],
+			[4.5, 1.8, 1], [5.5, 1.8, 1], [6.2, 2.5, 1], [6.2, 3.5, 1], [5.5, 4.2, 1], [4.5, 4.2, 1], [3.8, 3.5, 1], [3.8, 2.5, 1],
+			[4.3, 1.2, 5], [5.7, 1.2, 5], [6.8, 2.2, 5], [6.8, 3.8, 5], [5.7, 4.8, 5], [4.3, 4.8, 5], [3.2, 3.8, 5], [3.2, 2.2, 5],
+			[4.5, 1.8, 5], [5.5, 1.8, 5], [6.2, 2.5, 5], [6.2, 3.5, 5], [5.5, 4.2, 5], [4.5, 4.2, 5], [3.8, 3.5, 5], [3.8, 2.5, 5],
+			[1.7, 2.2, 1], [8.3, 2.2, 1], [8.3, 3.8, 1], [1.7, 3.8, 1], [3.2, 2.2, 3], [6.8, 2.2, 3], [6.8, 3.8, 3], [3.2, 3.8, 3]
+		];
+
+		// [na][3] = 72 arestas (p1,  p2,  cor)
+		let vertices = [
+			[0, 1, 2], [1, 2, 2], [2, 3, 2], [3, 0, 2], [4, 5, 2], [5, 6, 2], [6, 7, 2], [7, 4, 2],
+			[0, 4, 2], [1, 5, 2], [2, 6, 2], [3, 7, 2], [8, 9, 3], [9, 10, 3], [10, 11, 3], [11, 12, 3],
+			[12, 13, 3], [13, 14, 3], [14, 15, 3], [15, 8, 3], [24, 25, 3], [25, 26, 3], [26, 27, 3], [27, 28, 3],
+			[28, 29, 3], [29, 30, 3], [30, 31, 3], [31, 24, 3], [8, 24, 3], [9, 25, 3], [10, 26, 3], [11, 27, 3],
+			[12, 28, 3], [13, 29, 3], [14, 30, 3], [15, 31, 3], [16, 17, 3], [17, 18, 3], [18, 19, 3], [19, 20, 3],
+			[20, 21, 3], [21, 22, 3], [22, 23, 3], [23, 16, 3], [32, 33, 3], [33, 34, 3], [34, 35, 3], [35, 36, 3],
+			[36, 37, 3], [37, 38, 3], [38, 39, 3], [39, 32, 3], [16, 32, 3], [17, 33, 3], [18, 34, 3], [19, 35, 3],
+			[20, 36, 3], [21, 37, 3], [22, 38, 3], [23, 39, 3], [40, 15, 1], [10, 41, 1], [41, 42, 1], [42, 11, 1],
+			[14, 43, 1], [43, 40, 1], [40, 44, 1], [41, 45, 1], [42, 46, 1], [43, 47, 1], [47, 44, 1], [45, 46, 1]
+		];
+
+		function inicializa() {
+			let i;
+			for (i = 0; i < nv; i++) {
+				X[i] = pontos[i][0];
+				Y[i] = pontos[i][1];
+				Z[i] = pontos[i][2];
+			}
+			for (i = 0; i < na; i++) {
+				V1[i] = vertices[i][0];
+				V2[i] = vertices[i][1];
+				lines[i] = [0, 0, 0, 0, 0];
+			}
+			xv = yv = zv = 10;
+		}
+
+		function calcula() {
+			// xv, yv, zv, => coordenadas do observador.
+			let a, b, c, k1, k2, k3, k4, k5;
+			let kx, ky, k;
+			let x, y, z, la;
+			let xin, xax, yin, yax;
+			// float xmed, ymed;
+
+			let i;
+			let xmax, ymax;
+			xmax = 640;
+			ymax = 480;
+
+			// Calculo das constantes (Geometria Analitica)
+			a = Math.sqrt(xv * xv + yv * yv);
+			b = Math.sqrt(xv * xv + yv * yv + zv * zv);
+			c = a * b;
+			k1 = -yv / a;
+			k2 = xv / a;
+			k3 = -xv * zv / c;
+			k4 = -yv * zv / c;
+			k5 = a / b;
+
+			// Calculo para projecao na tela
+			for (i = 0; i < nv; i++) {
+				la = a * a + 1 / (xv * (X[i] - xv) + yv * (Y[i] - yv) + zv * (Z[i] - zv));
+
+				x = xv + la * (X[i] - xv);
+				y = yv + la * (Y[i] - yv);
+				z = zv + la * (Z[i] - zv);
+
+				xt[i] = (k1 * x + k2 * y);
+				yt[i] = (k3 * x + k4 * y + k5 * z);
+			}
+
+			// ajustar ao tamanho da tela
+			xin = X[0];
+			xax = X[0];
+			yin = Y[0];
+			yax = Y[0];
+
+			for (i = 0; i < nv; i++) {
+				if (xin > xt[i]) xin = xt[i];
+				if (xax < xt[i]) xax = xt[i];
+				if (yin > yt[i]) yin = yt[i];
+				if (yax < yt[i]) yax = yt[i];
+			}
+			// xmed = (xax + xin) / 2;
+			// ymed = (yax + yin) / 2;
+
+			kx = xmax / (xax - xin);
+			ky = ymax / (yax - yin);
+
+			k = ky;
+			if (kx < ky) {
+				k = kx;
+			}
+			x = (xmax - (xax - xin) * k) / 2;
+
+			// ajuste horizontal e vertical
+			for (i = 0; i < nv; i++) {
+				xt[i] = (xt[i] - xin) * k + x;
+				yt[i] = ymax - (yt[i] - yin) * k;
+			}
+			return 0;
+		}
+
+		function linhas() {
+			// add the result points to an array:
+			let i = 0;
+			let x1, x2, y1, y2, cor;
+
+			for (i = 0; i < na; i++) {
+				// int
+				x1 = xt[V1[i]];
+				y1 = yt[V1[i]];
+				x2 = xt[V2[i]];
+				y2 = yt[V2[i]];
+
+				cor = vertices[i][2];
+				lines[i] = [x1, y1, x2, y2, cor];
+			}
+			return 0;
+		}
+
+		function desenha() {
+			// use graphics library
+			let i = 0;
+			let x1, x2, y1, y2, cor;
+
+			clearCanvas();
+			myContext.beginPath();
+
+			for (i = 0; i < na; i++) {
+				x1 = lines[i][0];
+				y1 = lines[i][1];
+				x2 = lines[i][2];
+				y2 = lines[i][3];
+				cor = lines[i][4];
+
+				//setcolor(cor);
+				//line(x1, y1, x2, y2);
+				myContext.moveTo(x1, y1);
+				myContext.lineTo(x2, y2);
+			}
+			myContext.stroke();
+			return 0;
+		}
+
+		function read_input() {
+			let inc = 5;
+			let c;
+
+			// puts("Q,A, W,S E,D X-END: ");
+			c = getch();
+
+			if (c == 65 || c == 113) xv = xv + inc; // A$ = "Q" THEN XV = XV + 10
+			if (c == 81 || c == 97) xv = xv - inc; // A$ = "A" THEN XV = XV - 10
+			if (c == 87 || c == 119) yv = yv + inc; // A$ = "W" THEN YV = YV + 10
+			if (c == 83 || c == 115) yv = yv - inc; // A$ = "S" THEN YV = YV - 10
+			if (c == 69 || c == 101) zv = zv + inc; // A$ = "E" THEN ZV = ZV + 10
+			if (c == 68 || c == 100) zv = zv - inc; // A$ = "D" THEN ZV = ZV - 10
+			if (c == 88 || c == 120) return 0; // A$ = "X" THEN END
+			return 1;
+		}
+
+		function clearCanvas() {
+			myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+			myContext.beginPath();
+			myContext.stroke();
+		}
+
+		function main() {
+			let resp = 1;
+
+			inicializa();
+			xv = 10; yv = 10; zv = 10;
+			do {
+				clearCanvas();
+				calcula();
+				linhas();
+				desenha();
+				resp = read_input();
+			} while (resp != 0);
+			return 0;
+		}
+
+		function rotate(x, y, z)
+		{
+			xv += x;
+			yv += y;
+			zv += z;
+
+			console.log(xv, yv, zv);
+
+			calcula();
+			linhas();
+			desenha();
+		}
+
+		// main loop:
+		// -----------------------
+		inicializa();
+
+		calcula();
+		linhas();
+		desenha();
+
+	</script>
+</body>
+
+</html>

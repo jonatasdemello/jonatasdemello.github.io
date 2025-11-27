@@ -1,0 +1,19 @@
+// C code to illustrate using
+// graphics in linux environment
+#include<stdio.h>
+#include<stdlib.h>
+#include<graphics.h>
+
+int main()
+{
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "\\TURBOC3\\BGI");
+
+    circle(50, 50, 30);
+
+    //delay(500000);
+    getchar();
+    closegraph();
+    return 0;
+}
+

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="../include/vendor/prism.css">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <script type="text/javascript" src="../js/utils.js"></script>
+    <title>Canvas Test</title>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>Simple Canvas example</h1>
+        <canvas id="myCanvas" width="680" height="480"></canvas>
+    </main>
+
+    <div class="container">
+        <p>use arrow keys to update</p>
+        <form id="form1">
+            <div>
+                xMin: <input id="xMin" type="text" value="20" size="5" />
+                xMax: <input id="xMax" type="text" value="400" size="5" />
+                xStep: <input id="xStep" type="text" value="1" size="5" />
+                cte1: <input id="cte1" type="text" value="15" size="5" />
+            </div>
+            <div>
+                yMin: <input id="yMin" type="text" value="5" size="5" />
+                yMax: <input id="yMax" type="text" value="250" size="5" />
+                yStep: <input id="yStep" type="text" value="3" size="5" />
+                cte2: <input id="cte2" type="text" value="3" size="5" />
+            </div>
+            <div>
+                zCenter: <input id="zCenter" type="text" value="90" size="5" />
+                xCenter: <input id="xCenter" type="text" value="200" size="5" />
+                <input class="btn btn-primary" type="button" id="update" value="Refresh" onclick="return Update();" />
+            </div>
+        </form>
+    </div>
+
+<div class="container">
+    <pre><code class="language-basic line-numbers">
+10 FOR X = 40 TO 215
+20 LET MMAX=999: LET MMIN=0
+30 FOR Y = 16 TO 144 STEP 4
+40 LET R = SQR((X-127) * (X-127) + (Y-80) * (Y-80)) / 15
+50 LET Z = INT(Y + 90 * EXP(-R/3) * COS(R))
+60 IF Z &lt; MMAX OR Z &gt; MMIN THEN PLOT X,Z
+70 IF Z &lt; MMAX THEN LET MMAX=Z
+80 IF Z &gt; MMIN THEN LET MMIN=Z
+90 NEXT Y
+100 NEXT X
+
+ponto (0,0) inferior esquerdo tela
+(0,0) bottom left, (255,0) bottom right, (0,175) top left, (255,175) top right
+plot (0,0) to (255, 175) = 45.056 pontos
+
+R = SQR(X^2 + Y^2) / 15
+Z = Y + 90 * e ^ (-R/3) * COS(R)
+
+r = distancia do centro do plano X-Y ate o ponto desenhado
+EXP( aexpr ) = raise "e" to number "aexpr"
+e = 2.718281828459045
+Math.exp ( x ) = e ^ x
+</code></pre>
+</div>
+
+    <script>
+        /*
+        var myCanvas = document.getElementById("myCanvas");
+        var canvasWidth = canvas.width;
+        var canvasHeight = canvas.height;
+        var myContext = myCanvas.getContext("2d");
+        var canvasData = myContext.getImageData(0, 0, canvasWidth, canvasHeight);
+        */
+        var constants = {
+            leftArrow: 37,
+            upArrow: 38,
+            rightArrow: 39,
+            downArrow: 40
+        }
+        function ReadInput(field) {
+            var result = 0;
+            var val = document.getElementById(field).value;
+            result = Number(val);
+            console.log(result);
+            if (isNaN(result)) {
+                result = null;
+            }
+            return result;
+        }
+
+        function Draw(canvas, myContext) {
+            let xMin = ReadInput("xMin") ?? 20;
+            let xMax = ReadInput("xMax") ?? 400;
+            let xStep = ReadInput("xStep") ?? 1;
+            let yMin = ReadInput("yMin") ?? -20;
+            let yMax = ReadInput("yMax") ?? 250;
+            let yStep = ReadInput("yStep") ?? 3;
+
+            let cte1 = ReadInput("cte1") ?? 15;
+            let cte2 = ReadInput("cte2") ?? 3;
+            let zCenter = ReadInput("zCenter") ?? 90;
+            let xCenter = ReadInput("xCenter") ?? 200;
+
+            //console.log(xMin, xMax, xStep, yMin, yMax, yStep);
+
+            for (var x = xMin; x < xMax; x += xStep) { // 10, 250
+                var MMAX = 999, MMIN = 0;
+                for (var y = yMin; y < yMax; y += yStep) { // -10, 144, 3
+
+                    var r = Math.sqrt((x - xCenter) * (x - xCenter) + (y - zCenter) * (y - zCenter)) / cte1;
+                    var z = Math.round(y + zCenter * Math.exp(-r / cte2) * Math.cos(r));
+
+                    if (z < MMAX || z > MMIN) { point(x, z, myContext); }
+                    if (z < MMAX) { MMAX = z; }
+                    if (z > MMIN) { MMIN = z; }
+                }
+            }
+            DrawAxes(canvas, myContext);
+        }
+
+        function point(x, y, myContext) {
+            let PtSize = 2;
+            let Scale = 1.8;
+            myContext.fillStyle = "rgb(" + x + "," + y + ",40)";
+            myContext.fillRect(x * Scale, (250 - y) * Scale, PtSize, PtSize);
+        }
+
+        function DrawAxes(canvas, myContext) {
+            myContext.font = "10px Arial";
+            myContext.fillStyle = "rgb(255,255,255)";
+            // X-axis
+            for (var i = 10; i < canvas.width; i += 50) {
+                myContext.fillText(i, i, 10);
+            }
+            // Y-axis
+            for (var i = 10; i < canvas.height; i += 50) {
+                myContext.fillText(i, 10, i);
+            }
+        }
+
+        function ClearCanvas(canvas, myContext) {
+            var myCanvas = document.getElementById("myCanvas");
+            var myContext = myCanvas.getContext("2d");
+            myContext.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function Update() {
+            canvas = document.getElementById("myCanvas");
+            myContext = myCanvas.getContext("2d");
+            ClearCanvas(canvas, myContext);
+            Draw(canvas, myContext);
+        }
+
+        // -----------------------------------------------------------------------------------------------------
+        function IncZ() {
+            var val = document.getElementById("zCenter").value;
+            val = Number(val) + 5;
+            document.getElementById("zCenter").value = val;
+            Update();
+        }
+        function DecZ() {
+            var val = document.getElementById("zCenter").value;
+            val = Number(val) - 5;
+            document.getElementById("zCenter").value = val;
+            Update();
+        }
+        function processKeyDown(evt) {
+            if (evt.ctrlKey) {
+                switch (evt.keyCode) {
+                    case constants.upArrow:
+                        // No operation other than preventing the default behavior of the arrow key.
+                        evt.preventDefault(); // This prevents the default behavior of the arrow keys, which is to scroll the browser window when scroll bars are present. The user can still scroll the window with the mouse.
+                        break;
+                    case constants.downArrow:
+                        // No operation other than preventing the default behavior of the arrow key.
+                        evt.preventDefault();
+                        break;
+                    case constants.leftArrow:
+                        // console.log("ctrl+leftArrow");
+                        surface.zRotate(-1); // The sign determines if the surface rotates "clockwise" or "counterclockwise".
+                        evt.preventDefault();
+                        break;
+                    case constants.rightArrow:
+                        // console.log("ctrl+rightArrow");
+                        surface.zRotate(1);
+                        evt.preventDefault();
+                        break;
+                }
+                return; // When the control key is pressed, only the left and right arrows have meaning, no need to process any other key strokes (i.e., bail now).
+            }
+
+            // Assert: The control key is not pressed.
+
+            switch (evt.keyCode) {
+                case constants.upArrow:
+                    IncZ();
+                    evt.preventDefault();
+                    break;
+                case constants.downArrow:
+                    DecZ();
+                    evt.preventDefault();
+                    break;
+                case constants.leftArrow:
+                    // console.log("leftArrow");
+                    evt.preventDefault();
+                    break;
+                case constants.rightArrow:
+                    // console.log("rightArrow");
+                    evt.preventDefault();
+                    break;
+            }
+        }
+
+        window.onload = main;
+
+        function main() {
+            canvas = document.getElementById("myCanvas");
+            myContext = myCanvas.getContext("2d");
+            Draw(canvas, myContext);
+            document.addEventListener('keydown', processKeyDown, false); // Used to detect if the control key has been pressed.
+        }
+    </script>
+    <script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>
