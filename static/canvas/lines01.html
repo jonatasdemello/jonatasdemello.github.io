@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="../include/vendor/prism.css">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <script src="../js/utils.js"></script>
+    <title>Canvas</title>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>Simple Canvas example</h1>
+        <p>Tip: refresh for a new pattern.</p>
+        <canvas id="myCanvas" width="640" height="480"></canvas>
+    </main>
+
+    <div class="container">
+<pre><code class="language-basic line-numbers">
+5 REM * * * PROG LINES * * * (Sinclair BASIC)
+10 RADIANS: PAPER 6: CLS: PLOT SCRW/2,SCRH/2
+20 LET A=10
+25 FOR F=1 TO 10000
+30 LET X=0: LET Y=0
+40 LET Q=1+INT(4*RND)
+50 IF Q=1 THEN LET X = A
+60 IF Q=2 THEN LET X = -A
+70 IF Q=3 THEN LET Y = A
+80 IF Q=4 THEN LET Y = -A
+90 DRAW X,Y,PI
+100 NEXT F
+</code></pre>
+    </div>
+
+<script>
+    window.onload = function () {
+        // get canvas and context
+        var myCanvas = document.getElementById("myCanvas");
+        var myContext = myCanvas.getContext("2d");
+
+        // start in the center of the canvas
+        var Xpos = myCanvas.width / 2;
+        var Ypos = myCanvas.height / 2;
+
+        let randomColor = getRandomColor();
+        myContext.fillStyle = randomColor;
+        myContext.strokeStyle = randomColor;
+        myContext.lineWidth = 4;
+
+        var a = 25;
+        for (var i = 1; i < 350; i++) {
+            myContext.fillStyle = getRandomColor();
+            myContext.strokeStyle = getRandomColor();
+
+            myContext.beginPath();
+            myContext.moveTo(Xpos, Ypos);
+
+            var x = 0;
+            var y = 0;
+            var q = RND(1, 4);
+            if (q == 1) { x = a }
+            if (q == 2) { x = -a }
+            if (q == 3) { y = a }
+            if (q == 4) { y = -a }
+
+            // new position
+            Xpos += x;
+            Ypos += y;
+
+            myContext.lineTo(Xpos, Ypos);
+            myContext.stroke();
+        }
+    };
+    </script>
+    <script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>

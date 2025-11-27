@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="../include/vendor/prism.css">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <title>Canvas</title>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>Simple Canvas example</h1>
+        <p>
+            Based on the Book "Keys to Infinity" - Clifford A. Pickover <br>
+            This program compute the endpoint position (x,y) and (x2,y2) of each straight web chord of a circle. <br>
+            Play with different parameters and see the results!
+        </p>
+        <canvas id="myCanvas" width="640" height="480"></canvas>
+    </main>
+
+    <div class="container">
+
+        <div id="formControls">
+            <form id="form2">
+                <div>
+                    <input type="button" id="bt1" value="F1 (6,6)" onclick="drawType(1)" /> &nbsp;
+                    <input type="button" id="bt2" value="F2 (2,2)" onclick="drawType(2)" /> &nbsp;
+                    <input type="button" id="bt3" value="F3 (3,3)" onclick="drawType(3)" /> &nbsp;
+                    <input type="button" id="bt4" value="F4 (2,3)" onclick="drawType(4)" /> &nbsp;
+                    <input type="button" id="bt5" value="F5 (100,100)" onclick="drawType(5)" />
+                </div>
+                <div>
+                    <label>Param_A:</label> <input id="paramA" type="text" value="2" size="5" /> &nbsp;
+                    <label>Param_B:</label> <input id="paramB" type="text" value="2" size="5" /> &nbsp;
+                    <label>Step:</label> <input id="paramC" type="text" value="1" size="5" /> &nbsp;
+                    <input type="button" id="bt6" value="Draw" onclick="drawType(0)" /> &nbsp; &nbsp;
+                    <input type="button" id="clear" value="Clear" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+<div class="container">
+<pre><code class="language-javascript line-numbers">
+/*
+    Functions:
+    F1 - Ranunculoid :  a = 6;   b = 6;
+    F2 - Cardioid    :  a = 2;   b = 2;
+    F3 - Nephroid    :  a = 3;   b = 3;
+    F4 - Fishtailoid :  a = 2;   b = 3;
+    F5 - Amazingoid  :  a = 100; b = 100;
+*/
+    // params: a, b, c
+for (i = 0; i &lt;= 360; i = i + paramC) {
+    theta = i * pi / 180.0;
+    x = r * Math.cos(theta);
+    y = r * Math.sin(theta);
+    /* Select another point on circle */
+    x2 = r * Math.cos(a * theta);
+    y2 = r * Math.sin(b * theta);
+    /* Print endpoints of each line */
+    x = (x * ex + dx);
+    y = (y * ey + dy);
+    x2 = (x2 * ex + dx);
+    y2 = (y2 * ey + dy);
+
+    drawline(x, y, x2, y2, cor);
+}
+</code></pre>
+</div>
+
+    <script>
+        window.onload = function () {
+            drawType(1);
+        }
+
+        // move Axis center to middle of canvas
+        var dx = 300;
+        var dy = 300;
+        // add scale factor
+        var ex = 250;
+        var ey = 250;
+
+        var paramA = 0;
+        var paramB = 0;
+        var step = 1;
+
+		// get canvas and context
+        var myCanvas = document.getElementById("myCanvas");
+        var myContext = myCanvas.getContext("2d");
+
+        myCanvas.width = 600;
+        myCanvas.height = 600;
+
+        document.getElementById('clear').addEventListener('click', function () {
+            myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            myContext.beginPath();
+            myContext.stroke();
+        }, false);
+
+        function drawAxes() {
+            myContext.strokeStyle = '#696969';
+            drawline(300, 0, 300, 600, '#6E6E6E'); //Y
+            drawline(0, 300, 600, 300, '#6E6E6E'); //X
+            myContext.stroke();
+        }
+
+        function drawType(selType) {
+            switch (selType) {
+                case 0:
+                    paramA = document.getElementById('paramA').value;
+                    paramB = document.getElementById('paramB').value;
+
+                    clearCanvas();
+                    draw(paramA, paramB, '#98C0FC');
+                    break;
+                case 1:
+                    clearCanvas();
+                    draw(6, 6, '#01DFD7');
+                    break;
+                case 2:
+                    clearCanvas();
+                    draw(2, 2, '#D7DF01');
+                    break;
+                case 3:
+                    clearCanvas();
+                    draw(3, 3, '#FF0040');
+                    break;
+                case 4:
+                    clearCanvas();
+                    draw(2, 3, '#40FF00');
+                    break;
+                case 5:
+                    clearCanvas();
+                    draw(100, 100, '#2E2EFE');
+                    break;
+            }
+        }
+
+        function draw(a, b, cor) {
+            paramA = a;
+            paramB = b;
+
+            paramC = document.getElementById('paramC').value;
+            paramC = parseInt(paramC);
+
+            var r = 1.0;
+            var pi = 3.1415926; // or Math.PI
+
+            /* Ranunculoid:	a = 6; b = 6; */
+            /* Cardioid:	a = 2; b = 2; */
+            /* Nephroid: 	a = 3; b = 3; */
+            /* Amazingoid: 	a = 100; b = 100; */
+            /* Fishtailoid:	a = 2; b = 3; */
+
+            myContext.beginPath();
+
+            for (i = 0; i <= 360; i = i + paramC) {
+                theta = i * pi / 180.0;
+                x = r * Math.cos(theta);
+                y = r * Math.sin(theta);
+                /* Select another point on circle */
+                x2 = r * Math.cos(a * theta);
+                y2 = r * Math.sin(b * theta);
+                /* Print endpoints of each line */
+                x = (x * ex + dx);
+                y = (y * ey + dy);
+                x2 = (x2 * ex + dx);
+                y2 = (y2 * ey + dy);
+
+                drawline(x, y, x2, y2, cor);
+            }
+            myContext.stroke();
+        }
+
+        function drawline(x1, y1, x2, y2, color) {
+            myContext.lineWidth = 1;
+            myContext.moveTo(x1, y1);
+            myContext.lineTo(x2, y2);
+            myContext.strokeStyle = color;
+        }
+
+        function clearCanvas() {
+            myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            myContext.beginPath();
+            myContext.stroke();
+        }
+
+    </script>
+    <script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="../include/style.css">
+    <title>Canvas</title>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>3D Cube</h1>
+        <p>
+            This project dates back to 1994,
+            originally from my Computer Science programming classes.
+            <br>
+            Check this page <a href="./readme.html">for details and more information</a>.
+            <br>
+        </p>
+        <canvas id="myCanvas" width="640" height="480"></canvas>
+    </main>
+
+    <div class="container">
+
+        <form id="form2">
+            <div>
+                <input type="text" name="scUp" id="scUp" value="1.2" size="4" />
+                <input type="button" value="scale+" onclick="scaleUp();" />
+            </div>
+            <div>
+                <input type="text" name="scDown" id="scDown" value="0.8" size="4" />
+                <input type="button" value="scale-" onclick="scaleDown();" />
+            </div>
+            <div>
+                <input type="text" name="moveInc" id="moveInc" value="10" size="4" />
+                <input type="button" value="Up" onclick="moveUp();" />
+                <input type="button" value="Down" onclick="moveDown();" />
+                <input type="button" value="Left" onclick="moveLeft();" />
+                <input type="button" value="Right" onclick="moveRight();" />
+            </div>
+            <div>
+                <label>rx:</label>
+                <input type="text" name="rx" id="rx" value="5" size="4" />
+
+                <label>ry:</label>
+                <input type="text" name="ry" id="ry" value="5" size="4" />
+
+                <label>rz:</label>
+                <input type="text" name="rz" id="rz" value="5" size="4" />
+
+                <input type="button" value="Rotate" onclick="rotate();" />
+            </div>
+            <div>
+                <input type="button" value="Clear" onclick="ClearCanvas();" />
+                <input type="button" value="Start" onclick="startLoop();" />
+                <input type="button" value="Stop" onclick="stopLoop();" />
+            </div>
+        </form>
+    </div>
+
+    <script>
+        "use strict";
+
+        Array.matrix = function (numrows, numcols, initial) {
+            var arr = [];
+            for (var i = 0; i < numrows; ++i) {
+                var columns = [];
+                for (var j = 0; j < numcols; ++j) {
+                    columns[j] = initial;
+                }
+                arr[i] = columns;
+            }
+            return arr;
+        }
+
+        // [x, y, z, 1] = 8 points
+        var cubo = [
+            [45, 45, 45, 1], // P0
+            [45, 45, -45, 1], // P1
+            [45, -45, -45, 1], // P2
+            [45, -45, 45, 1], // P3
+            [-45, 45, 45, 1], // P4
+            [-45, 45, -45, 1], // P5
+            [-45, -45, -45, 1], // P6
+            [-45, -45, 45, 1]  // P7
+        ];
+
+        var myCanvas = document.getElementById("myCanvas");
+        var myContext = myCanvas.getContext("2d");
+
+        function DrawLine(x1, y1, x2, y2, color) {
+            myContext.fillStyle = color;
+            myContext.strokeStyle = "#00FF00";
+            myContext.lineWidth = 1;
+            myContext.beginPath();
+            myContext.moveTo(320 + x1, 240 - y1);
+            myContext.lineTo(320 + x2, 240 - y2);
+            myContext.closePath();
+            myContext.fill();
+            myContext.stroke();
+        }
+
+        function ClearCanvas() {
+            myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        }
+
+        function DrawCube(cube) {
+            //
+            //    P5-----P1
+            //   / |    / |
+            //  P4-----P0 |
+            //  |  |   |  |
+            //  |  P6--|--P2
+            //  | /    | /
+            //  P7-----P3
+            //
+            // front face: p1, p4, p5, p0
+
+            // front face
+            DrawLine(cube[4][0], cube[4][1], cube[0][0], cube[0][1]); // p4 -> p0
+            DrawLine(cube[7][0], cube[7][1], cube[3][0], cube[3][1]); // p7 -> p3
+            DrawLine(cube[4][0], cube[4][1], cube[7][0], cube[7][1]); // p4 -> p7
+            DrawLine(cube[0][0], cube[0][1], cube[3][0], cube[3][1]); // p0 -> p3
+
+            // back face
+            DrawLine(cube[5][0], cube[5][1], cube[1][0], cube[1][1]); // p5 -> p1
+            DrawLine(cube[6][0], cube[6][1], cube[2][0], cube[2][1]); // p6 -> p2
+            DrawLine(cube[5][0], cube[5][1], cube[6][0], cube[6][1]); // p5 -> p6
+            DrawLine(cube[1][0], cube[1][1], cube[2][0], cube[2][1]); // p1 -> p2
+
+            // link front to back
+            DrawLine(cube[0][0], cube[0][1], cube[1][0], cube[1][1]); // p0 -> p1
+            DrawLine(cube[3][0], cube[3][1], cube[2][0], cube[2][1]); // p3 -> p2
+            DrawLine(cube[4][0], cube[4][1], cube[5][0], cube[5][1]); // p4 -> p5
+            DrawLine(cube[7][0], cube[7][1], cube[6][0], cube[6][1]); // p7 -> p6
+        }
+
+        function MultPtoMat(Pto, Mtx) {
+            // multiplicar um ponto P[4] por uma matriz M[4][4]
+            // o resultado P[1][4] x M[4][4] é P1[1][4], ou seja, um ponto
+
+            var AUX = [0, 0, 0, 0];
+            var AUX2;
+            var j, k;
+
+            for (j = 0; j < 4; j++) {
+                AUX2 = 0;
+                for (k = 0; k < 4; k++)
+                    AUX2 = AUX2 + (Pto[k] * Mtx[k][j]);
+                AUX[j] = AUX2;
+            }
+
+            for (j = 0; j < 4; j++)
+                Pto[j] = AUX[j];
+        }
+
+        function TransladaPonto(P, DX, DY, DZ) {
+            // translada um ponto
+            // multiplica um ponto P[4] pela matriz de deslocamento MT
+            // deslocamento no eixo X => DX
+            // deslocamento no eixo Y => DY
+            // deslocamento no eixo Z => DZ
+            // devolve o resultado em P[4]
+
+            var MT = [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [DX, DY, DZ, 1]
+            ];
+
+            MultPtoMat(P, MT);
+        }
+
+        function TransladaCubo(CB, DX, DY, DZ) {
+            for (var pto = 0; pto < 8; pto++) {
+                TransladaPonto(CB[pto], DX, DY, DZ);
+            }
+        }
+
+        function EscalaPonto(pto, scale) {
+            // scale matrix
+            var mtxZ = [
+                [scale, 0, 0, 0],
+                [0, scale, 0, 0],
+                [0, 0, scale, 0],
+                [0, 0, 0, scale]
+            ];
+            MultPtoMat(pto, mtxZ);
+        }
+
+        function EscalaCubo(cube, scale) {
+            for (var pto = 0; pto < 8; pto++) {
+                EscalaPonto(cube[pto], scale);
+            }
+        }
+
+        function MultMat(M1, M2, M3) {
+            // M1 x M2 = M3
+
+            // AUX; cria uma matriz auxiliar para armazenar o resultado
+            var AUX = Array.matrix(4, 4, 0);
+            var i, j, k;
+            for (i = 0; i < 4; i++) {
+                for (j = 0; j < 4; j++) {
+                    AUX[i][j] = 0;
+                    for (k = 0; k < 4; k++) {
+                        AUX[i][j] = AUX[i][j] + (M1[i][k] * M2[k][j]);
+                    }
+                }
+            }
+            // copiar a matriz resultante (AUX) para a matriz de retorno M3
+            for (i = 0; i < 4; i++) {
+                for (j = 0; j < 4; j++) {
+                    M3[i][j] = AUX[i][j];
+                }
+            }
+        }
+
+        function RotacionaCubo(CB, RX, RY, RZ) {
+            // Para rotacionar o cubo nos ângulos RX, RY e RZ:
+            // primeiro criar as matrizes de rotação nos eixos X, Y e Z
+            // depois efetuar a composição de movimentos:
+            // multiplicar a matriz MX pela matriz MY e colocar na matriz M
+            // depois, multiplicar a matriz M obitda, pela matriz MZ e colocar o resultado em M
+            // com isto obtemos uma matriz M, que combina os movimentos de rotação no eixo X, Y e Z
+            // e por último, multiplicar os 8 pontos do cubo CB pela matriz M
+            // devolvendo o resultado em CB1
+
+            var i;
+            //var M = Array.matrix(4, 4, 0);
+
+            var M = [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+            ];
+
+            var angulo = RX;
+
+            var Mx = [
+                [1, 0, 0, 0],
+                [0, Math.cos(angulo), Math.sin(angulo), 0],
+                [0, -Math.sin(angulo), Math.cos(angulo), 0],
+                [0, 0, 0, 1]
+            ];
+
+            angulo = RY;
+            var My = [
+                [Math.cos(angulo), 0, Math.sin(angulo), 0],
+                [0, 1, 0, 0],
+                [-Math.sin(angulo), 0, Math.cos(angulo), 0],
+                [0, 0, 0, 1]
+            ];
+
+            angulo = RZ;
+            var Mz = [
+                [Math.cos(angulo), -Math.sin(angulo), 0, 0],
+                [Math.sin(angulo), Math.cos(angulo), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
+            ];
+
+            MultMat(Mx, My, M);
+            MultMat(M, Mz, M);
+
+            for (i = 0; i < 8; i++) {
+                MultPtoMat(CB[i], M);
+            }
+        }
+
+        // Scale
+        function scaleCube(val) {
+            ClearCanvas();
+            EscalaCubo(cubo, val);
+            DrawCube(cubo);
+        }
+
+        function scaleUp() {
+            let val = document.getElementById("scUp").value;
+            scaleCube(val);
+        }
+
+        function scaleDown() {
+            let val = document.getElementById("scDown").value;
+            scaleCube(val);
+        }
+
+        // Rotate
+        function rotate() {
+            var rx = document.getElementById("rx").value;
+            var ry = document.getElementById("ry").value;
+            var rz = document.getElementById("rz").value;
+
+            ClearCanvas();
+            RotacionaCubo(cubo, rx, ry, rz);
+            DrawCube(cubo);
+        }
+
+        // Move
+        function moveUp() {
+            let val = document.getElementById("moveInc").value;
+            ClearCanvas();
+            TransladaCubo(cubo, 0, val, 0);
+            DrawCube(cubo);
+        }
+
+        function moveDown() {
+            let val = document.getElementById("moveInc").value;
+            ClearCanvas();
+            TransladaCubo(cubo, 0, -val, 0);
+            DrawCube(cubo);
+        }
+
+        function moveLeft() {
+            let val = document.getElementById("moveInc").value;
+            ClearCanvas();
+            TransladaCubo(cubo, -val, 0, 0);
+            DrawCube(cubo);
+        }
+
+        function moveRight() {
+            let val = document.getElementById("moveInc").value;
+            ClearCanvas();
+            TransladaCubo(cubo, val, 0, 0);
+            DrawCube(cubo);
+        }
+
+        /* loop
+        window.onload = init;
+        function init() {
+            let step = 500;
+            setInterval(onEachStep, step); // 60 fps = 1000 / 60
+        };
+        function onEachStep() {
+            rotate()
+            DrawCube(cubo);
+        };
+        const loopInterval = setInterval(onEachStep, 500);
+        function stopPlay()
+        {
+            clearInterval(loopInterval);
+        }
+        */
+
+        function onEachStep() {
+            rotate()
+            DrawCube(cubo);
+        };
+
+        let loopId = 0;
+        let isRunning = false;
+
+        function startLoop() {
+            if(!isRunning) {
+                loopId = setInterval(onEachStep, 500);
+                isRunning = true;
+            }
+        }
+        function stopLoop() {
+            if (isRunning){
+                clearInterval(loopId);
+                isRunning = false;
+            }
+        }
+
+        // initial draw after load
+        window.onload = function () {
+            DrawCube(cubo);
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="../include/vendor/prism.css">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <title>Canvas</title>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+        </nav>
+
+        <h1>Simple Canvas example</h1>
+        <canvas id="myCanvas" width="640" height="480"></canvas>
+    </main>
+
+    <div class="container">
+<pre><code class="language-javascript line-numbers">
+window.onload = function () {
+
+    // get canvas and context
+    var myCanvas = document.getElementById("myCanvas");
+    var myContext = myCanvas.getContext("2d");
+
+    // Set the color (brick red) using an HTML color code:
+    myContext.strokeStyle = "#c0f800";
+    myContext.lineWidth = 20;
+
+    // Top-Left is (0, 0)
+    myContext.beginPath();
+    myContext.moveTo(450, 10);
+    myContext.lineTo(450, 200);
+    myContext.closePath();
+    myContext.stroke();
+
+    // Set the line width and color (for all the lines).
+    myContext.lineWidth = 5;
+    myContext.strokeStyle = "rgb(205,40,40)";
+
+    // Draw the first line, with the standard butt ending.
+    myContext.beginPath();
+    myContext.moveTo(10, 50);
+    myContext.lineTo(400, 50);
+    myContext.lineCap = "butt";
+    myContext.stroke();
+
+    // Draw the second line, with a round cap.
+    myContext.strokeStyle = "#D35400";
+    myContext.beginPath();
+    myContext.moveTo(10, 120);
+    myContext.lineTo(400, 120);
+    myContext.lineCap = "round";
+    myContext.stroke();
+
+    // Draw the third line, with a square cap.
+    myContext.strokeStyle = "rgb(46,204,113)";
+    myContext.beginPath();
+    myContext.moveTo(10, 190);
+    myContext.lineTo(400, 190);
+    myContext.lineCap = "square";
+    myContext.stroke();
+
+    // Create variables to store each detail about the arc.
+    myContext.beginPath();
+    var centerX = 150;
+    var centerY = 300;
+    var radius = 100;
+
+    var startingAngle = 1.25 * Math.PI;
+    var endingAngle = 1.75 * Math.PI;
+
+    // Use this information to draw the arc.
+    myContext.arc(centerX, centerY, radius, startingAngle, endingAngle);
+    myContext.closePath();
+    myContext.stroke();
+
+    // circle
+    myContext.beginPath();
+
+    radius = 150;
+    var startingAngle = 0;
+    var endingAngle = 2 * Math.PI;
+
+    // Use this information to draw the arc.
+    myContext.arc(centerX, centerY, radius, startingAngle, endingAngle);
+    myContext.stroke();
+};
+</code></pre>
+            </div>
+
+    <script>
+        window.onload = function () {
+
+            // get canvas and context
+            var myCanvas = document.getElementById("myCanvas");
+            var myContext = myCanvas.getContext("2d");
+
+            // Set the color (brick red) using an HTML color code:
+            myContext.strokeStyle = "#c0f800";
+            myContext.lineWidth = 20;
+
+            // Top-Left is (0, 0)
+            myContext.beginPath();
+            myContext.moveTo(450, 10);
+            myContext.lineTo(450, 200);
+            myContext.closePath();
+            myContext.stroke();
+
+            // Set the line width and color (for all the lines).
+            myContext.lineWidth = 5;
+            myContext.strokeStyle = "rgb(205,40,40)";
+
+            // Draw the first line, with the standard butt ending.
+            myContext.beginPath();
+            myContext.moveTo(10, 50);
+            myContext.lineTo(400, 50);
+            myContext.lineCap = "butt";
+            myContext.stroke();
+
+            // Draw the second line, with a round cap.
+            myContext.strokeStyle = "#D35400";
+            myContext.beginPath();
+            myContext.moveTo(10, 120);
+            myContext.lineTo(400, 120);
+            myContext.lineCap = "round";
+            myContext.stroke();
+
+            // Draw the third line, with a square cap.
+            myContext.strokeStyle = "rgb(46,204,113)";
+            myContext.beginPath();
+            myContext.moveTo(10, 190);
+            myContext.lineTo(400, 190);
+            myContext.lineCap = "square";
+            myContext.stroke();
+
+            // Create variables to store each detail about the arc.
+            myContext.beginPath();
+            var centerX = 150;
+            var centerY = 300;
+            var radius = 100;
+
+            var startingAngle = 1.25 * Math.PI;
+            var endingAngle = 1.75 * Math.PI;
+
+            // Use this information to draw the arc.
+            myContext.arc(centerX, centerY, radius, startingAngle, endingAngle);
+            myContext.closePath();
+            myContext.stroke();
+
+            // circle
+            myContext.beginPath();
+
+            radius = 150;
+            var startingAngle = 0;
+            var endingAngle = 2 * Math.PI;
+
+            // Use this information to draw the arc.
+            myContext.arc(centerX, centerY, radius, startingAngle, endingAngle);
+            myContext.stroke();
+        };
+    </script>
+    <script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>

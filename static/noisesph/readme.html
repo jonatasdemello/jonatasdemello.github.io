@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+	<link rel="stylesheet" href="../include/vendor/prism.css">
+
+	<title>Canvas</title>
+	<style type="text/css">
+		body {
+			margin: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<main class="container">
+		<nav class="nav">
+			<a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+		</nav>
+
+		<h1>Noise Sphere</h1>
+		<p>
+			<em>Visualize the noise sphere of a set of random numbers.</em><br>
+			<blockquote>
+				Pickover, Clifford A. 1995. <br>
+				Article: "Random number generators: pretty good ones are easy to find." <br>
+				The Visual Computer (1995) 11:369-377.<br>
+				Book "Keys to Infinity", Pickover, Chapter 31. <br>
+			</blockquote>
+		</p>
+	</main>
+
+	<hr>
+	<div class="container">
+		<p>
+			A <strong>noise sphere</strong> maps a sequence of uniformly-distributed random numbers to spherical coordinate triples. <br>
+			This is useful for visually detecting any unexpected correlations in the random number sequence
+			or to detect unexpected structure indicating correlations between triples.
+			When such structure is present, numbers may not be truly random. <br>
+		</p>
+
+		<p>Workflow:</p>
+		<p>Step 1) generate an array of RandomNumbers[]</p>
+
+		<pre><code class="language-javascript">randomNumbers[] = GenerateRandomNumbers(maxPts);</code></pre>
+
+		<p>Step 2) take 3 numbers into an array PT[n, n+1, n+2] rotating every point (so each point becomes x, y, z)&nbsp;</p>
+
+<pre><code class="language-javascript">let PT = [0, 0, 0];
+for (var i = 0; i &lt; (randomNumbers.length);) {
+	for (var j = 0; j &lt; 3; j++) {
+		PT[j] = randomNumbers[i];
+		i++;
+	}
+... more stuff ...
+}</code></pre>
+
+<p>Step 3) convert the 3 points from PT[p0, p1, p2] to Polar(r, theta, phi) coordinates</p>
+<p>
+	A mapping of random number triples to points in spherical coordinates according to:<br>
+	<p>Noise Sphere <a href="https://mathworld.wolfram.com/NoiseSphere.html">https://mathworld.wolfram.com/NoiseSphere.html</a></p>
+	<blockquote class="blockquote">
+		&theta; = 2 &pi; X <sub>n</sub> <br>
+		&phi; = &pi; X <sub>n+1</sub> <br>
+		&rho; = Math.sqrt( X <sub>x+2</sub> )
+	</blockquote>
+</p>
+
+<pre><code class="language-javascript">	let polar = { r: 0.0, theta: 0.0, phi: 0.0 };
+
+	polar.phi = 2 * Math.PI * PT[n];         /* p0 */
+	polar.theta = Math.PI * PT[(n + 1) % 3]; /* p1 */
+	polar.r = Math.sqrt(PT[(n + 2) % 3]);    /* p2 */
+
+	/* rotate n: (0,1,2) =&gt; (1,2,0) =&gt; (2,0,1) =&gt; (0,1,2) */
+	n = (n + 1) % 3;</code></pre>
+
+<p>Step 4) convert Polar(r, theta, phi) to Cartesian P(x,y,z)&nbsp;</p>
+<p>Spherical Coordinates: <a target="_blank" rel="noopener noreferrer" href="https://mathworld.wolfram.com/SphericalCoordinates.html">https://mathworld.wolfram.com/SphericalCoordinates.html</a></p>
+<p>Coordinates: spherical (r,theta,phi) are related to the Cartesian (x,y,z) by:</p>
+
+<blockquote class="blockquote">
+	x = r * cos (&theta;) * sin (&phi;)<br>
+	y = r * sin (&theta;) * sin (&phi;)<br>
+	z = r * cos (&phi;)
+</blockquote>
+
+<pre><code class="language-javascript">
+		x =	r * cos(theta) * sin(phi)
+		y =	r * sin(theta) * sin(phi)
+		z =	r * cos(phi)
+</code></pre>
+
+<p>Step 5) plot all points on canvas using Cartesian(x,y)&nbsp;</p>
+
+<pre><code class="language-javascript">putpixel(MidA + ProjectPoint(C.x), MidY - ProjectPoint(C.y), C.Color);</code></pre>
+<p>&nbsp;</p>
+
+<p>Rotate n: (0,1,2) => (1,2,0) => (2,0,1) => (0,1,2)</p>
+<pre>
+--------------  0  1  2  0
+(n)         =>  0  1  2  0
+(n + 1) % 3 =>  1  2  0  1
+(n + 2) % 3 =>  2  0  1  2
+
+---------------------------------------------------------------------------------------------------
+n: 0
+ (n)         =>  0
+ (n + 1) % 3 =>  1
+ (n + 2) % 3 =>  2
+
+n: 1
+ (n)         =>  1
+ (n + 1) % 3 =>  2
+ (n + 2) % 3 =>  0
+
+n: 2
+ (n)         =>  2
+ (n + 1) % 3 =>  0
+ (n + 2) % 3 =>  1
+
+n: 3
+ (n)         =>  0
+ (n + 1) % 3 =>  1
+ (n + 2) % 3 =>  2
+</pre>
+	</div>
+
+	<script src="../include/vendor/prism.js"></script>
+</body>
+
+</html>

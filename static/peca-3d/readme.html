@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../include/vendor/bootstrap.min.css" />
+	<link rel="stylesheet" href="../include/vendor/prism.css">
+
+	<title>3D Object</title>
+	<style>
+		canvas {
+			border: 1px dashed black;
+			padding: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<main class="container">
+		<nav class="nav">
+			<a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+		</nav>
+
+
+<h1>GUIA PRATICO DE SISTEMAS GRAFICOS - APPLE II</h1>
+<p><strong>Escala Humana</strong></p>
+
+<p><img src="./book/Book-00-guia_pratico_sistemas_graficos_apple-01.jpg"></p>
+
+<p>Obtida com o armazenamento e repeticao da figura em varias escalas (Fig. 30).</p>
+<p><strong>CAD PARA TRES DIMENSOES</strong></p>
+<p>Fig. 31 - Perspective de peca meanies.</p>
+
+<h2>PERSPECTIVA</h2>
+<p>
+Este programa, adaptado pars o APPLE II, realiza o desenho de perspectivas de objetos
+simples e pode auxiliar no projeto a medida que facilita o encontro de uma posicao
+favoravel para se obter uma boa visao do objeto (Fig. 31).
+</p>
+<p>Os dados sao guardados no final do programa na instrucao DATA nesta forma:</p>
+<ul>
+    <li>Numero de vertices</li>
+    <li>Vertices (coordenadas X, Y e Z)</li>
+    <li>Numero de arestas (semi-retas de urn vertice a outro)</li>
+    <li>Arestas (aresta de partida, aresta final)</li>
+</ul>
+<p>O programa abaixo:</p>
+<pre>
+    <code>
+5 REM *** ORIGEM: GUIA PRATICO DE SISTEMAS GRAFICOS - APPLE II ***
+10 REM *********************************
+15 REM * FONTE POR FRANCISCO F CARDOSO
+20 REM * & LUIZ B M LATERZZA
+25 REM *
+30 REM * OBJETO POR ALVARO LUIS CRUZ
+35 REM *********************************
+40 LOMEM = 2048
+50 DIM X(100), Y(100), Z(100), V1(200), V2(200), XT(100), YT(100)
+70 TEXT: HOME
+80 READ NV
+90 FOR I = 1 TO NV
+100 READ X(I), Y(I), Z(I)
+110 NEXT
+120 READ NA
+130 FOR I = 1 TO NA
+140 READ V1(I), V2(I)
+150 NEXT
+160 HOME : POKE 34,20: HOME
+165 PRINT "COORDENADAS DO OBSERVADOR (10, 20, 30)"
+166 INPUT "(X,Y,Z) = "; XV, YV, ZV
+170 A = SQR(XV ^ 2 + YV ^ 2)
+180 B = SQR(XV ^ 2 + YV ^ 2 + ZV ^ 2)
+190 K1 = -YV / A
+200 K2 = XV / A
+210 K3 = -XV * ZV / (A * B)
+220 K4 = -YV * ZV / (A * B)
+230 K5 = A / B
+240 FOR I = 1 TO NV
+250 LA = A ^ 2 + 1 / (XV * (X(I) - XV) + YV * (Y(I) - YV) + ZV * (Z(I) - ZV))
+260 X = XV + LA * (X(I) - XV)
+270 Y = YV + LA * (Y(I) - YV)
+280 Z = ZV + LA * (Z(I) - ZV)
+290 XT(I) = INT(K1 * X + K2 * Y)
+300 YT(I) = K3 * X + K4 * Y + K5 * Z
+310 NEXT
+320 XIN = X(1): XAX = X(1): YIN = Y(1): YAX = Y(1)
+330 FOR I = 1 TO NV
+340 IF XIN > XT(I) THEN XIN = XT(I)
+350 IF XAX < XT(I) THEN XAX = XT(I)
+360 IF YIN > YT(I) THEN YIN = YT(I)
+370 IF YAX < YT(I) THEN VAX = YT(I)
+380 NEXT
+390 XMED = (XAX + XIN) / 2: YMED = (YAX + YIN) / 2
+400 KX = 278 / (XAX - XIN): KY = 158 / (VAX - YIN)
+410 IF KX < KY THEN K = KX: GOTO 425
+420 K = KY
+425 X = (278 - (XAX - XIN) * K) / 2
+430 FOR I = 1 TO NV
+440 XT(I) = (XT(I) - XIN) * K + X
+450 YT(I) = 158 - (YT(I) - YIN) * K
+460 NEXT
+470 HGR2
+475 HGOLOR = 3
+480 FOR I = 1 TO NA
+490 HPLOT XT(V1(I)), YT(V1(I)) TO XT(V2(I)), YT(V2(I))
+500 NEXT
+800 GET A$: PRINT
+805 TEXT
+807 IF A$ = "I" THEN INPUT "CARACTERISTICAS DE IMPRESSAO :"; A$: PRINT CHR$(4); "PR#1": PRINT CHR$(9); "G2"; A$:
+808 PRINT "(X,Y,Z) = "; XV; " "; YV; " "; ZV: PRINT CHR$(4); "PR#0": GOTO 800
+810 GOTO 165
+900 REM *** DATA ***
+1000 DATA 48 : REM NUMERO DE VERTICES NV
+1010 DATA 0,0,0 : REM DADOS DOS VERTICES NA FORMA "DATA X,Y,Z"
+1020 DATA 10,0,0
+1030 DATA 10,6,0
+1040 DATA 0,6,0
+1050 DATA 0,0,1
+1060 DATA 10,0,1
+1070 DATA 10,6,1
+1080 DATA 0,6,1
+1090 DATA 4.3,1.2,1
+1100 DATA 5.7,1.2,1
+1110 DATA 6.8,2.2,1
+1120 DATA 6.8,3.8,1
+1130 DATA 5.7,4.8,1
+1140 DATA 4.3,4.8,1
+1150 DATA 3.2,3.8,1
+1160 DATA 3.2,2.2,1
+1170 DATA 4.5,1.8,1
+1180 DATA 5.5,1.8,1
+1190 DATA 6.2,2.5,1
+1200 DATA 6.2,3.5,1
+1210 DATA 5.5,4.2,1
+1220 DATA 4.5,4.2,1
+1230 DATA 3.8,3.5,1
+1240 DATA 3.8,2.5,1
+1250 DATA 4.3,1.2,5
+1260 DATA 5.7,1.2,5
+1270 DATA 6.8,2.2,5
+1280 DATA 6.8,3.8,5
+1290 DATA 5.7,4.8,5
+1300 DATA 4.3,4.8,5
+1310 DATA 3.2,3.8,5
+1320 DATA 3.2,2.2,5
+1330 DATA 4.5,1.8,5
+1340 DATA 5.5,1.8,5
+1350 DATA 6.2,2.5,5
+1360 DATA 6.2,3.5,5
+1370 DATA 5.5,4.2,5
+1380 DATA 4.5,4.2,5
+1390 DATA 3.8,3.5,5
+1400 DATA 3.8,2.5,5
+1410 DATA 1.7,2.2,1
+1420 DATA 8.3,2.2,1
+1430 DATA 8.3,3.8,1
+1440 DATA 1.7,3.8,1
+1450 DATA 3.2,2.2,3
+1460 DATA 6.8,2.2,3
+1470 DATA 6.8,3.8,3
+1480 DATA 3.2,3.8,3
+2000 DATA 72 : REM NUMERO DE ARESTAS
+2010 DATA 1,2 : REM ARESTAS NO FORMATO "DATA ARESTA-INIC, ARESTA-FIM"
+2020 DATA 2,3
+2030 DATA 3,4
+2040 DATA 4,1
+2050 DATA 5,6
+2060 DATA 6,7
+2070 DATA 7,8
+2080 DATA 8,5
+2090 DATA 1,5
+2100 DATA 2,6
+2110 DATA 3,7
+2120 DATA 4,8
+2130 REM CORPO
+2140 DATA 9,10
+2150 DATA 10,11
+2160 DATA 11,12
+2170 DATA 12,13
+2180 DATA 13,14
+2190 DATA 14,15
+2200 DATA 15,16
+2210 DATA 16,9
+2220 DATA 25,26
+2230 DATA 26,27
+2240 DATA 27,28
+2250 DATA 28,29
+2260 DATA 29,30
+2270 DATA 30,31
+2280 DATA 31,32
+2290 DATA 32,25
+2300 DATA 9,25
+2310 DATA 10,26
+2320 DATA 11,27
+2330 DATA 12,28
+2340 DATA 13,29
+2350 DATA 14,30
+2360 DATA 15,31
+2370 DATA 16,32
+2380 DATA 17,18
+2390 DATA 18,19
+2400 DATA 19,20
+2410 DATA 20,21
+2420 DATA 21,22
+2430 DATA 22,23
+2440 DATA 23,24
+2450 DATA 24,17
+2460 DATA 33,34
+2470 DATA 34,35
+2480 DATA 35,36
+2490 DATA 36,37
+2500 DATA 37,38
+2510 DATA 38,39
+2520 DATA 39,40
+2530 DATA 40,33
+2540 DATA 17,33
+2550 DATA 18,34
+2560 DATA 19,35
+2570 DATA 20,36
+2580 DATA 21,37
+2590 DATA 22,38
+2600 DATA 23,39
+2610 DATA 24,40
+2620 DATA 41,16
+2630 DATA 11,42
+2640 DATA 42,43
+2650 DATA 43,12
+2660 DATA 15,44
+2670 DATA 44,41
+2680 DATA 41,45
+2690 DATA 42,46
+2700 DATA 43,47
+2710 DATA 44,48
+2720 DATA 48,45
+2730 DATA 46,47
+3000 GOTO 165
+    </code>
+</pre>
+
+<p>As primeiras vezes que for entrar os dados procure organizar-se no tocante as linhas de
+dados da forma mostrada, pois esta permite a localizacao facil de erros de digitacao.
+Com o tempo vocé podera verificar vantagens, tais como a diminuicao do numero de linhas e
+consequente liberacao de memoria, que justificarao o acumulo de dados numa mesma instrucao DATA.</p>
+
+<p>Examinemos o programa:</p>
+
+<pre>
+    <code>
+40  Ajuste de memoria
+50  Dimensionamento de variaveis
+70 - 150 Carregamento das matrizes de vértices e arestas
+166 - Coordenadas do observador
+170 - 230 Calculo de constantes (geometria analitica)
+240 - 310 Calculo dos pontos projetados no plano da tela do computador.
+320 - 425 Ajuste da figura ao tamanho da tela.
+    Caso essa seja muito menor as constantes aumentarao seus valores, proporcionalmente.
+    Caso-seja maior estas vdo reduzi-la.
+430 - 460 Ajuste horizontal e vertical especifico do APPLE. Vide Capitulo 1.
+470 - 500 Plotagem
+807 - Linha de impressao
+1000 - 1999 Dados dos vértices
+2006 - 2999 Dados das arestas
+    </code>
+</pre>
+<p>Rode o programa. Caso tudo esteja correto vocé devera obter a figura abaixo (Fig. 32)
+ao entrar com as coordenadas 10, 20, 30 para o observador.</p>
+<p>Fig. 32 - Perspectiva de peca mecanica 10, 10, 10.</p>
+
+<p>Na confeccao de graficos de alta resolucao quanto maior a definicao, o numero de pontos
+e ligacoes, maior a quantidade de memoria requerida para o processamento das imagens.
+Uma maneira eficaz de se aumentar a memoria disponfvel seria a criacao de um programa
+auxiliar que gravasse os dados num arquivo externo para posterior leitura.
+Um pequeno programa poderia receber uma entrada via teclado. Optaremos pelo uso,
+mais uma vez, de READ e DATA pois estas facilitam a ediago dos dados.
+Utilize o programa a seguir para gerar o arquivo:</p>
+
+<pre>
+    <code>
+0 REM ************************************
+1 REM * CARREGAMENTO DE FIGURAS EM DISCO
+2 REM * ALVARO LUIS CRUZ
+3 REM ************************************
+10 DS=CHR$ (4)
+20 INPUT "NOME DO ARGUIVO ":NO$
+30 PRINT D$; "OPEN "; NO$
+40 PRINT D$; "CLOSE"; NO$
+50 PRINT D$; "DELETE"; NO$
+60 PRINT D$; "OPEN";  NO$
+70 PRINT D$; "WRITE "; NO$
+80 READ NV
+90 PRINT NV
+100 FOR A = 1 TO NV
+110 READ X,Y,2
+120 PRINT X: PRINT Y: PRINT Z
+130 NEXT A
+140 READ NA
+150 PRINT NA
+160 FOR A= 1 TO NA
+470 READ A1, A2
+180 PRINT A1: PRINT A2
+190 NEXT
+200 PRINT D$: "CLOSE"
+210 REM A PARTIR DESTA LINHA ENTRE COM OS DADOS NESTA SEQUENCIA :
+211 REM N* DE VERTICES, VERTICES (X,Y,.Z),... ,
+212 REM N* DE ARESTAS, ARESTA INICIAL, ARESTA FINAL, ...
+220 DATA ....
+
+    Transcreva para este programa os dados da peca anterior.
+    Para poder acessa-los faremos algumas modificacoes ne programa de perspectiva.
+    Acrescente estas linhas:
+
+43 D$=CHRS$(4)
+72 PRINT D$: "CATALOG"
+74 INPUT "LER DADOS DE QUE ARQUIVO ": AQ$
+76 PRINT D$: "OPEN ": AQ$
+78 PRINT Ds: "READ ": AQ$
+80 INPUT NV
+100 INPUT X(I), <span class="hljs-built_in">Y(I), Z(I)
+120 INPUT NA
+140 INPUT V1(I), V2(I)
+155 PRINT D$: "CLOSE"
+    </code>
+</pre>
+
+<p>Com estas linhas seu programa ja podera ler dados nos disquetes.
+Agora, delete as linhas DATA a partir da linha 1000.</p>
+<p>DEL 1000, 2999</p>
+<p>Com isso, figuras mais complexas podem ser desenhadas,
+pois a drea que os valores das varigveis do programa ocupavam esta livre.</p>
+<p>Tente agora com uma figura propria.</p>
+
+<p><strong>PASSOS BASICOS</strong></p>
+
+<ol>
+<li>Monte uma tabela com todos os vértices da figura.
+    Lembre-se que um circulo pode ser aproximado como um conjunto de semi-retas proximas.</li>
+<li>Relacionar todas as ligacdes entre os diferentes vértices, ou seja, qual vértice se liga com qual.
+    O numero dos vértices e o numero da posicao de entrada de cada um deles.
+    No nosso caso o vértice 1 e&#39; o 0,0,0; o 2 é o 10,0,0 etc.</li>
+<li>Preencha as instrucSes DATA do nosso Programa de carregamento de figuras com estes valores.</li>
+<li>Execute o programa.</li>
+<li>Rode, agora, o novo programa de perspectiva.</li>
+<li>Caso nao haja ligagdes ou vértices mal posicionados e a figura ndo va sofrer novas alteracoe,
+    vocé pode deletar as linhas DATA do carregamento de figuras.
+    Caso contrario, retorne e ajuste os DADOS.</li>
+</ol>
+
+<p>Caso vocé deseje imprimir a figura, sera perguntado pelos caracteres de impressao que sao
+caracteres especificos da placa que poderao duplicar a pagina grafica, roda-la de 180' ou ainda
+imprimi-la de modo inverso. A auséncia destes determina IMPRESSAO PADRAO.</p>
+<p>Com o auxilio da geometria analitica varios programas podem ser desenvolvidos nesta area.</p>
+<p>Qualquer contribuicao, tal como, agilizagdo destes programas e ou criacao de outros, pode ser comunicada ao autor.</p>
+
+<p>Paginas do livro:</p>
+<ul>
+    <li><a href="./book//Book-00-guia_pratico_sistemas_graficos_apple-01.jpg">capa</a></li>
+    <li><a href="./book/Book-01.png">pag 01</a></li>
+    <li><a href="./book/Book-02.png">pag 02</a></li>
+    <li><a href="./book/Book-03.png">pag 03</a></li>
+    <li><a href="./book/Book-04.png">pag 04</a></li>
+    <li><a href="./book/Book-05.png">pag 05</a></li>
+    <li><a href="./book/Book-06.png">pag 06</a></li>
+    <li><a href="./book/Book-07.png">pag 07</a></li>
+    <li><a href="./book/Book-08.png">pag 08</a></li>
+    <li><a href="./book/Book-09.png">pag 09</a></li>
+    <li><a href="./book/Book-10.png">pag 10</a></li>
+</ul>
+
+
+</main>
+</body>
+</html>
+
