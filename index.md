@@ -15,6 +15,4 @@ I want to explore the use of templates and leverage it for blogging, starting wi
 Also, I am not an expert in UI and Front-End, my expertise in on the Back-End.
 A black screen with green or yellow text is all I need!
 
-
-
 --------------------------------
