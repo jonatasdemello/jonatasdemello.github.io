@@ -49,20 +49,20 @@
             line-height: 1;
         }
 
-        .controls {
+        /* .controls {
             margin-top: 15px;
-            /*display: flex;*/
+            display: flex;
             gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-        }
+        } */
 
-        .input-group {
+        /* .input-group {
             display: flex;
             gap: 8px;
             align-items: center;
-        }
+        } */
 
         button {
             background-color: #0f0;
@@ -120,6 +120,31 @@
         .hidden {
             display: none;
         }
+
+        .container-flex {
+            display: flex; /* Makes children flex items */
+            justify-content: space-between; /* Optional: Distributes space evenly */
+            gap: 10px; /* Optional: Adds space between the divs */
+        }
+
+        .div1,
+        .div2 {
+            flex: 1; /* Makes both divs grow to fill equal space */
+            padding: 10px;
+            border: 1px solid #ccc;
+            /* use flex again so each box is aligned as a column */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Optional styling for visibility */
+        .div1 {
+            background-color: #0f3844;
+        }
+
+        .div2 {
+            background-color: #55500f;
+        }
     </style>
 </head>
 
@@ -136,22 +161,24 @@
         FOLLOWED BY THE MILLIMETER SIZE (45 TO 150 MM)<br><br>
         <button onclick="startGame()">Start Game</button>
         <div>
-            <pre>
-Complete artillery duel simulation: Two cannons on opposite sides of a randomly generated mountain
-Ballistic physics: Implements gravity (16 ft/s²) and wind effects on projectile trajectory
-Animated projectiles: Traces the shell's path in real-time with orange (left gun) or white (right gun)
-Wind simulation: Random wind speed (0-40) and direction (left/right) affecting shots
-Mountain collision detection: Checks if projectile hits the mountain
-Hit detection: Determines if opponent's gun is destroyed (within 5 pixels)
-Turn-based gameplay: Players alternate shots with angle (20-100°) and velocity (45-150mm)
-Score tracking: Keeps track of wins for left and right guns
-Visual indicators: Wind direction arrows, explosions on impact
-Instructions screen: Full game instructions before starting
-The physics uses the classic trajectory equations:
-x = v₀·cos(θ)·t + wind·effect
-y = v₀·sin(θ)·t - ½·g·t²
-Players must account for wind speed and direction to accurately hit their opponent's gun position!
-            </pre>
+            <p>
+                The conversion includes:
+                Complete artillery duel simulation: Two cannons on opposite sides of a randomly generated mountain
+                Ballistic physics: Implements gravity (16 ft/s²) and wind effects on projectile trajectory
+                Animated projectiles: Traces the shell's path in real-time with orange (left gun) or white (right gun)
+                Wind simulation: Random wind speed (0-40) and direction (left/right) affecting shots
+                Mountain collision detection: Checks if projectile hits the mountain
+                Hit detection: Determines if opponent's gun is destroyed (within 5 pixels)
+                Turn-based gameplay: Players alternate shots with angle (20-100°) and velocity (45-150mm)
+                Score tracking: Keeps track of wins for left and right guns
+                Visual indicators: Wind direction arrows, explosions on impact
+                Instructions screen: Full game instructions before starting
+                The physics uses the classic trajectory equations:
+                <br>
+                x = v₀·cos(θ)·t + wind·effect<br>
+                y = v₀·sin(θ)·t - ½·g·t²<br>
+                Players must account for wind speed and direction to accurately hit their opponent's gun position!
+            </p>
         </div>
     </div>
 
@@ -161,9 +188,9 @@ Players must account for wind speed and direction to accurately hit their oppone
 
     <div id="gameInfo" class="game-info"></div>
 
-    <div id="controls" class="controls hidden">
-        <div class="input-group">
-            L
+    <div id="controls" class="controls hidden container-flex">
+        <div class="input-group div1">
+            <div>Player 1 - Left</div>
             <label for="angle">Angle (20-100°):</label>
             <!-- <input type="number" id="angle" min="20" max="100" value="45"> -->
             <input type="range" id="angle1" name="angle1" min="20" max="100" value="45" />
@@ -171,11 +198,12 @@ Players must account for wind speed and direction to accurately hit their oppone
             <label for="velocity">MM Size (45-150):</label>
             <!-- <input type="number" id="velocity" min="45" max="150" value="100"> -->
             <input type="range" id="velocity1" name="velocity1" min="45" max="150" value="95" />
-            <button id="fireBtn" onclick="fire()">Fire!</button>
+
+            <button id="fire1Btn" class="disabled" onclick="fire()">P1 Fire!</button>
         </div>
         &nbsp;
-        <div class="input-group">
-            R
+        <div class="input-group div2">
+            <div>Player 2 - Right</div>
             <label for="angle">Angle (20-100°):</label>
             <!-- <input type="number" id="angle" min="20" max="100" value="45"> -->
             <input type="range" id="angle2" name="angle2" min="20" max="100" value="45" />
@@ -183,20 +211,22 @@ Players must account for wind speed and direction to accurately hit their oppone
             <label for="velocity">MM Size (45-150):</label>
             <!-- <input type="number" id="velocity" min="45" max="150" value="100"> -->
             <input type="range" id="velocity2" name="velocity2" min="45" max="150" value="95" />
-            <button id="fireBtn" onclick="fire()">Fire!</button>
+
+            <button id="fire2Btn" class="disabled" onclick="fire()">P2 Fire!</button>
         </div>
+    </div>
+    <div id="controls1" class="controls">
+        <br>
         <div class="input-group">
             <button id="newGameBtn" onclick="newGame()">New Game</button>
-
+        </div>
+        <div id="score" class="score hidden">
+            <strong>SCORE</strong><br>-----<br>
+            LEFT: <span id="leftScore">0</span><br>
+            RIGHT: <span id="rightScore">0</span>
         </div>
     </div>
 
-    <div id="score" class="score hidden">
-        <strong>SCORE</strong><br>
-        -----<br>
-        LEFT: <span id="leftScore">0</span><br>
-        RIGHT: <span id="rightScore">0</span>
-    </div>
 
     <script>
         const canvas = document.getElementById('canvas');
@@ -424,6 +454,17 @@ Players must account for wind speed and direction to accurately hit their oppone
             console.log("W1:", W1, "W2:", W2);
         }
 
+        function showButton() {
+            // const playerDir = P1 < 0 ? "RIGHT" : "LEFT";
+            if (P1 < 0) { // right
+                document.getElementById('fire1Btn').disabled = true;
+                document.getElementById('fire2Btn').disabled = false;
+            }
+            else { // left
+                document.getElementById('fire1Btn').disabled = false;
+                document.getElementById('fire2Btn').disabled = true;
+            }
+        }
         // game starts here
         function newGame() {
             hideInstructions();
@@ -437,7 +478,9 @@ Players must account for wind speed and direction to accurately hit their oppone
             updateMessage();
 
             gameActive = true;
-            document.getElementById('fireBtn').disabled = false;
+            showButton();
+            // document.getElementById('fire1Btn').disabled = false;
+            // document.getElementById('fire2Btn').disabled = true;
         }
 
         function updateMessage() {
@@ -462,8 +505,25 @@ Players must account for wind speed and direction to accurately hit their oppone
         }
 
         async function fire() {
-            const A0 = parseFloat(document.getElementById('angle').value);
-            const V1 = parseFloat(document.getElementById('velocity').value);
+            let A0 = 0;
+            let v1 = 0;
+            // const A0 = parseFloat(document.getElementById('angle').value);
+            // const V1 = parseFloat(document.getElementById('velocity').value);
+            // read input
+            const iA1 = parseFloat(document.getElementById('angle1').value);
+            const iV1 = parseFloat(document.getElementById('velocity1').value);
+
+            const iA2 = parseFloat(document.getElementById('angle2').value);
+            const iV2 = parseFloat(document.getElementById('velocity2').value);
+
+            if (P1 < 0) { // right
+                A0 = iA2;
+                V1 = iV2;
+            }
+            else { // left
+                A0 = iA1;
+                V1 = iV1;
+            }
 
             // Validate input
             if (A0 < 20 || A0 > 100 || V1 < 45 || V1 > 150) {
@@ -473,7 +533,8 @@ Players must account for wind speed and direction to accurately hit their oppone
                 return;
             }
 
-            document.getElementById('fireBtn').disabled = true;
+            document.getElementById('fire1Btn').disabled = true;
+            document.getElementById('fire2Btn').disabled = true;
 
             // Line 450-470: Convert angle and calculate initial velocity
             const A1 = A0 * Math.PI / 180;
@@ -565,7 +626,7 @@ Players must account for wind speed and direction to accurately hit their oppone
             updateMessage();
             updateScore();
 
-            document.getElementById('fireBtn').disabled = false;
+            showButton();
         }
     </script>
 </body>

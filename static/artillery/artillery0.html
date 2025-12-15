@@ -128,27 +128,32 @@
         SIZE, YOU WILL BE ABLE TO DESTROY YOUR OPPONENT. EACH OF YOU IN TURN WILL TAKE
         A SHOT AT YOUR OPPONENT WHILE TAKING INTO ACCOUNT THE WIND SPEED. YOU WILL
         ENTER THE DEGREE MEASURE (BETWEEN 20 AND 100 DEGREES). THIS WILL BE
-        FOLLOWED BY THE MILLIMETER SIZE (45 TO 150 MM)<br><br>
+        FOLLOWED BY THE MILLIMETER SIZE (45 TO 150 MM)
+        <br>
+        <br>
         <button onclick="startGame()">Start Game</button>
         <button onclick="hideInstructions()">Skip Instructions</button>
+        <br>
+        <br>
     <div>
+    <p>
         The conversion includes:
-
-Complete artillery duel simulation: Two cannons on opposite sides of a randomly generated mountain
-Ballistic physics: Implements gravity (16 ft/s²) and wind effects on projectile trajectory
-Animated projectiles: Traces the shell's path in real-time with orange (left gun) or white (right gun)
-Wind simulation: Random wind speed (0-40) and direction (left/right) affecting shots
-Mountain collision detection: Checks if projectile hits the mountain
-Hit detection: Determines if opponent's gun is destroyed (within 5 pixels)
-Turn-based gameplay: Players alternate shots with angle (20-100°) and velocity (45-150mm)
-Score tracking: Keeps track of wins for left and right guns
-Visual indicators: Wind direction arrows, explosions on impact
-Instructions screen: Full game instructions before starting
-The physics uses the classic trajectory equations:
-
-x = v₀·cos(θ)·t + wind·effect
-y = v₀·sin(θ)·t - ½·g·t²
-Players must account for wind speed and direction to accurately hit their opponent's gun position!
+        Complete artillery duel simulation: Two cannons on opposite sides of a randomly generated mountain
+        Ballistic physics: Implements gravity (16 ft/s²) and wind effects on projectile trajectory
+        Animated projectiles: Traces the shell's path in real-time with orange (left gun) or white (right gun)
+        Wind simulation: Random wind speed (0-40) and direction (left/right) affecting shots
+        Mountain collision detection: Checks if projectile hits the mountain
+        Hit detection: Determines if opponent's gun is destroyed (within 5 pixels)
+        Turn-based gameplay: Players alternate shots with angle (20-100°) and velocity (45-150mm)
+        Score tracking: Keeps track of wins for left and right guns
+        Visual indicators: Wind direction arrows, explosions on impact
+        Instructions screen: Full game instructions before starting
+        The physics uses the classic trajectory equations:
+        <br>
+        x = v₀·cos(θ)·t + wind·effect<br>
+        y = v₀·sin(θ)·t - ½·g·t²<br>
+        Players must account for wind speed and direction to accurately hit their opponent's gun position!
+    </p>
     </div>
 
     </div>
