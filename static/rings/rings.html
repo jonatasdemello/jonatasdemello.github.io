@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rings - Applesoft BASIC Port</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        canvas {
+            border: 2px solid #0f0;
+            background-color: #000;
+            image-rendering: pixelated;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #0ff;
+        }
+
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .progress {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rings</h1>
+    <div class="info">
+        Colorful animated ring patterns<br>
+        Original Applesoft BASIC Program
+    </div>
+
+    <div>
+        The conversion includes:
+
+Parametric ring generation: Uses X = R - sq * cos(α - u) and Y = R + sq * sin(α + u) to create spiral patterns
+Random color selection: Picks random colors (1-7, excluding 4/black) for each ring
+Apple II HGR2 colors: Green, Violet, White, Orange, and Blue
+Animated progression: Draws rings from outer (sq=80) to inner (sq=0) with step of π
+Phase offset: The variable u increments by ~π per iteration, creating the rotating spiral effect
+2x scaled display: 560×384 pixels for better visibility
+Async rendering: Non-blocking drawing with stop/start controls
+Progress indicator: Shows drawing progress
+The program creates beautiful, colorful spiral ring patterns with each ring in a different random color, producing a psychedelic effect typical of early computer graphics demos.
+
+    </div>
+    <canvas id="canvas" width="560" height="384"></canvas>
+
+    <div class="controls">
+        <button id="drawBtn" onclick="startDrawing()">Draw</button>
+        <button id="stopBtn" onclick="stopDrawing()" disabled>Stop</button>
+        <button onclick="clearCanvas()">Clear</button>
+    </div>
+
+    <div class="progress" id="progress"></div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Apple II HGR2 colors (doubled for high-res display)
+        const COLORS = [
+            '#000000', // 0 - Black
+            '#00FF00', // 1 - Green
+            '#FF00FF', // 2 - Violet/Magenta
+            '#FFFFFF', // 3 - White
+            '#000000', // 4 - Black (not used, skipped)
+            '#FF8000', // 5 - Orange
+            '#0000FF', // 6 - Blue
+            '#FFFFFF'  // 7 - White
+        ];
+
+        let currentColor = COLORS[1];
+        let isDrawing = false;
+        let shouldStop = false;
+
+        function hcolor(color) {
+            if (color >= 0 && color < COLORS.length) {
+                currentColor = COLORS[color];
+            }
+        }
+
+        function hplot(x, y) {
+            // Scale up 2x for better visibility (HGR2 was 560x384 effectively)
+            ctx.fillStyle = currentColor;
+            ctx.fillRect(x * 2, y * 2, 2, 2);
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('progress').innerHTML = '';
+        }
+
+        function updateProgress(sq, total) {
+            const progress = Math.floor(((80 - sq) / 80) * 100);
+            document.getElementById('progress').innerHTML = `Drawing: ${progress}%`;
+        }
+
+        function updateButtons(drawing) {
+            document.getElementById('drawBtn').disabled = drawing;
+            document.getElementById('stopBtn').disabled = !drawing;
+        }
+
+        function stopDrawing() {
+            shouldStop = true;
+            document.getElementById('progress').innerHTML += ' - Stopping...';
+        }
+
+        // Degrees to radians conversion
+        function toRadians(degrees) {
+            return degrees * Math.PI / 180;
+        }
+
+        async function startDrawing() {
+            if (isDrawing) return;
+
+            isDrawing = true;
+            shouldStop = false;
+            updateButtons(true);
+
+            // Line 210: Clear screen (HGR2)
+            clearCanvas();
+
+            // Line 212: Initial color
+            hcolor(1);
+
+            // Line 240-260: Constants
+            const A = 65;
+            const B = 10;
+            const R = 80;
+
+            // Line 290: Main loop - for sq=80 to 0 step -3.14159
+            for (let sq = 80; sq >= 0; sq -= 3.14159) {
+                if (shouldStop) {
+                    document.getElementById('progress').innerHTML = 'Stopped';
+                    break;
+                }
+
+                updateProgress(sq, 80);
+
+                // Line 292: u = 360
+                let u = 360;
+
+                // Line 293-296: Random color selection (skip color 4)
+                let co;
+                do {
+                    co = Math.floor(Math.random() * 7) + 1;
+                } while (co === 4);
+
+                hcolor(co);
+
+                // Line 300: Inner loop - FOR ALPHA = 0 TO 360 step 1
+                for (let ALPHA = 0; ALPHA <= 360; ALPHA += 1) {
+                    // Line 301: u = u + 3.1411
+                    u = u + 3.1411;
+
+                    // Line 310: X1 = INT(R - sq * COS(ALPHA - u) + 0.5)
+                    const X1 = Math.floor(R - sq * Math.cos(toRadians(ALPHA - u)) + 0.5);
+
+                    // Line 320: Y1 = INT(R + sq * SIN(ALPHA + u) - 0.5)
+                    const Y1 = Math.floor(R + sq * Math.sin(toRadians(ALPHA + u)) - 0.5);
+
+                    // Line 330: HPLOT A + X1, B + Y1
+                    hplot(A + X1, B + Y1);
+                }
+
+                // Allow UI to update periodically
+                if (Math.floor(sq * 10) % 10 === 0) {
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+            }
+
+            if (!shouldStop) {
+                document.getElementById('progress').innerHTML = 'Complete!';
+            }
+
+            isDrawing = false;
+            shouldStop = false;
+            updateButtons(false);
+        }
+
+        // Draw on load
+        window.onload = function() {
+            startDrawing();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koch Snowflake</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        canvas {
+            border: 2px solid #0f0;
+            background-color: #000;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #0ff;
+        }
+
+        .settings {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .setting-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            background-color: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            width: 60px;
+        }
+
+        label {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Koch Snowflake</h1>
+    <div class="info">
+        Fractal Koch Snowflake Generator<br>
+        A classic fractal consisting of three Koch curves
+    </div>
+
+    <div>
+        The conversion includes:
+
+Recursive Koch curve algorithm: Implements the classic fractal subdivision pattern
+Turtle graphics: Uses position (X, Y) and angle (A) to draw lines
+Three-sided snowflake: Draws three Koch curves at 120° angles to form a snowflake
+Adjustable recursion level: Control the detail (default level 4, up to 7)
+Adjustable size: Change the initial side length (default 270 pixels)
+Stack-based recursion: Uses arrays DIST[] and LEVEL[] with stack pointer ST to track recursion depth
+Koch curve construction: Each segment divides into 4 segments with angles: 0°, +60°, -60°, 0°
+The algorithm works by:
+
+Starting with an equilateral triangle
+Recursively subdividing each segment into 4 parts: _/\_
+Creating the characteristic snowflake fractal pattern
+Higher recursion levels create more detailed, intricate snowflakes but take longer to render.
+    </div>
+    <div class="settings">
+        <div class="setting-group">
+            <label for="level">Recursion Level:</label>
+            <input type="number" id="level" value="4" min="0" max="7" step="1">
+        </div>
+        <div class="setting-group">
+            <label for="size">Size:</label>
+            <input type="number" id="size" value="270" min="50" max="400" step="10">
+        </div>
+    </div>
+
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <div class="controls">
+        <button onclick="drawSnowflake()">Draw</button>
+        <button onclick="clearCanvas()">Clear</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Global variables to match BASIC program
+        let DIST = [];
+        let LEVEL = [];
+        let ST = 1;
+        let X, Y, A;
+        const PI = Math.PI;
+
+        function clearCanvas() {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function toRadians(degrees) {
+            return degrees * PI / 180;
+        }
+
+        // Line 1000: Turtle Move Routine
+        function turtleMove() {
+            const OX = X;
+            const OY = Y;
+
+            // Line 1030-1040: Calculate new position
+            X = X + DIST[ST] * Math.cos(toRadians(A));
+            Y = Y + DIST[ST] * Math.sin(toRadians(A));
+
+            // Line 1050: Draw line
+            ctx.strokeStyle = '#00FF00';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(OX, OY);
+            ctx.lineTo(X, Y);
+            ctx.stroke();
+        }
+
+        // Line 300: Snowflake Side Subroutine (recursive)
+        function snowflakeSide() {
+            let BR = 0;
+            ST = ST + 1;
+
+            // Line 330-360: Check if at base level
+            if (LEVEL[ST - 1] === 1) {
+                BR = 1;
+            }
+
+            if (BR === 1) {
+                ST = ST - 1;
+                turtleMove();
+                return;
+            }
+
+            // Line 370-380: Set up next recursion level
+            LEVEL[ST] = LEVEL[ST - 1] - 1;
+            DIST[ST] = DIST[ST - 1] / 3;
+
+            // Line 390-450: Recursive Koch curve construction
+            snowflakeSide();      // Line 390
+            A = A + 60;           // Line 400
+            snowflakeSide();      // Line 410
+            A = A - 120;          // Line 420
+            snowflakeSide();      // Line 430
+            A = A + 60;           // Line 440
+            snowflakeSide();      // Line 450
+
+            ST = ST - 1;          // Line 460
+        }
+
+        function drawSnowflake() {
+            // Line 55: Clear screen
+            clearCanvas();
+
+            // Line 20-40: Initialize arrays
+            DIST = new Array(11);
+            LEVEL = new Array(11);
+            ST = 1;
+
+            // Get parameters from inputs
+            const initialLevel = parseInt(document.getElementById('level').value) || 4;
+            const initialDist = parseInt(document.getElementById('size').value) || 270;
+
+            // Line 70-90: Starting position and angle
+            const SX = 100;
+            const SY = 300;
+            const SA = 0;
+
+            // Line 100-120: Initialize
+            ST = 1;
+            DIST[1] = initialDist;
+            LEVEL[1] = initialLevel;
+
+            // Line 140-160: Set starting position and angle
+            X = SX;
+            Y = SY;
+            A = SA;
+
+            // Draw three sides of the snowflake
+
+            // First side (Line 170-190)
+            A = A + 60;
+            ST = 1;
+            snowflakeSide();
+
+            // Second side (Line 200-220)
+            A = A - 120;
+            ST = 1;
+            snowflakeSide();
+
+            // Third side (Line 230-250)
+            A = A - 120;
+            ST = 1;
+            snowflakeSide();
+        }
+
+        // Draw on load
+        window.onload = function() {
+            drawSnowflake();
+        };
+    </script>
+</body>
+</html>

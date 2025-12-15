@@ -1,0 +1,66 @@
+Main Program Flow:
+
+1. Main Flow - Complete program flow showing:
+
+Initialization and setup
+Initialization and instruction display
+Instruction display option
+Gun and mountain setup
+Gun and wind generation
+Main game loop (20 turns max)
+Main game loop (20 turns)
+Player turns with input validation
+Player input and validation
+Projectile trajectory calculation and animation
+Trajectory calculation and animation
+Hit detection and scoring
+Hit detection and scoring
+Play again logic
+Play again loop
+
+All GOTO Jumps (red dashed lines):
+
+Line  19→150: Skip instructions
+Line 190→170: Retry gun positions
+Line 220→240: Wind direction handling
+Line 445→430: Invalid input retry
+Line 590→750, 670→750, 690→750: Trajectory exits
+Line 840→930, 890→930: Post-hit flow
+Line 950→150: Restart game
+
+
+2. Subroutines - Detailed view of all 6 subroutines:
+
+GOSUB 1060: Check mountain collision
+GOSUB 1060: Check mountain collision with boundary checks
+GOSUB 1160: Draw explosion
+GOSUB 1160: Draw explosion animation (5-point star pattern)
+GOSUB 1290: Draw player indicator
+GOSUB 1290: Draw player turn indicator with logic branches
+GOSUB 1440: Draw mountain
+GOSUB 1440: Generate and draw random mountain terrain
+GOSUB 1580: Display wind direction message
+GOSUB 1580: Print wind direction
+GOSUB 1630: Set player starting position
+GOSUB 1630: Switch player position
+
+6 Subroutines are shown on the right side with their functionality and RETURN paths (purple dotted lines).
+
+The diagram uses color coding for different block types (initialization, input, loops, decisions, subroutines) making it easy to understand the program's structure and control flow at a glance.
+
+
+3. Complete Structure - High-level overview showing:
+
+Setup phase (guns, wind, mountain)
+Game and projectile loops
+All subroutine calls
+Win conditions and scoring
+Play again flow
+The diagrams use color coding:
+
+🟢 Green: Start/End
+🟡 Yellow: Decisions
+🟠 Orange: Loops
+🔴 Pink: Subroutine calls
+⚪ Default: Process blocks
+The interactive tabs make it easy to navigate between different views of the program structure!
