@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTILLERY.BAS - Mermaid Flow Diagram</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .mermaid {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .info-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 5px;
+            border-left: 4px solid #1976d2;
+        }
+
+        .info-section h3 {
+            margin-top: 0;
+            color: #1565c0;
+        }
+
+        .info-section ul {
+            line-height: 1.8;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: none;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background: #1976d2;
+            color: white;
+        }
+
+        .tab:hover {
+            background: #64b5f6;
+            color: white;
+        }
+
+        .diagram-container {
+            display: block;
+        }
+
+        .diagram-container.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>ARTILLERY.BAS - Mermaid Flow Diagrams</h1>
+    <div class="subtitle">Interactive flowcharts showing program structure and control flow</div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showDiagram('main')">Main Flow</button>
+            <button class="tab" onclick="showDiagram('subroutines')">Subroutines</button>
+            <button class="tab" onclick="showDiagram('complete')">Complete Flow</button>
+        </div>
+
+        <!-- Main Flow Diagram -->
+        <div id="main" class="diagram-container active">
+            <h2 style="text-align:center; color:#1976d2;">Main Program Flow</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([START<br/>Lines 5-10]) --> InputInst{Instructions?<br/>Line 15-16}
+
+    InputInst -->|NO| ShowInst[Show Instructions<br/>Lines 20-140<br/>Print text & GET key]
+    InputInst -->|YES| InitGame
+
+    ShowInst --> InitGame[Initialize Graphics<br/>Lines 150-160<br/>HGR, HCOLOR=6]
+
+    InitGame --> InitGuns[Generate Gun Positions<br/>Lines 170-190<br/>G1, G2 random]
+    InitGuns -->|G1,G2 too close| InitGuns
+
+    InitGuns --> InitWind[Initialize Wind<br/>Lines 200-230<br/>W1 speed, W2 direction]
+
+    InitWind --> DrawGuns[Draw Guns<br/>Lines 240-340<br/>Both cannons]
+
+    DrawGuns --> CallMountain[GOSUB 1440<br/>Draw Mountain<br/>Line 360]
+    CallMountain --> CallPlayer1[GOSUB 1630<br/>Set Player Position<br/>Line 370]
+
+    CallPlayer1 --> LoopX8[FOR X8 = 1 TO 20<br/>Game Turns Loop<br/>Line 380]
+
+    LoopX8 --> SwitchPlayer[Switch Player<br/>Lines 390-400<br/>P1 = P1 * -1]
+
+    SwitchPlayer --> CallIndic[GOSUB 1290<br/>Draw Indicator<br/>Line 410]
+    CallIndic --> CallWind[GOSUB 1580<br/>Print Wind Info<br/>Line 420]
+
+    CallWind --> InputShot[Input Angle & Velocity<br/>Lines 430-440<br/>A1 20-100, V1 45-150]
+
+    InputShot --> ValidateInput{Valid Input?<br/>Lines 441-442}
+    ValidateInput -->|NO| ErrorMsg[Print Error<br/>Line 445]
+    ErrorMsg -->|GOTO 430| InputShot
+
+    ValidateInput -->|YES| CalcTraj[Calculate Trajectory<br/>Lines 450-510<br/>Convert angle, calc params]
+
+    CalcTraj --> LoopY8[FOR Y8 = 0 TO T1 STEP T2<br/>Trajectory Loop<br/>Line 520]
+
+    LoopY8 --> CalcPos[Calculate Position<br/>Lines 530-580<br/>X, Y with wind effect]
+
+    CalcPos --> CheckLow{Y < 9?<br/>Line 590}
+    CheckLow -->|YES GOTO 750| CheckHit
+
+    CheckLow -->|NO| CheckPlayer{P1 < 0?<br/>Line 600}
+
+    CheckPlayer -->|YES Right Gun| PlotRight[Plot Right Shot<br/>Lines 680-730<br/>HCOLOR=3 White]
+    CheckPlayer -->|NO Left Gun| PlotLeft[Plot Left Shot<br/>Lines 610-660<br/>HCOLOR=5 Orange]
+
+    PlotRight --> CheckHit[GOSUB 1060<br/>Check Mountain Hit<br/>Line 750]
+    PlotLeft --> CheckHit
+
+    CheckHit --> CheckP2{P2 = 5?<br/>Mountain Hit?<br/>Line 760}
+    CheckP2 -->|YES GOTO 800| DrawExplosion
+    CheckP2 -->|NO| NextY8[NEXT Y8<br/>Line 770]
+    NextY8 --> LoopY8
+
+    DrawExplosion[GOSUB 1160<br/>Draw Explosion<br/>Line 790]
+
+    DrawExplosion --> CheckGun1{Hit G1?<br/>Line 800}
+    CheckGun1 -->|YES| RightWins[Right Gun Wins<br/>Lines 820-830<br/>T3++]
+
+    CheckGun1 -->|NO| CheckGun2{Hit G2?<br/>Line 850}
+    CheckGun2 -->|YES| LeftWins[Left Gun Wins<br/>Lines 870-880<br/>T4++]
+
+    RightWins -->|GOTO 930| PlayAgain
+    LeftWins -->|GOTO 930| PlayAgain
+
+    CheckGun2 -->|NO Miss| NextX8[NEXT X8<br/>Line 920]
+    NextX8 --> LoopX8
+
+    PlayAgain{Play Again?<br/>Lines 930-951}
+    PlayAgain -->|YES GOTO 150| InitGame
+    PlayAgain -->|NO| ShowScore[Show Final Score<br/>Lines 990-1020<br/>T3 Right, T4 Left]
+
+    ShowScore --> End([END<br/>Line 1050])
+
+    style Start fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    style End fill:#ffebee,stroke:#c62828,stroke-width:3px
+    style InputInst fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style ValidateInput fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style CheckLow fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style CheckPlayer fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style CheckP2 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style CheckGun1 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style CheckGun2 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style PlayAgain fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style LoopX8 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style LoopY8 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style NextX8 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style NextY8 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style InputShot fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style RightWins fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style LeftWins fill:#ffebee,stroke:#c62828,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- Subroutines Diagram -->
+        <div id="subroutines" class="diagram-container">
+            <h2 style="text-align:center; color:#c2185b;">Subroutines Detail</h2>
+            <div class="mermaid">
+flowchart TD
+    subgraph SUB1060["SUBROUTINE 1060: Check Mountain Hit"]
+        S1060Start([Enter SUB 1060<br/>Line 1060]) --> S1060Init[Initialize Y6=150<br/>Line 1060]
+        S1060Init --> S1060Calc[Calculate Mountain Bounds<br/>Lines 1070-1080<br/>G8 = Y7 + 2*G3<br/>Y7 = G1 + G2]
+        S1060Calc --> S1060Check1{Y > G3?<br/>Line 1090}
+        S1060Check1 -->|YES| S1060Return
+        S1060Check1 -->|NO| S1060Check2{G4 < Y7+Y?<br/>Line 1100}
+        S1060Check2 -->|YES| S1060Return
+        S1060Check2 -->|NO| S1060Check3{G4 > G8-Y?<br/>Line 1110}
+        S1060Check3 -->|YES| S1060Return
+        S1060Check3 -->|NO Hit!| S1060Hit[Set P2 = 5<br/>Lines 1120-1130<br/>Y6 = 150-Y]
+        S1060Hit --> S1060Draw[Draw Explosion<br/>FOR Z=1 TO 5<br/>Lines 1160-1240<br/>HPLOT explosion]
+        S1060Draw --> S1060Switch[GOSUB 1630<br/>Switch Player<br/>Line 1270]
+        S1060Switch --> S1060Return([RETURN<br/>Line 1280])
+    end
+    subgraph SUB1290["SUBROUTINE 1290: Draw Player Indicator"]
+        S1290Start([Enter SUB 1290<br/>Line 1290]) --> S1290Check{P1 < 0?<br/>Line 1290}
+        S1290Check -->|NO Left| S1290Left[Draw Left Indicator<br/>Lines 1300-1330<br/>HPLOT 1,152-155]
+        S1290Left --> S1290Check2{P1 < 0?<br/>Line 1340}
+        S1290Check2 -->|YES| S1290Color2
+        S1290Check2 -->|NO| S1290Color1[HCOLOR = 0<br/>Line 1350]
+        S1290Check -->|YES Right| S1290Right[Draw Right Indicator<br/>Lines 1360-1390<br/>HPLOT 250,152-155]
+        S1290Color1 --> S1290Right
+        S1290Right --> S1290Clear[HCOLOR = 0<br/>Line 1400]
+        S1290Clear --> S1290Check3{P1 < 0?<br/>Line 1410}
+        S1290Check3 -->|YES| S1290Left
+        S1290Check3 -->|NO| S1290Color2[HCOLOR = 2<br/>Line 1420]
+        S1290Color2 --> S1290Return([RETURN<br/>Line 1430])
+    end
+    subgraph SUB1440["SUBROUTINE 1440: Draw Mountain"]
+        S1440Start([Enter SUB 1440<br/>Line 1440]) --> S1440Calc1[Calculate G1<br/>G1 = G2-G1 / 2<br/>Line 1440]
+        S1440Calc1 --> S1440Rand1[Random G2<br/>Line 1450]
+        S1440Rand1 --> S1440Rand2[Random G3<br/>Line 1460]
+        S1440Rand2 --> S1440Check1{G3 < 30?<br/>Line 1470}
+        S1440Check1 -->|YES| S1440Rand2
+        S1440Check1 -->|NO| S1440Check2{G2-G1+G2<br/>> 2*G3?<br/>Line 1480}
+        S1440Check2 -->|NO| S1440Dec[G3 = G3 - 1<br/>Line 1490]
+        S1440Dec --> S1440Check2
+        S1440Check2 -->|YES| S1440Ground[Draw Ground<br/>Lines 1510-1540<br/>FOR M1=1 TO 252<br/>HPLOT orange line]
+        S1440Ground --> S1440Mount[Draw Mountain<br/>Lines 1550-1560<br/>Two HPLOT lines<br/>Triangle shape]
+        S1440Mount --> S1440Return([RETURN<br/>Line 1570])
+    end
+
+    style S1060Start fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style S1290Start fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style S1440Start fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style S1060Return fill:#e1bee7,stroke:#8e24aa,stroke-width:2px
+    style S1290Return fill:#e1bee7,stroke:#8e24aa,stroke-width:2px
+    style S1440Return fill:#e1bee7,stroke:#8e24aa,stroke-width:2px
+
+</div>
+    <div class="mermaid">
+flowchart TD
+    subgraph SUB1160["SUBROUTINE 1160: Draw Explosion"]
+        S1160Start([Enter SUB 1160<br/>Line 1160]) --> S1160Loop[FOR Z = 1 TO 5<br/>Line 1160]
+        S1160Loop --> S1160Check{G4 in bounds?<br/>0-253?<br/>Line 1170}
+        S1160Check -->|NO| S1160Next
+        S1160Check -->|YES| S1160Plot[HPLOT Explosion Pattern<br/>Lines 1180-1230<br/>5 HPLOT statements<br/>Star pattern]
+        S1160Plot --> S1160Next[NEXT Z<br/>Line 1240]
+        S1160Next --> S1160Loop
+        S1160Loop -->|Done| S1160Clear[Clear X, Y<br/>Lines 1250-1260]
+        S1160Clear --> S1160Call[GOSUB 1630<br/>Line 1270]
+        S1160Call --> S1160Return([RETURN<br/>Line 1280])
+    end
+
+    subgraph SUB1580["SUBROUTINE 1580: Print Wind Direction"]
+        S1580Start([Enter SUB 1580<br/>Line 1580]) --> S1580Check{W2 < 0?<br/>Line 1580}
+        S1580Check -->|NO| S1580Right[PRINT Wind Right<br/>Line 1590]
+        S1580Check -->|YES| S1580Left[PRINT Wind Left<br/>Line 1610]
+        S1580Right --> S1580Return([RETURN<br/>Line 1620])
+        S1580Left --> S1580Return
+    end
+
+    subgraph SUB1630["SUBROUTINE 1630: Set Player Position"]
+        S1630Start([Enter SUB 1630<br/>Line 1630]) --> S1630Check{P1 < 0?<br/>Line 1630}
+        S1630Check -->|NO| S1630Right[Set Right Position<br/>Line 1640<br/>X2=G2, Y2=150]
+        S1630Check -->|YES| S1630Left[Set Left Position<br/>Line 1660<br/>X2=G1, Y2=150]
+        S1630Right --> S1630Return([RETURN<br/>Line 1670])
+        S1630Left --> S1630Return
+    end
+
+    style S1160Start fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style S1580Start fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style S1630Start fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style S1160Return fill:#e1bee7,stroke:#8e24aa,stroke-width:2px
+    style S1580Return fill:#e1bee7,stroke:#8e24aa,stroke-width:2px
+    style S1630Return fill:#e1bee7,stroke:#8e24aa,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- Complete Flow Diagram -->
+        <div id="complete" class="diagram-container">
+            <h2 style="text-align:center; color:#388e3c;">Complete Program Structure</h2>
+            <div class="mermaid">
+graph TD
+    Start([ARTILLERY START]) --> Init[Initialize & Setup<br/>Lines 5-160]
+
+    Init --> Setup[Setup Phase]
+    Setup --> |170-190| GunPos[Gun Positions]
+    Setup --> |200-230| Wind[Wind Parameters]
+    Setup --> |240-340| DrawGuns[Draw Guns]
+
+    DrawGuns --> Mountain[SUB 1440<br/>Draw Mountain]
+    Mountain --> PlayerInit[SUB 1630<br/>Init Player]
+
+    PlayerInit --> GameLoop{Game Loop<br/>X8: 1-20}
+
+    GameLoop --> Turn[Player Turn]
+    Turn --> |400| Switch[Switch Player P1]
+    Turn --> |410| Indicator[SUB 1290<br/>Player Indicator]
+    Turn --> |420| WindMsg[SUB 1580<br/>Wind Message]
+
+    WindMsg --> Input[Input A1, V1]
+    Input --> |441-445| Validate{Valid?}
+    Validate -->|NO| Input
+    Validate -->|YES| Trajectory[Calculate Trajectory<br/>450-510]
+
+    Trajectory --> ProjectileLoop{Projectile Loop<br/>Y8: 0-T1}
+
+    ProjectileLoop --> CalcXY[Calculate X,Y<br/>530-580]
+    CalcXY --> |590| GroundCheck{Y < 9?}
+    GroundCheck -->|YES| EndShot[End Shot]
+
+    GroundCheck -->|NO| PlotShot[Plot Shot<br/>600-730]
+    PlotShot --> MountainCheck[SUB 1060<br/>Check Hit]
+
+    MountainCheck --> |760| HitCheck{Mountain<br/>Hit?}
+    HitCheck -->|YES| Explode[SUB 1160<br/>Explosion]
+    HitCheck -->|NO| ProjectileLoop
+
+    Explode --> WinCheck{Hit Gun?}
+    EndShot --> WinCheck
+
+    WinCheck -->|G1| RWin[Right Wins<br/>T3++]
+    WinCheck -->|G2| LWin[Left Wins<br/>T4++]
+    WinCheck -->|Miss| GameLoop
+
+    RWin --> Again{Play<br/>Again?}
+    LWin --> Again
+    GameLoop -->|20 turns| Again
+
+    Again -->|YES| Setup
+    Again -->|NO| Score[Show Score<br/>990-1020]
+
+    Score --> End([END])
+
+    style Start fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
+    style End fill:#f44336,stroke:#c62828,stroke-width:3px,color:#fff
+    style GameLoop fill:#ff9800,stroke:#e65100,stroke-width:2px
+    style ProjectileLoop fill:#ff9800,stroke:#e65100,stroke-width:2px
+    style Mountain fill:#e91e63,stroke:#880e4f,stroke-width:2px,color:#fff
+    style PlayerInit fill:#e91e63,stroke:#880e4f,stroke-width:2px,color:#fff
+    style Indicator fill:#e91e63,stroke:#880e4f,stroke-width:2px,color:#fff
+    style WindMsg fill:#e91e63,stroke:#880e4f,stroke-width:2px,color:#fff
+    style MountainCheck fill:#e91e63,stroke:#880e4f,stroke-width:2px,color:#fff
+    style Explode fill:#e91e63,stroke:#880e4f,stroke-width:2px,color:#fff
+    style RWin fill:#ffeb3b,stroke:#f57f17,stroke-width:2px
+    style LWin fill:#ffeb3b,stroke:#f57f17,stroke-width:2px
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>Program Structure Overview</h3>
+            <ul>
+                <li><strong>Main Program:</strong> Lines 5-950 control game initialization, main loop, and restart logic</li>
+                <li><strong>Game Loop:</strong> Lines 380-920 handle up to 20 turns between players</li>
+                <li><strong>Trajectory Loop:</strong> Lines 520-770 calculate and animate projectile path with physics</li>
+                <li><strong>Six Subroutines:</strong>
+                    <ul>
+                        <li><strong>1060-1280:</strong> Check mountain collision and handle hits</li>
+                        <li><strong>1160-1280:</strong> Draw explosion animation (5-point star)</li>
+                        <li><strong>1290-1430:</strong> Draw player turn indicator on screen</li>
+                        <li><strong>1440-1570:</strong> Generate and draw random mountain terrain</li>
+                        <li><strong>1580-1620:</strong> Display wind direction message</li>
+                        <li><strong>1630-1670:</strong> Set starting position for current player's shot</li>
+                    </ul>
+                </li>
+                <li><strong>Key GOTO Jumps:</strong>
+                    <ul>
+                        <li>Line 19→150: Skip instructions and start game</li>
+                        <li>Line 190→170: Retry gun positions if too close</li>
+                        <li>Line 445→430: Invalid input retry loop</li>
+                        <li>Line 590→750: Projectile hit ground, exit trajectory loop</li>
+                        <li>Line 950→150: Restart entire game</li>
+                    </ul>
+                </li>
+                <li><strong>Physics Model:</strong> Implements gravity (16 ft/s²) and wind effects on projectile trajectory using parametric equations</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showDiagram(id) {
+            // Hide all diagrams
+            const containers = document.querySelectorAll('.diagram-container');
+            containers.forEach(c => c.classList.remove('active'));
+
+            // Remove active from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+
+            // Show selected diagram
+            document.getElementById(id).classList.add('active');
+
+            // Activate clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artillery Duel</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        canvas {
+            border: 2px solid #0f0;
+            background-color: #000;
+            image-rendering: pixelated;
+        }
+
+        .game-info {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.8;
+            min-height: 80px;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        button {
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #0ff;
+        }
+
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        input[type="number"] {
+            background-color: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            width: 80px;
+        }
+
+        label {
+            font-size: 14px;
+        }
+
+        .score {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #0f0;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .instructions {
+            max-width: 600px;
+            text-align: left;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 2px solid #0f0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>ARTILLERY</h1>
+
+    <div id="instructionsDiv" class="instructions">
+        <strong>ARTILLERY</strong><br><br>
+        ARTILLERY IS A SIMULATION OF AN ARTILLERY DUEL BETWEEN TWO SETS OF GUNS
+        ON EITHER SIDE OF A MOUNTAIN. BY USING THE ANGLE OF THE GUN AND THE MILLIMETER
+        SIZE, YOU WILL BE ABLE TO DESTROY YOUR OPPONENT. EACH OF YOU IN TURN WILL TAKE
+        A SHOT AT YOUR OPPONENT WHILE TAKING INTO ACCOUNT THE WIND SPEED. YOU WILL
+        ENTER THE DEGREE MEASURE (BETWEEN 20 AND 100 DEGREES). THIS WILL BE
+        FOLLOWED BY THE MILLIMETER SIZE (45 TO 150 MM)<br><br>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="hideInstructions()">Skip Instructions</button>
+    <div>
+        The conversion includes:
+
+Complete artillery duel simulation: Two cannons on opposite sides of a randomly generated mountain
+Ballistic physics: Implements gravity (16 ft/s²) and wind effects on projectile trajectory
+Animated projectiles: Traces the shell's path in real-time with orange (left gun) or white (right gun)
+Wind simulation: Random wind speed (0-40) and direction (left/right) affecting shots
+Mountain collision detection: Checks if projectile hits the mountain
+Hit detection: Determines if opponent's gun is destroyed (within 5 pixels)
+Turn-based gameplay: Players alternate shots with angle (20-100°) and velocity (45-150mm)
+Score tracking: Keeps track of wins for left and right guns
+Visual indicators: Wind direction arrows, explosions on impact
+Instructions screen: Full game instructions before starting
+The physics uses the classic trajectory equations:
+
+x = v₀·cos(θ)·t + wind·effect
+y = v₀·sin(θ)·t - ½·g·t²
+Players must account for wind speed and direction to accurately hit their opponent's gun position!
+    </div>
+
+    </div>
+
+    <canvas id="canvas" width="560" height="384" class="hidden"></canvas>
+
+    <div id="gameInfo" class="game-info"></div>
+
+    <div id="controls" class="controls hidden">
+        <div class="input-group">
+            <label for="angle">Angle (20-100°):</label>
+            <input type="number" id="angle" min="20" max="100" value="45">
+        </div>
+        <div class="input-group">
+            <label for="velocity">MM Size (45-150):</label>
+            <input type="number" id="velocity" min="45" max="150" value="100">
+        </div>
+        <button id="fireBtn" onclick="fire()">Fire!</button>
+        <button onclick="newGame()">New Game</button>
+    </div>
+
+    <div id="score" class="score hidden">
+        <strong>SCORE</strong><br>
+        -----<br>
+        LEFT: <span id="leftScore">0</span><br>
+        RIGHT: <span id="rightScore">0</span>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Apple II HGR colors (scaled 2x)
+        const COLORS = [
+            '#000000', // 0 - Black
+            '#00FF00', // 1 - Green
+            '#FF00FF', // 2 - Violet/Magenta
+            '#FFFFFF', // 3 - White
+            '#000000', // 4 - Black
+            '#FF8000', // 5 - Orange
+            '#0000FF'  // 6 - Blue
+        ];
+
+        let currentColor = COLORS[6];
+        let G = [0, 0, 0]; // Gun positions (1-indexed)
+        let W1, W2; // Wind speed and direction
+        let G2, G3; // Mountain parameters
+        let P1 = 1; // Current player (-1 or 1)
+        let T3 = 0, T4 = 0; // Scores
+        let lastX = 0, lastY = 0;
+        let gameActive = false;
+
+        function hcolor(color) {
+            currentColor = COLORS[color] || COLORS[6];
+        }
+
+        function hplot(x1, y1, x2, y2) {
+            // Scale 2x for better visibility
+            x1 *= 2; y1 *= 2;
+            if (x2 !== undefined) {
+                x2 *= 2; y2 *= 2;
+            }
+
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+
+            if (x2 === undefined) {
+                ctx.fillRect(x1, y1, 2, 2);
+                lastX = x1;
+                lastY = y1;
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = COLORS[0];
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        function drawAxes(canvas, myContext) {
+            myContext.font = "10px Arial";
+            myContext.fillStyle = "white";
+            // X-axis
+            for (var x = 0; x < canvas.width; x += 50) {
+                myContext.fillText(x, x, 10);
+            }
+            // Y-axis
+            for (var y = 0; y < canvas.height; y += 50) {
+                myContext.fillText(y, 0, y);
+            }
+        }
+
+        function hideInstructions() {
+            document.getElementById('instructionsDiv').classList.add('hidden');
+            document.getElementById('canvas').classList.remove('hidden');
+            document.getElementById('controls').classList.remove('hidden');
+            document.getElementById('score').classList.remove('hidden');
+        }
+
+        function startGame() {
+            hideInstructions();
+            newGame();
+        }
+
+        function updateInfo(message) {
+            document.getElementById('gameInfo').innerHTML = message;
+        }
+
+        function updateScore() {
+            document.getElementById('leftScore').textContent = T4;
+            document.getElementById('rightScore').textContent = T3;
+        }
+
+        // Line 1440: Draw mountain
+        function drawMountain() {
+            const G1 = (G[2] - G[1]) / 2;
+            G2 = Math.random() * (G1 - 1) + 1;
+            G3 = Math.random() * G1 / 2 + 10;
+
+            while (G3 < 30) {
+                G3 = Math.random() * G1 / 2 + 10;
+            }
+
+            while (G[2] - (G[1] + G2) <= 2 * G3) {
+                G3 = G3 - 1;
+            }
+
+            // Draw ground
+            hcolor(1);
+            for (let M1 = 1; M1 <= 252; M1++) {
+                hplot(M1, 150);
+            }
+
+            // Draw mountain
+            hplot(G[1] + G2, 150, G[1] + G2 + G3, 150 - G3);
+            hplot(G[1] + G2 + 2 * G3, 150, G[1] + G2 + G3, 150 - G3);
+        }
+
+        // Draw guns
+        function drawGuns() {
+            hcolor(6);
+
+            // Right gun
+            hplot(G[2] + 8, 149, G[2], 145);
+            hplot(G[2] + 8, 150, G[2], 146);
+            hplot(G[2] + 4, 145, G[2] - 3, 137);
+            hplot(G[2] + 5, 144, G[2] - 7, 136);
+            hplot(G[2] + 2, 135, G[2] - 2, 150);
+
+            // Left gun
+            hplot(G[1] - 8, 149, G[1], 145);
+            hplot(G[1] - 8, 150, G[1], 146);
+            hplot(G[1] - 4, 145, G[1] + 3, 137);
+            hplot(G[1] - 5, 144, G[1] + 7, 136);
+            hplot(G[1] - 2, 135, G[1] + 2, 150);
+        }
+
+        // Line 1290: Draw wind indicator
+        function drawWindIndicator() {
+            let c1 = P1 < 0 ? 3 : 0; // White or Black
+            let c2 = P1 < 0 ? 0 : 5; // Black or Orange
+            hcolor(c1);
+            //if (P1 < 0) {
+                //hcolor(6);
+                hplot(250, 152, 254, 152);
+                hplot(250, 153, 254, 153);
+                hplot(250, 154, 254, 154);
+                hplot(250, 155, 254, 155);
+            //} else {
+            hcolor(c2);
+                //hcolor(6);
+                hplot(1, 152, 4, 152);
+                hplot(1, 153, 4, 153);
+                hplot(1, 154, 4, 154);
+                hplot(1, 155, 4, 155);
+            //}
+            hcolor(2);
+        }
+
+        function newGame() {
+            clearCanvas();
+            //drawAxes(canvas, ctx);
+            gameActive = true;
+
+            // Line 170-190: Initialize gun positions
+            G[1] = Math.random() * 117 + 8;
+            G[2] = Math.random() * 117 + 125;
+            while (G[2] - G[1] < 140) {
+                G[1] = Math.random() * 117 + 8;
+                G[2] = Math.random() * 117 + 125;
+            }
+
+            // Line 200-230: Initialize wind
+            W1 = Math.floor(Math.random() * 41);
+            W2 = Math.floor(Math.random() + 0.5) - 1;
+            if (W2 >= 0) W2 = 1;
+
+            P1 = W2;
+
+            drawMountain();
+            drawGuns();
+            drawWindIndicator();
+
+            const windDir = W2 < 0 ? "LEFT" : "RIGHT";
+            updateInfo(`THE WIND IS TO THE ${windDir} AT ${W1}<br><br>` +
+                      `${P1 < 0 ? "RIGHT" : "LEFT"} GUN: ENTER ANGLE AND MM SIZE TO FIRE`);
+
+            document.getElementById('fireBtn').disabled = false;
+        }
+
+        // Line 1160: Draw explosion
+        function drawExplosion(G4, Y6) {
+            for (let Z = 1; Z <= 5; Z++) {
+                if (G4 >= 0 && G4 <= 253) {
+                    hplot(G4, Y6 - Z);
+                    hplot(G4 + Z, Y6 - Z);
+                    hplot(G4 - Z, Y6 - Z);
+                    hplot(G4 + Z, Y6 - 1);
+                    hplot(G4 - Z, Y6 - 1);
+                }
+            }
+        }
+
+        async function fire() {
+            const A1Input = parseFloat(document.getElementById('angle').value);
+            const V1 = parseFloat(document.getElementById('velocity').value);
+
+            // Validate input
+            if (A1Input < 20 || A1Input > 100 || V1 < 45 || V1 > 150) {
+                updateInfo('<span style="background-color:#0f0;color:#000;padding:2px 8px;">ILLEGAL QUANTITY - TRY AGAIN</span><br><br>' +
+                          `THE WIND IS TO THE ${W2 < 0 ? "LEFT" : "RIGHT"} AT ${W1}<br>` +
+                          `${P1 < 0 ? "RIGHT" : "LEFT"} GUN: ENTER ANGLE AND MM SIZE TO FIRE`);
+                return;
+            }
+
+            document.getElementById('fireBtn').disabled = true;
+
+            // Line 450-470: Convert angle and calculate initial velocity
+            const A1 = A1Input * Math.PI / 180;
+            const X1 = Math.cos(A1) * V1;
+            const Y1 = Math.sin(A1) * V1;
+
+            // Line 480-510: Calculate trajectory parameters
+            const T1 = Y1 / 16;
+            const T2 = T1 / 24;
+            const W3 = W1 * T2 * P1;
+            let W5 = 0;
+
+            // Set initial position
+            if (P1 < 0) {
+                lastX = G[2] * 2;
+                lastY = 150 * 2;
+            } else {
+                lastX = G[1] * 2;
+                lastY = 150 * 2;
+            }
+
+            let hit = false;
+            let G4 = 0;
+            let finalY = 150;
+
+            // Line 520-770: Trajectory loop
+            for (let Y8 = 0; Y8 <= T1; Y8 += T2) {
+                W5 = W5 + W3;
+                let X = X1 * Y8;
+                X = X + (W5 * W2);
+                X = Math.floor(X + 0.5);
+                let Y = Y1 * Y8 - 16 * Y8 * Y8;
+                Y = Math.floor(Y + 0.5);
+
+                // Calculate plot position
+                if (Y < 9) {
+                    X2 = G[1];
+                }
+                else {
+                    X2 = G[2];
+                }
+                Y2 = 150
+
+                if (P1 < 0) {
+                    G4 = G[2] - X;
+                    if (G4 >= 0 && G4 <= 254 && Y <= 149) {
+                        hcolor(3);
+                        hplot(lastX / 2, lastY / 2, G4, 150 - Y);
+                        lastX = G4 * 2;
+                        lastY = (150 - Y) * 2;
+                    }
+                } else {
+                    G4 = G[1] + X;
+                    if (G4 >= 1 && G4 <= 254 && Y <= 149) {
+                        hcolor(5);
+                        hplot(lastX / 2, lastY / 2, G4, 150 - Y);
+                        lastX = G4 * 2;
+                        lastY = (150 - Y) * 2;
+                    }
+                }
+
+                // Check for mountain hit
+                const Y7 = G[1] + G2;
+                const G8 = Y7 + 2 * G3;
+                if (Y <= G3 && G4 >= Y7 + Y && G4 <= G8 - Y) {
+                    hit = true;
+                    finalY = 150 - Y;
+                    break;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 10));
+            }
+
+            // Draw explosion
+            drawExplosion(G4, finalY);
+
+            // Check for hit
+            let message = '';
+            if (G4 >= G[1] - 5 && G4 <= G[1] + 5) {
+                message = '<strong>GOOD WORK! RIGHT GUN SURVIVES.</strong>';
+                T3++;
+                gameActive = false;
+            } else if (G4 >= G[2] - 5 && G4 <= G[2] + 5) {
+                message = '<strong>NICE SHOOTING! LEFT GUN SURVIVES.</strong>';
+                T4++;
+                gameActive = false;
+            } else {
+                // Switch players
+                P1 = P1 * -1;
+                drawWindIndicator();
+                const windDir = W2 < 0 ? "LEFT" : "RIGHT";
+                message = `THE WIND IS TO THE ${windDir} AT ${W1}<br><br>` +
+                         `${P1 < 0 ? "RIGHT" : "LEFT"} GUN: ENTER ANGLE AND MM SIZE TO FIRE`;
+                document.getElementById('fireBtn').disabled = false;
+            }
+
+            updateInfo(message);
+            updateScore();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Distribution 2D Plot</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            background-color: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            width: 100px;
+        }
+
+        canvas {
+            border: 2px solid #0f0;
+            background-color: #000;
+            image-rendering: pixelated;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #0ff;
+        }
+
+        .output {
+            margin-top: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gaussian Distribution - 2D Plot</h1>
+    <div class="info">
+        Plot Gaussian distribution in two dimensions<br>
+        The program renders a 3D Gaussian bell curve surface with proper hidden line removal for a realistic 3D effect.
+        <br>
+
+    </div>
+    <div>
+        <p>The conversion includes:</p>
+        <ul>
+            <li>Interactive input: Allows changing the standard deviation value</li>
+            <li>2D Gaussian surface: Plots the bell curve in two dimensions using the formula g = e^(-r²/(2σ²))/(2πσ²)</li>
+            <li>Hidden line removal: Implements the original algorithm for drawing hidden surfaces</li>
+            <li>Coordinate transformation: Maps the -5.0 to +5.0 range with proper 3D perspective</li>
+            <li>Apple II HGR emulation: 280×192 resolution with HPLOT/HCOLOR functions</li>
+            <li>Real-time display: Shows the standard deviation, plot range, and peak value</li>
+        </ul>
+    </div>
+
+    <div class="input-section">
+        <label for="stdDev">Standard Deviation:</label>
+        <input type="number" id="stdDev" value="1.0" step="0.1" min="0.1" max="10">
+        <button onclick="plotGaussian()">Plot</button>
+    </div>
+
+    <canvas id="canvas" width="280" height="192"></canvas>
+
+    <div class="controls">
+        <button onclick="clearCanvas()">Clear</button>
+    </div>
+
+    <div class="output" id="output"></div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Apple II HGR colors
+        const COLORS = {
+            BLACK: '#000000',
+            WHITE: '#FFFFFF',
+            GREEN: '#00FF00'
+        };
+
+        let currentColor = COLORS.WHITE;
+        let lastX = null;
+        let lastY = null;
+
+        function hcolor(color) {
+            switch(color) {
+                case 0: currentColor = COLORS.BLACK; break;
+                case 3: currentColor = COLORS.WHITE; break;
+                default: currentColor = COLORS.WHITE;
+            }
+        }
+
+        function hplot(x, y, isLineTo = false) {
+            // Clamp coordinates to canvas bounds
+            x = Math.max(0, Math.min(canvas.width - 1, x));
+            y = Math.max(0, Math.min(canvas.height - 1, y));
+
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+
+            if (isLineTo && lastX !== null && lastY !== null) {
+                // Draw line from last point
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            } else {
+                // Single point
+                ctx.fillRect(x, y, 1, 1);
+            }
+
+            lastX = x;
+            lastY = y;
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = COLORS.BLACK;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            lastX = null;
+            lastY = null;
+            document.getElementById('output').innerHTML = '';
+        }
+
+        function plotGaussian() {
+            // Clear screen (HGR)
+            clearCanvas();
+            hcolor(3);
+
+            // Get standard deviation from input
+            const s1 = parseFloat(document.getElementById('stdDev').value);
+            if (s1 <= 0) {
+                alert('Standard deviation must be positive!');
+                return;
+            }
+
+            // Line 30: Constants
+            const w = 278;
+            const h = 155;
+            const p2 = Math.PI * 2; // ATN(1) * 8 = PI * 2
+
+            // Line 40-45
+            const w0 = w - 100;
+            const w1 = w0 / 10;
+            const h1 = h - 100;
+            const h2 = h - 60;
+
+            // Line 50
+            const k = 0.5;
+            const m = 1 / (p2 * s1 * s1);
+
+            // Line 60-320: Main nested loop
+            for (let i = 0; i <= 10; i += k) {
+                const x = 10 * i + 1;
+                const y = 10 * i + h1;
+
+                // Line 75: Initial plot
+                hplot(x, y, false);
+
+                // Line 80-310: Inner loop
+                for (let j = 0; j <= w0; j++) {
+                    const j1 = 10 * j / w0;
+
+                    // Line 90-130: Calculate Gaussian value
+                    const d1 = Math.abs(5 - i);
+                    const d2 = Math.abs(5 - j1);
+                    const r2 = (d1 * d1 + d2 * d2) / (2 * s1 * s1);
+                    const g = Math.exp(-r2) / (p2 * s1 * s1);
+                    const a = Math.floor((h2 * g) / m);
+
+                    // Line 140-160: Calculate coordinates
+                    const xPlot = 10 * i + w1 * j1 + 1;
+                    const yPlot = 10 * i + h1 - a;
+
+                    // Line 160: Plot to point
+                    hplot(xPlot, yPlot, true);
+
+                    // Line 170-260: Hidden line removal
+                    if (i !== 0) {
+                        if (j === w0 || (j % 10 === 0)) {
+                            const d1_k = Math.abs(5 - i + k);
+                            const d2_k = Math.abs(5 - j1);
+                            const r2_k = (d1_k * d1_k + d2_k * d2_k) / (2 * s1 * s1);
+                            const u = Math.exp(-r2_k) / (p2 * s1 * s1);
+                            const a1 = Math.floor(h2 * u / m);
+
+                            const x1 = 10 * (i - k) + w1 * j1 + 1;
+                            const y1 = 10 * (i - k) + h1 - a1;
+
+                            // Line 250-260
+                            hplot(x1, y1, true);
+                            hplot(xPlot, yPlot, false);
+                        }
+                    }
+
+                    // Line 265-305: Erase hidden lines
+                    if (j !== 0) {
+                        if (i >= 10 || (j !== w0 && j % 10 !== 0)) {
+                            hcolor(0);
+                        }
+                        hplot(xPlot, 10 * i + h1, true);
+                        hcolor(3);
+                        hplot(xPlot, yPlot, false);
+                    }
+                }
+            }
+
+            // Line 330: Draw axes/frame
+            hplot(w + 1, h, false);
+            hplot(100 + 1, h, true);
+            hplot(0 + 1, h1, true);
+
+            // Line 340-360: Display info
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `
+                Gaussian (std. dev. = ${s1})<br>
+                Plot from -5.0 to +5.0<br>
+                Peak value = ${m.toFixed(6)}
+            `;
+        }
+
+        // Plot on load with default value
+        window.onload = function() {
+            plotGaussian();
+        };
+    </script>
+</body>
+</html>

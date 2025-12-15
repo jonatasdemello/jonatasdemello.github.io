@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTILLERY.BAS - Program Flow Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-family: 'Courier New', monospace;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        svg {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+        .block {
+            fill: #e3f2fd;
+            stroke: #1976d2;
+            stroke-width: 2;
+        }
+
+        .block-init {
+            fill: #fff3e0;
+            stroke: #f57c00;
+            stroke-width: 2;
+        }
+
+        .block-input {
+            fill: #f3e5f5;
+            stroke: #7b1fa2;
+            stroke-width: 2;
+        }
+
+        .block-loop {
+            fill: #e8f5e9;
+            stroke: #388e3c;
+            stroke-width: 2;
+        }
+
+        .block-decision {
+            fill: #fff9c4;
+            stroke: #f9a825;
+            stroke-width: 2;
+        }
+
+        .block-subroutine {
+            fill: #fce4ec;
+            stroke: #c2185b;
+            stroke-width: 2;
+        }
+
+        .block-end {
+            fill: #ffebee;
+            stroke: #c62828;
+            stroke-width: 2;
+        }
+
+        .arrow {
+            fill: none;
+            stroke: #333;
+            stroke-width: 2;
+            marker-end: url(#arrowhead);
+        }
+
+        .arrow-goto {
+            fill: none;
+            stroke: #d32f2f;
+            stroke-width: 2;
+            stroke-dasharray: 5,3;
+            marker-end: url(#arrowhead-red);
+        }
+
+        .arrow-gosub {
+            fill: none;
+            stroke: #c2185b;
+            stroke-width: 2;
+            stroke-dasharray: 3,3;
+            marker-end: url(#arrowhead-pink);
+        }
+
+        .arrow-return {
+            fill: none;
+            stroke: #7b1fa2;
+            stroke-width: 1.5;
+            stroke-dasharray: 2,2;
+            marker-end: url(#arrowhead-purple);
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: bold;
+            fill: #333;
+        }
+
+        .line-num {
+            font-size: 9px;
+            fill: #666;
+            font-style: italic;
+        }
+
+        .goto-label {
+            font-size: 9px;
+            fill: #d32f2f;
+            font-weight: bold;
+        }
+
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .legend h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .legend-item {
+            display: inline-block;
+            margin-right: 25px;
+            margin-bottom: 10px;
+        }
+
+        .legend-line {
+            display: inline-block;
+            width: 40px;
+            height: 2px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        .legend-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
+            border: 2px solid;
+        }
+    </style>
+</head>
+<body>
+    <h1>ARTILLERY.BAS - Program Flow Diagram</h1>
+    <div class="subtitle">Complete flow diagram showing all GOTO/GOSUB jumps and program structure</div>
+
+    <div class="container">
+        <svg width="1340" height="2200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#333" />
+                </marker>
+                <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#d32f2f" />
+                </marker>
+                <marker id="arrowhead-pink" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#c2185b" />
+                </marker>
+                <marker id="arrowhead-purple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#7b1fa2" />
+                </marker>
+            </defs>
+
+            <!-- START -->
+            <rect x="140" y="10" width="120" height="40" class="block-init" rx="5"/>
+            <text x="200" y="25" text-anchor="middle" class="line-num">5-10</text>
+            <text x="200" y="38" text-anchor="middle" class="label">START</text>
+
+            <!-- Instructions? -->
+            <rect x="140" y="70" width="120" height="50" class="block-input" rx="5"/>
+            <text x="200" y="85" text-anchor="middle" class="line-num">15-16</text>
+            <text x="200" y="98" text-anchor="middle" class="label">Instructions?</text>
+            <text x="200" y="110" text-anchor="middle" class="label" style="font-size:9px">(INPUT)</text>
+
+            <!-- Decision: N? -->
+            <polygon points="200,140 260,170 200,200 140,170" class="block-decision"/>
+            <text x="200" y="168" text-anchor="middle" class="line-num">16</text>
+            <text x="200" y="180" text-anchor="middle" class="label">N?</text>
+
+            <!-- Show Instructions -->
+            <rect x="20" y="220" width="120" height="80" class="block" rx="5"/>
+            <text x="80" y="235" text-anchor="middle" class="line-num">20-140</text>
+            <text x="80" y="248" text-anchor="middle" class="label">SHOW</text>
+            <text x="80" y="260" text-anchor="middle" class="label">INSTRUCTIONS</text>
+            <text x="80" y="272" text-anchor="middle" class="label">(PRINT)</text>
+            <text x="80" y="285" text-anchor="middle" class="label">GET KEY</text>
+
+            <!-- HGR Setup -->
+            <rect x="140" y="320" width="120" height="50" class="block-init" rx="5"/>
+            <text x="200" y="335" text-anchor="middle" class="line-num">150-160</text>
+            <text x="200" y="348" text-anchor="middle" class="label">HGR SETUP</text>
+            <text x="200" y="360" text-anchor="middle" class="label" style="font-size:9px">HCOLOR=6</text>
+
+            <!-- Gun Positions -->
+            <rect x="140" y="390" width="120" height="60" class="block-init" rx="5"/>
+            <text x="200" y="405" text-anchor="middle" class="line-num">170-190</text>
+            <text x="200" y="418" text-anchor="middle" class="label">INIT GUN</text>
+            <text x="200" y="430" text-anchor="middle" class="label">POSITIONS</text>
+            <text x="200" y="442" text-anchor="middle" class="label" style="font-size:9px">G(1), G(2)</text>
+
+            <!-- Wind Setup -->
+            <rect x="140" y="470" width="120" height="60" class="block-init" rx="5"/>
+            <text x="200" y="485" text-anchor="middle" class="line-num">200-230</text>
+            <text x="200" y="498" text-anchor="middle" class="label">INIT WIND</text>
+            <text x="200" y="510" text-anchor="middle" class="label" style="font-size:9px">W1, W2</text>
+
+            <!-- Draw Guns -->
+            <rect x="140" y="550" width="120" height="50" class="block" rx="5"/>
+            <text x="200" y="565" text-anchor="middle" class="line-num">240-340</text>
+            <text x="200" y="578" text-anchor="middle" class="label">DRAW GUNS</text>
+            <text x="200" y="590" text-anchor="middle" class="label" style="font-size:9px">HPLOT</text>
+
+            <!-- GOSUB 1440 Mountain -->
+            <rect x="140" y="620" width="120" height="40" class="block" rx="5"/>
+            <text x="200" y="635" text-anchor="middle" class="line-num">360</text>
+            <text x="200" y="648" text-anchor="middle" class="label">GOSUB 1440</text>
+
+            <!-- GOSUB 1630 Player -->
+            <rect x="140" y="680" width="120" height="40" class="block" rx="5"/>
+            <text x="200" y="695" text-anchor="middle" class="line-num">370</text>
+            <text x="200" y="708" text-anchor="middle" class="label">GOSUB 1630</text>
+
+            <!-- FOR X8 Loop -->
+            <rect x="140" y="740" width="120" height="50" class="block-loop" rx="5"/>
+            <text x="200" y="755" text-anchor="middle" class="line-num">380</text>
+            <text x="200" y="768" text-anchor="middle" class="label">FOR X8=1</text>
+            <text x="200" y="780" text-anchor="middle" class="label">TO 20</text>
+
+            <!-- Switch Player -->
+            <rect x="140" y="810" width="120" height="50" class="block" rx="5"/>
+            <text x="200" y="825" text-anchor="middle" class="line-num">390-410</text>
+            <text x="200" y="838" text-anchor="middle" class="label">SWITCH</text>
+            <text x="200" y="850" text-anchor="middle" class="label">PLAYER P1</text>
+
+            <!-- GOSUB 1290 Indicator -->
+            <rect x="140" y="880" width="120" height="40" class="block" rx="5"/>
+            <text x="200" y="895" text-anchor="middle" class="line-num">410</text>
+            <text x="200" y="908" text-anchor="middle" class="label">GOSUB 1290</text>
+
+            <!-- GOSUB 1580 Wind -->
+            <rect x="140" y="940" width="120" height="40" class="block" rx="5"/>
+            <text x="200" y="955" text-anchor="middle" class="line-num">420</text>
+            <text x="200" y="968" text-anchor="middle" class="label">GOSUB 1580</text>
+
+            <!-- Input Angle/Velocity -->
+            <rect x="140" y="1000" width="120" height="60" class="block-input" rx="5"/>
+            <text x="200" y="1015" text-anchor="middle" class="line-num">430-440</text>
+            <text x="200" y="1028" text-anchor="middle" class="label">INPUT</text>
+            <text x="200" y="1040" text-anchor="middle" class="label">A1, V1</text>
+            <text x="200" y="1052" text-anchor="middle" class="label" style="font-size:9px">(angle, vel)</text>
+
+            <!-- Validate Input -->
+            <polygon points="200,1080 260,1110 200,1140 140,1110" class="block-decision"/>
+            <text x="200" y="1108" text-anchor="middle" class="line-num">441-442</text>
+            <text x="200" y="1120" text-anchor="middle" class="label">Valid?</text>
+
+            <!-- Error Message -->
+            <rect x="320" y="1090" width="100" height="40" class="block" rx="5"/>
+            <text x="370" y="1105" text-anchor="middle" class="line-num">445</text>
+            <text x="370" y="1118" text-anchor="middle" class="label">ERROR MSG</text>
+
+            <!-- Calculate Trajectory -->
+            <rect x="140" y="1160" width="120" height="60" class="block" rx="5"/>
+            <text x="200" y="1175" text-anchor="middle" class="line-num">450-510</text>
+            <text x="200" y="1188" text-anchor="middle" class="label">CALCULATE</text>
+            <text x="200" y="1200" text-anchor="middle" class="label">TRAJECTORY</text>
+            <text x="200" y="1212" text-anchor="middle" class="label" style="font-size:9px">X1,Y1,T1,T2,W3</text>
+
+            <!-- FOR Y8 Loop -->
+            <rect x="140" y="1240" width="120" height="50" class="block-loop" rx="5"/>
+            <text x="200" y="1255" text-anchor="middle" class="line-num">520</text>
+            <text x="200" y="1268" text-anchor="middle" class="label">FOR Y8=0</text>
+            <text x="200" y="1280" text-anchor="middle" class="label">TO T1 STEP T2</text>
+
+            <!-- Calculate Position -->
+            <rect x="140" y="1310" width="120" height="60" class="block" rx="5"/>
+            <text x="200" y="1325" text-anchor="middle" class="line-num">530-580</text>
+            <text x="200" y="1338" text-anchor="middle" class="label">CALC X,Y</text>
+            <text x="200" y="1350" text-anchor="middle" class="label">POSITION</text>
+            <text x="200" y="1362" text-anchor="middle" class="label" style="font-size:9px">with wind</text>
+
+            <!-- Check Y < 9 -->
+            <polygon points="200,1390 240,1415 200,1440 160,1415" class="block-decision"/>
+            <text x="200" y="1413" text-anchor="middle" class="line-num">590</text>
+            <text x="200" y="1425" text-anchor="middle" class="label" style="font-size:9px">Y &lt; 9?</text>
+
+            <!-- Check Player -->
+            <polygon points="200,1470 240,1495 200,1520 160,1495" class="block-decision"/>
+            <text x="200" y="1493" text-anchor="middle" class="line-num">600</text>
+            <text x="200" y="1505" text-anchor="middle" class="label" style="font-size:9px">P1 &lt; 0?</text>
+
+            <!-- Plot Left -->
+            <rect x="20" y="1545" width="100" height="50" class="block" rx="5"/>
+            <text x="70" y="1560" text-anchor="middle" class="line-num">610-660</text>
+            <text x="70" y="1573" text-anchor="middle" class="label">PLOT LEFT</text>
+            <text x="70" y="1585" text-anchor="middle" class="label" style="font-size:9px">HCOLOR=5</text>
+
+            <!-- Plot Right -->
+            <rect x="280" y="1545" width="100" height="50" class="block" rx="5"/>
+            <text x="330" y="1560" text-anchor="middle" class="line-num">680-730</text>
+            <text x="330" y="1573" text-anchor="middle" class="label">PLOT RIGHT</text>
+            <text x="330" y="1585" text-anchor="middle" class="label" style="font-size:9px">HCOLOR=3</text>
+
+            <!-- GOSUB 1060 Check Hit -->
+            <rect x="140" y="1615" width="120" height="40" class="block" rx="5"/>
+            <text x="200" y="1630" text-anchor="middle" class="line-num">750</text>
+            <text x="200" y="1643" text-anchor="middle" class="label">GOSUB 1060</text>
+
+            <!-- Check P2=5 -->
+            <polygon points="200,1675 240,1700 200,1725 160,1700" class="block-decision"/>
+            <text x="200" y="1698" text-anchor="middle" class="line-num">760</text>
+            <text x="200" y="1710" text-anchor="middle" class="label" style="font-size:9px">P2=5?</text>
+
+            <!-- NEXT Y8 -->
+            <rect x="20" y="1680" width="80" height="40" class="block-loop" rx="5"/>
+            <text x="60" y="1695" text-anchor="middle" class="line-num">770</text>
+            <text x="60" y="1708" text-anchor="middle" class="label">NEXT Y8</text>
+
+            <!-- Explosion -->
+            <rect x="140" y="1745" width="120" height="40" class="block" rx="5"/>
+            <text x="200" y="1760" text-anchor="middle" class="line-num">790</text>
+            <text x="200" y="1773" text-anchor="middle" class="label">GOSUB 1160</text>
+
+            <!-- Check Hit Gun 1 -->
+            <polygon points="200,1805 260,1835 200,1865 140,1835" class="block-decision"/>
+            <text x="200" y="1833" text-anchor="middle" class="line-num">800</text>
+            <text x="200" y="1845" text-anchor="middle" class="label" style="font-size:9px">Hit G(1)?</text>
+
+            <!-- Right Wins -->
+            <rect x="20" y="1895" width="100" height="50" class="block-end" rx="5"/>
+            <text x="70" y="1910" text-anchor="middle" class="line-num">820-830</text>
+            <text x="70" y="1923" text-anchor="middle" class="label">RIGHT WINS</text>
+            <text x="70" y="1935" text-anchor="middle" class="label" style="font-size:9px">T3++</text>
+
+            <!-- Check Hit Gun 2 -->
+            <polygon points="200,1905 260,1935 200,1965 140,1935" class="block-decision"/>
+            <text x="200" y="1933" text-anchor="middle" class="line-num">850</text>
+            <text x="200" y="1945" text-anchor="middle" class="label" style="font-size:9px">Hit G(2)?</text>
+
+            <!-- Left Wins -->
+            <rect x="280" y="1895" width="100" height="50" class="block-end" rx="5"/>
+            <text x="330" y="1910" text-anchor="middle" class="line-num">870-880</text>
+            <text x="330" y="1923" text-anchor="middle" class="label">LEFT WINS</text>
+            <text x="330" y="1935" text-anchor="middle" class="label" style="font-size:9px">T4++</text>
+
+            <!-- NEXT X8 -->
+            <rect x="140" y="1985" width="120" height="40" class="block-loop" rx="5"/>
+            <text x="200" y="2000" text-anchor="middle" class="line-num">920</text>
+            <text x="200" y="2013" text-anchor="middle" class="label">NEXT X8</text>
+
+            <!-- Play Again? -->
+            <polygon points="200,2045 260,2075 200,2105 140,2075" class="block-decision"/>
+            <text x="200" y="2073" text-anchor="middle" class="line-num">930-951</text>
+            <text x="200" y="2085" text-anchor="middle" class="label" style="font-size:9px">Again?</text>
+
+            <!-- Show Score & END -->
+            <rect x="140" y="2125" width="120" height="60" class="block-end" rx="5"/>
+            <text x="200" y="2140" text-anchor="middle" class="line-num">990-1050</text>
+            <text x="200" y="2153" text-anchor="middle" class="label">SHOW SCORE</text>
+            <text x="200" y="2165" text-anchor="middle" class="label">END</text>
+
+            <!-- SUBROUTINES (Right side) -->
+            <text x="650" y="30" text-anchor="middle" style="font-size:16px; font-weight:bold; fill:#c2185b;">SUBROUTINES</text>
+
+            <!-- SUB 1060: Check Mountain Hit -->
+            <rect x="500" y="60" width="140" height="140" class="block-subroutine" rx="5"/>
+            <text x="570" y="75" text-anchor="middle" class="line-num">1060-1280</text>
+            <text x="570" y="90" text-anchor="middle" class="label" style="font-size:12px;font-weight:bold;">SUB 1060</text>
+            <text x="570" y="105" text-anchor="middle" class="label">Check Mountain</text>
+            <text x="570" y="118" text-anchor="middle" class="label">Hit (1090-1110)</text>
+            <text x="570" y="133" text-anchor="middle" class="label">Set P2=5</text>
+            <text x="570" y="148" text-anchor="middle" class="label">if hit</text>
+            <text x="570" y="163" text-anchor="middle" class="label">Draw Explosion</text>
+            <text x="570" y="176" text-anchor="middle" class="label">GOSUB 1630</text>
+            <text x="570" y="191" text-anchor="middle" class="label" style="font-size:10px;fill:#7b1fa2;">RETURN</text>
+
+            <!-- SUB 1160: Draw Explosion -->
+            <rect x="660" y="60" width="140" height="80" class="block-subroutine" rx="5"/>
+            <text x="730" y="75" text-anchor="middle" class="line-num">1160-1280</text>
+            <text x="730" y="90" text-anchor="middle" class="label" style="font-size:12px;font-weight:bold;">SUB 1160</text>
+            <text x="730" y="105" text-anchor="middle" class="label">Draw Explosion</text>
+            <text x="730" y="120" text-anchor="middle" class="label">FOR Z=1 TO 5</text>
+            <text x="730" y="133" text-anchor="middle" class="label" style="font-size:10px;fill:#7b1fa2;">RETURN</text>
+
+            <!-- SUB 1290: Player Indicator -->
+            <rect x="500" y="220" width="140" height="80" class="block-subroutine" rx="5"/>
+            <text x="570" y="235" text-anchor="middle" class="line-num">1290-1430</text>
+            <text x="570" y="250" text-anchor="middle" class="label" style="font-size:12px;font-weight:bold;">SUB 1290</text>
+            <text x="570" y="265" text-anchor="middle" class="label">Draw Player</text>
+            <text x="570" y="280" text-anchor="middle" class="label">Indicator</text>
+            <text x="570" y="293" text-anchor="middle" class="label" style="font-size:10px;fill:#7b1fa2;">RETURN</text>
+
+            <!-- SUB 1440: Draw Mountain -->
+            <rect x="660" y="220" width="140" height="100" class="block-subroutine" rx="5"/>
+            <text x="730" y="235" text-anchor="middle" class="line-num">1440-1570</text>
+            <text x="730" y="250" text-anchor="middle" class="label" style="font-size:12px;font-weight:bold;">SUB 1440</text>
+            <text x="730" y="265" text-anchor="middle" class="label">Calculate &</text>
+            <text x="730" y="280" text-anchor="middle" class="label">Draw Mountain</text>
+            <text x="730" y="295" text-anchor="middle" class="label" style="font-size:9px">G2, G3 params</text>
+            <text x="730" y="308" text-anchor="middle" class="label" style="font-size:10px;fill:#7b1fa2;">RETURN</text>
+
+            <!-- SUB 1580: Wind Direction -->
+            <rect x="500" y="340" width="140" height="80" class="block-subroutine" rx="5"/>
+            <text x="570" y="355" text-anchor="middle" class="line-num">1580-1620</text>
+            <text x="570" y="370" text-anchor="middle" class="label" style="font-size:12px;font-weight:bold;">SUB 1580</text>
+            <text x="570" y="385" text-anchor="middle" class="label">Print Wind</text>
+            <text x="570" y="400" text-anchor="middle" class="label">Direction</text>
+            <text x="570" y="413" text-anchor="middle" class="label" style="font-size:10px;fill:#7b1fa2;">RETURN</text>
+
+            <!-- SUB 1630: Switch Player -->
+            <rect x="660" y="340" width="140" height="80" class="block-subroutine" rx="5"/>
+            <text x="730" y="355" text-anchor="middle" class="line-num">1630-1670</text>
+            <text x="730" y="370" text-anchor="middle" class="label" style="font-size:12px;font-weight:bold;">SUB 1630</text>
+            <text x="730" y="385" text-anchor="middle" class="label">Set X2, Y2</text>
+            <text x="730" y="400" text-anchor="middle" class="label">for Player</text>
+            <text x="730" y="413" text-anchor="middle" class="label" style="font-size:10px;fill:#7b1fa2;">RETURN</text>
+
+            <!-- Main Flow Arrows -->
+            <path d="M 200 50 L 200 70" class="arrow"/>
+            <path d="M 200 120 L 200 140" class="arrow"/>
+
+            <!-- N? to Skip Instructions (YES) -->
+            <path d="M 260 170 L 280 170 L 280 340 L 260 340" class="arrow-goto"/>
+            <text x="285" y="165" class="goto-label">YES→150</text>
+
+            <!-- N? to Show Instructions (NO) -->
+            <path d="M 140 170 L 80 170 L 80 220" class="arrow"/>
+            <text x="90" y="195" class="label" style="font-size:9px">NO</text>
+
+            <!-- Show Instructions to HGR -->
+            <path d="M 80 300 L 80 310 L 200 310 L 200 320" class="arrow-goto"/>
+            <text x="100" y="308" class="goto-label">→150</text>
+
+            <!-- Continue main flow -->
+            <path d="M 200 370 L 200 390" class="arrow"/>
+            <path d="M 200 450 L 200 470" class="arrow"/>
+
+            <!-- Gun loop back -->
+            <path d="M 160 450 L 100 450 L 100 410 L 140 410" class="arrow-goto"/>
+            <text x="105" y="430" class="goto-label">IF&lt;140→170</text>
+
+            <!-- Wind decision -->
+            <path d="M 160 530 L 100 530 L 100 550 L 140 550" class="arrow-goto"/>
+            <text x="105" y="525" class="goto-label">IF&lt;0→240</text>
+
+            <path d="M 200 530 L 200 550" class="arrow"/>
+            <path d="M 200 600 L 200 620" class="arrow"/>
+            <path d="M 200 660 L 200 680" class="arrow"/>
+            <path d="M 200 720 L 200 740" class="arrow"/>
+            <path d="M 200 790 L 200 810" class="arrow"/>
+            <path d="M 200 860 L 200 880" class="arrow"/>
+            <path d="M 200 920 L 200 940" class="arrow"/>
+            <path d="M 200 980 L 200 1000" class="arrow"/>
+            <path d="M 200 1060 L 200 1080" class="arrow"/>
+
+            <!-- Invalid input loop -->
+            <path d="M 260 1110 L 320 1110" class="arrow"/>
+            <text x="270" y="1105" class="label" style="font-size:9px">NO</text>
+            <path d="M 370 1090 L 370 1030 L 260 1030" class="arrow-goto"/>
+            <text x="375" y="1060" class="goto-label">→430</text>
+
+            <!-- Valid input continues -->
+            <path d="M 200 1140 L 200 1160" class="arrow"/>
+            <text x="210" y="1150" class="label" style="font-size:9px">YES</text>
+
+            <path d="M 200 1220 L 200 1240" class="arrow"/>
+            <path d="M 200 1290 L 200 1310" class="arrow"/>
+            <path d="M 200 1370 L 200 1390" class="arrow"/>
+
+            <!-- Y<9 exits loop -->
+            <path d="M 240 1415 L 300 1415 L 300 1635 L 260 1635" class="arrow-goto"/>
+            <text x="305" y="1410" class="goto-label">YES→750</text>
+
+            <!-- Y>=9 continues -->
+            <path d="M 200 1440 L 200 1470" class="arrow"/>
+            <text x="210" y="1455" class="label" style="font-size:9px">NO</text>
+
+            <!-- P1<0 branches -->
+            <path d="M 160 1495 L 70 1495 L 70 1545" class="arrow"/>
+            <text x="75" y="1520" class="label" style="font-size:9px">YES</text>
+            <path d="M 240 1495 L 330 1495 L 330 1545" class="arrow"/>
+            <text x="250" y="1490" class="label" style="font-size:9px">NO</text>
+
+            <!-- Plot branches converge -->
+            <path d="M 70 1595 L 70 1635 L 140 1635" class="arrow-goto"/>
+            <text x="75" y="1610" class="goto-label">→750</text>
+            <path d="M 330 1595 L 330 1635 L 260 1635" class="arrow-goto"/>
+            <text x="290" y="1610" class="goto-label">→750</text>
+
+            <path d="M 200 1655 L 200 1675" class="arrow"/>
+
+            <!-- P2=5 exits -->
+            <path d="M 240 1700 L 280 1700 L 280 1765 L 260 1765" class="arrow-goto"/>
+            <text x="285" y="1695" class="goto-label">YES→800</text>
+
+            <!-- P2!=5 loops -->
+            <path d="M 160 1700 L 60 1700 L 60 1265 L 140 1265" class="arrow"/>
+            <text x="65" y="1450" class="goto-label">NO→770</text>
+
+            <path d="M 200 1725 L 200 1745" class="arrow"/>
+            <path d="M 200 1785 L 200 1805" class="arrow"/>
+
+            <!-- Hit Gun 1 -->
+            <path d="M 140 1835 L 70 1835 L 70 1895" class="arrow"/>
+            <text x="75" y="1860" class="label" style="font-size:9px">YES</text>
+            <path d="M 70 1945 L 70 1970 L 200 1970 L 200 1985" class="arrow-goto"/>
+            <text x="100" y="1965" class="goto-label">→930</text>
+
+            <!-- Check Gun 2 -->
+            <path d="M 200 1865 L 200 1905" class="arrow"/>
+            <text x="210" y="1885" class="label" style="font-size:9px">NO</text>
+
+            <!-- Hit Gun 2 -->
+            <path d="M 260 1935 L 330 1935 L 330 1895" class="arrow"/>
+            <text x="270" y="1930" class="label" style="font-size:9px">YES</text>
+            <path d="M 330 1945 L 330 1970 L 200 1970 L 200 1985" class="arrow-goto"/>
+            <text x="280" y="1965" class="goto-label">→930</text>
+
+            <!-- Miss both - continue loop -->
+            <path d="M 200 1965 L 200 1985" class="arrow"/>
+            <text x="210" y="1975" class="label" style="font-size:9px">NO</text>
+
+            <!-- NEXT X8 loops back -->
+            <path d="M 140 2005 L 40 2005 L 40 765 L 140 765" class="arrow"/>
+            <text x="45" y="1400" class="goto-label">LOOP→380</text>
+
+            <path d="M 200 2025 L 200 2045" class="arrow"/>
+
+            <!-- Play Again YES -->
+            <path d="M 260 2075 L 320 2075 L 320 340 L 260 340" class="arrow-goto"/>
+            <text x="325" y="1200" class="goto-label">YES→150</text>
+
+            <!-- Play Again NO -->
+            <path d="M 200 2105 L 200 2125" class="arrow"/>
+            <text x="210" y="2115" class="label" style="font-size:9px">NO</text>
+
+            <!-- GOSUB calls -->
+            <path d="M 260 640 L 500 640 L 500 280" class="arrow-gosub"/>
+            <text x="380" y="635" class="label" style="font-size:9px;fill:#c2185b;">GOSUB 1440</text>
+
+            <path d="M 260 700 L 480 700 L 480 380 L 660 380" class="arrow-gosub"/>
+            <text x="370" y="695" class="label" style="font-size:9px;fill:#c2185b;">GOSUB 1630</text>
+
+            <path d="M 260 900 L 460 900 L 460 260 L 500 260" class="arrow-gosub"/>
+            <text x="360" y="895" class="label" style="font-size:9px;fill:#c2185b;">GOSUB 1290</text>
+
+            <path d="M 260 960 L 440 960 L 440 380 L 500 380" class="arrow-gosub"/>
+            <text x="350" y="955" class="label" style="font-size:9px;fill:#c2185b;">GOSUB 1580</text>
+
+            <path d="M 260 1635 L 420 1635 L 420 120 L 500 120" class="arrow-gosub"/>
+            <text x="340" y="1630" class="label" style="font-size:9px;fill:#c2185b;">GOSUB 1060</text>
+
+            <path d="M 260 1765 L 400 1765 L 400 100 L 660 100" class="arrow-gosub"/>
+            <text x="330" y="1760" class="label" style="font-size:9px;fill:#c2185b;">GOSUB 1160</text>
+
+            <!-- RETURN arrows -->
+            <path d="M 500 280 L 480 280 L 480 640 L 260 640" class="arrow-return"/>
+            <path d="M 660 380 L 640 380 L 640 700 L 260 700" class="arrow-return"/>
+            <path d="M 500 260 L 440 260 L 440 900 L 260 900" class="arrow-return"/>
+            <path d="M 500 380 L 420 380 L 420 960 L 260 960" class="arrow-return"/>
+            <path d="M 500 120 L 380 120 L 380 1635 L 260 1635" class="arrow-return"/>
+            <path d="M 660 100 L 640 100 L 640 1765 L 260 1765" class="arrow-return"/>
+
+            <!-- SUB 1060 internal GOSUB 1630 -->
+            <path d="M 640 176 L 730 176 L 730 340" class="arrow-gosub"/>
+            <text x="680" y="171" class="label" style="font-size:8px;fill:#c2185b;">GOSUB 1630</text>
+            <path d="M 730 380 L 730 420 L 640 420 L 640 191" class="arrow-return"/>
+
+        </svg>
+
+        <div class="legend">
+            <h3>Legend</h3>
+            <div>
+                <div class="legend-item">
+                    <span class="legend-line" style="background:#333;"></span>
+                    <span>Sequential Flow</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-line" style="background:#d32f2f; border-top:2px dashed #d32f2f;"></span>
+                    <span>GOTO Jump</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-line" style="background:#c2185b; border-top:2px dashed #c2185b;"></span>
+                    <span>GOSUB Call</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-line" style="background:#7b1fa2; border-top:2px dotted #7b1fa2;"></span>
+                    <span>RETURN</span>
+                </div>
+            </div>
+            <div style="margin-top:15px;">
+                <div class="legend-item">
+                    <span class="legend-box" style="background:#fff3e0; border-color:#f57c00;"></span>
+                    <span>Initialize</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box" style="background:#f3e5f5; border-color:#7b1fa2;"></span>
+                    <span>Input</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box" style="background:#e8f5e9; border-color:#388e3c;"></span>
+                    <span>Loop</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box" style="background:#fff9c4; border-color:#f9a825;"></span>
+                    <span>Decision</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box" style="background:#fce4ec; border-color:#c2185b;"></span>
+                    <span>Subroutine</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box" style="background:#ffebee; border-color:#c62828;"></span>
+                    <span>End/Win</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:20px; padding:15px; background:#e3f2fd; border-radius:5px; border-left:4px solid #1976d2;">
+            <h3 style="margin-top:0; color:#1565c0;">Key GOTO/GOSUB Jumps</h3>
+            <ul style="line-height:1.8;">
+                <li><strong>Line 16→19:</strong> Skip instructions if "N"</li>
+                <li><strong>Line 17→20:</strong> Show instructions</li>
+                <li><strong>Line 19→150:</strong> Start game (skip instructions)</li>
+                <li><strong>Line 190→170:</strong> Retry gun positions if too close</li>
+                <li><strong>Line 220→240:</strong> Handle wind direction</li>
+                <li><strong>Line 445→430:</strong> Invalid input retry</li>
+                <li><strong>Line 590→750:</strong> Projectile hit ground</li>
+                <li><strong>Line 670→750, 690→750:</strong> Out of bounds</li>
+                <li><strong>Line 760→800:</strong> Mountain hit detected (P2=5)</li>
+                <li><strong>Line 840→930, 890→930:</strong> After hit, ask play again</li>
+                <li><strong>Line 950-951→150:</strong> Play again (restart game)</li>
+                <li><strong>Line 1090-1110→1280:</strong> Mountain collision checks</li>
+                <li><strong>Line 1170→1240:</strong> Skip explosion if out of bounds</li>
+                <li><strong>Line 1340→1420:</strong> Player indicator drawing</li>
+                <li><strong>Line 1410→1300:</strong> Player indicator loop</li>
+                <li><strong>Line 1470→1460:</strong> Mountain height validation</li>
+                <li><strong>Line 1500→1480:</strong> Mountain spacing validation</li>
+                <li><strong>Line 1600→1620:</strong> Wind direction print</li>
+                <li><strong>Line 1650→1670:</strong> Set player position</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>

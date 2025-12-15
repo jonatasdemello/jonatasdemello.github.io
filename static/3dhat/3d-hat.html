@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D HAT - Applesoft BASIC Port</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .info a {
+            color: #0ff;
+        }
+
+        canvas {
+            border: 2px solid #0f0;
+            background-color: #000;
+            image-rendering: pixelated;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #0ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>3D HAT</h1>
+    <div class="info">
+        MTU 80 Column 3D HAT Program<br>
+        Original: Micro, the 6502 magazine, May 1981 page 2<br>
+        <a href="http://archive.6502.org/publications/micro/micro_36_may_1981.pdf" target="_blank">Source PDF</a> |
+        <a href="https://archive.org/details/creativecomputing-1981-05/page/n67" target="_blank">Archive.org</a> |
+        <a href="./image2.png" target="_blank">image only</a> |
+        <br>
+        The program renders the same mathematical 3D hat surface using the formula <br>
+        y = sin(r) + 0.4*sin(3r) <br>
+        where r is the radial distance from the center.
+    </div>
+
+    <canvas id="canvas" width="280" height="192"></canvas>
+
+    <div class="controls">
+        <button onclick="draw3DHat()">Redraw</button>
+        <button onclick="clearCanvas()">Clear</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Apple II HGR2 colors
+        const COLORS = {
+            BLACK: '#000000',
+            WHITE: '#FFFFFF',
+            GREEN: '#00FF00',
+            VIOLET: '#FF00FF',
+            ORANGE: '#FF8000',
+            BLUE: '#0000FF'
+        };
+
+        let currentColor = COLORS.WHITE;
+
+        function hcolor(color) {
+            // HCOLOR 3 is white in Apple II
+            switch(color) {
+                case 0: currentColor = COLORS.BLACK; break;
+                case 1: currentColor = COLORS.GREEN; break;
+                case 2: currentColor = COLORS.VIOLET; break;
+                case 3: currentColor = COLORS.WHITE; break;
+                case 4: currentColor = COLORS.BLACK; break;
+                case 5: currentColor = COLORS.ORANGE; break;
+                case 6: currentColor = COLORS.BLUE; break;
+                case 7: currentColor = COLORS.WHITE; break;
+                default: currentColor = COLORS.WHITE;
+            }
+        }
+
+        function hplot(x1, y1, x2, y2) {
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+
+            if (x2 === undefined || y2 === undefined) {
+                // Single point
+                ctx.fillRect(x1, y1, 1, 1);
+            } else {
+                // Line
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = COLORS.BLACK;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function draw3DHat() {
+            // Clear screen (HGR2)
+            clearCanvas();
+            hcolor(3);
+
+            // Line 20: P=140 : Q=100
+            const P = 140;
+            const Q = 100;
+
+            // Line 30-50: Initialize parameters
+            const XP = 120;
+            const XR = 1.5 * Math.PI;
+            const YP = 56;
+            const YR = 1;
+            const ZP = 64;
+
+            // Line 50: Calculate factors
+            const XF = XR / XP;
+            const YF = YP / YR;
+            const ZF = XR / ZP;
+
+            // Line 60-150: Main loop
+            for (let ZI = -Q; ZI <= Q - 1; ZI++) {
+                // Line 70: Skip if out of range
+                if (ZI < -ZP || ZI > ZP) continue;
+
+                // Line 80
+                const ZT = ZI * XP / ZP;
+                const ZZ = ZI;
+
+                // Line 90
+                const XL = Math.floor(0.5 + Math.sqrt(XP * XP - ZT * ZT));
+
+                // Line 100-140: Inner loop
+                for (let XI = -XL; XI <= XL; XI++) {
+                    // Line 110
+                    const XT = Math.sqrt(XI * XI + ZT * ZT) * XF;
+                    const XX = XI;
+
+                    // Line 120: Calculate Y coordinate
+                    const YY = (Math.sin(XT) + 0.4 * Math.sin(3 * XT)) * YF;
+
+                    // Line 170-220: Plotting subroutine
+                    let X1 = XX + ZZ + P;
+                    let Y1 = YY - ZZ + Q;
+
+                    // Line 181-184: Bounds checking
+                    if (Y1 < 1) Y1 = 1;
+                    if (Y1 > 191) Y1 = 191;
+                    if (X1 < 0) X1 = 0;
+                    if (X1 > 279) X1 = 279;
+
+                    // Line 190: Plot the point
+                    hcolor(3);
+                    hplot(X1, 191 - Y1);
+
+                    // Line 210: Draw vertical line to erase below
+                    hcolor(0);
+                    hplot(X1, 191 - (Y1 - 1), X1, 191 - 0);
+                }
+            }
+        }
+
+        // Draw on load
+        window.onload = function() {
+            draw3DHat();
+        };
+    </script>
+</body>
+</html>

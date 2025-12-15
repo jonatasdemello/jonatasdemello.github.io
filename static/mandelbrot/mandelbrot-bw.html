@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandelbrot Set - B&W</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        canvas {
+            border: 2px solid #0f0;
+            background-color: #000;
+            image-rendering: pixelated;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #0ff;
+        }
+
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .progress {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .settings {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .setting-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            background-color: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            width: 80px;
+        }
+
+        label {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mandelbrot Set</h1>
+    <div class="info">
+        Black & White Mandelbrot Set Visualization<br>
+        Original Applesoft BASIC Program
+    </div>
+
+    <div>
+        The conversion includes:
+<ul>
+    <li>Classic Mandelbrot algorithm: Iterates z = z² + c to determine set membership</li>
+    <li>Black & white rendering: Uses the color toggle (c = 1 - c) to create the distinctive pattern</li>
+    <li>Vertical symmetry: Plots both top and bottom halves simultaneously (HPLOT x,y and HPLOT x,191-y)</li>
+    <li>Adjustable parameters: Can modify max iterations (default 117) and escape threshold (default 4)</li>
+    <li>Progress indicator: Shows rendering progress with percentage</li>
+    <li>Async rendering: Non-blocking drawing that allows stopping mid-render</li>
+    <li>Apple II resolution: 280×192 pixels matching the original HGR mode</li>
+    <li>The program maps the screen to the complex plane region approximately from -2 to 1 on the real axis and -1 to 1 on the imaginary axis, revealing the iconic Mandelbrot Set fractal.</li>
+</ul>
+
+    </div>
+    <div class="settings">
+        <div class="setting-group">
+            <label for="maxIter">Max Iterations:</label>
+            <input type="number" id="maxIter" value="117" min="10" max="500" step="1">
+        </div>
+        <div class="setting-group">
+            <label for="threshold">Threshold:</label>
+            <input type="number" id="threshold" value="4" min="2" max="16" step="1">
+        </div>
+    </div>
+
+    <canvas id="canvas" width="280" height="192"></canvas>
+
+    <div class="controls">
+        <button id="drawBtn" onclick="startDrawing()">Draw</button>
+        <button id="stopBtn" onclick="stopDrawing()" disabled>Stop</button>
+        <button onclick="clearCanvas()">Clear</button>
+    </div>
+
+    <div class="progress" id="progress"></div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Apple II HGR colors
+        const COLORS = {
+            BLACK: '#000000',
+            WHITE: '#FFFFFF'
+        };
+
+        let currentColor = COLORS.WHITE;
+        let isDrawing = false;
+        let shouldStop = false;
+
+        function hcolor(color) {
+            currentColor = color === 3 ? COLORS.WHITE : COLORS.BLACK;
+        }
+
+        function hplot(x, y) {
+            ctx.fillStyle = currentColor;
+            ctx.fillRect(x, y, 1, 1);
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = COLORS.BLACK;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('progress').innerHTML = '';
+        }
+
+        function updateProgress(x, total) {
+            const percent = Math.floor((x / total) * 100);
+            document.getElementById('progress').innerHTML = `Drawing: ${percent}% (${x}/${total})`;
+        }
+
+        function updateButtons(drawing) {
+            document.getElementById('drawBtn').disabled = drawing;
+            document.getElementById('stopBtn').disabled = !drawing;
+        }
+
+        function stopDrawing() {
+            shouldStop = true;
+            document.getElementById('progress').innerHTML += ' - Stopping...';
+        }
+
+        async function startDrawing() {
+            if (isDrawing) return;
+
+            isDrawing = true;
+            shouldStop = false;
+            updateButtons(true);
+
+            // Clear screen (HGR)
+            clearCanvas();
+            hcolor(3); // HCOLOR=3 (white)
+
+            // Get parameters from inputs
+            const maxIterations = parseInt(document.getElementById('maxIter').value) || 117;
+            const threshold = parseFloat(document.getElementById('threshold').value) || 4;
+
+            // Line 120: Main loop - FOR x = 0 TO 279
+            for (let x = 0; x <= 279; x++) {
+                if (shouldStop) {
+                    document.getElementById('progress').innerHTML = 'Stopped';
+                    break;
+                }
+
+                // Update progress every 10 pixels
+                if (x % 10 === 0) {
+                    updateProgress(x, 279);
+                    // Allow UI to update
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+
+                // Inner loop - FOR y = 0 TO 95
+                for (let y = 0; y <= 95; y++) {
+                    // Line 130: Scale coordinates to complex plane
+                    // x1 = x / 280 * 3 - 2 : y1 = y / 191 * 2 - 1
+                    const x1 = x / 280 * 3 - 2;
+                    const y1 = y / 191 * 2 - 1;
+
+                    // Line 140: Initialize iteration variables
+                    let i = 0;
+                    let s = x1;  // Real part
+                    let t = y1;  // Imaginary part
+                    let c = 0;   // Color toggle
+
+                    // Line 150-170: Mandelbrot iteration
+                    // z(n+1) = z(n)^2 + c
+                    while (s * s + t * t < threshold && i < maxIterations) {
+                        // Line 150: s1 = s * s - t * t + x1
+                        const s1 = s * s - t * t + x1;
+
+                        // Line 160: t = 2 * s * t + y1 : s = s1
+                        t = 2 * s * t + y1;
+                        s = s1;
+                        c = 1 - c; // Toggle between 0 and 1
+                        i = i + 1;
+                    }
+
+                    // Line 180: Plot if c = 0 (even number of iterations)
+                    if (c === 0) {
+                        hplot(x, y);           // Top half
+                        hplot(x, 191 - y);     // Bottom half (mirror)
+                    }
+                }
+            }
+
+            if (!shouldStop) {
+                document.getElementById('progress').innerHTML = 'Complete! (100%)';
+            }
+
+            isDrawing = false;
+            shouldStop = false;
+            updateButtons(false);
+        }
+
+        // Draw on load
+        window.onload = function() {
+            startDrawing();
+        };
+    </script>
+</body>
+</html>

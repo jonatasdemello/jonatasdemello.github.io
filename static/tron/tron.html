@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../include/bootstrap.min.css" />
+
+	<link rel="stylesheet" href="../include/style.css">
+	<title>Canvas</title>
+</head>
+
+<body>
+	<main class="container">
+		<nav class="nav">
+			<a class="nav-link active" aria-current="page" href="../index.html">&larr; Home</a>
+		</nav>
+
+		<h1>Tron Recognizer</h1>
+		<p>
+			Tron Recognizer, simplified version.
+		</p>
+		<canvas id="myCanvas" width="640" height="480"></canvas>
+	</main>
+
+	<div class="container">
+
+		<form id="form2">
+			<div>
+				P:
+				<input type="text" name="scUp" id="scUp" value="1.1" size="2" />
+				<input type="button" value="scale+" onclick="scaleUp();" />
+				L:
+				<input type="text" name="scDown" id="scDown" value="0.9" size="2" />
+				<input type="button" value="scale-" onclick="scaleDown();" />
+			</div>
+			<div>
+				move:
+				<input type="text" name="moveInc" id="moveInc" value="1" size="2" />
+				<input type="button" value="Up" onclick="moveUp();" />
+				<input type="button" value="Down" onclick="moveDown();" />
+				<input type="button" value="Left" onclick="moveLeft();" />
+				<input type="button" value="Right" onclick="moveRight();" />
+			</div>
+			<div>
+				rotate:
+				<input type="text" name="rotInc" id="rotInc" value="0.5" size="2" />
+				<input type="button" value="Rx" onclick="rotX();" />
+				<input type="button" value="Ry" onclick="rotY();" />
+				<input type="button" value="Rz" onclick="rotZ();" />
+				or "q", "w", "e" , "a", "s", "d"
+			</div>
+			<div>
+				rotate all:
+				<label>rx:</label>
+				<input type="text" name="rx" id="rx" value="0.2" size="4" />
+				<label>ry:</label>
+				<input type="text" name="ry" id="ry" value="0.2" size="4" />
+				<label>rz:</label>
+				<input type="text" name="rz" id="rz" value="0.2" size="4" />
+				<input type="button" value="Rotate" onclick="rotate();" />
+			</div>
+			<div>
+				animate:
+				<input type="button" value="Start" onclick="startLoop();" />
+				<input type="button" value="Stop" onclick="stopLoop();" />
+				<input type="button" value="Clear" onclick="ClearCanvas();" />
+			</div>
+		</form>
+	</div>
+
+	<script>
+		"use strict";
+		var constants = {
+			canvasWidth: 600, // In pixels. ADJUST
+			canvasHeight: 600, // In pixels. ADJUST
+			leftArrow: 37,
+			upArrow: 38,
+			rightArrow: 39,
+			downArrow: 40,
+			plus: 0,
+			minus: 0,
+			a: 0,
+			s: 0,
+			d: 0,
+			q: 0,
+			w: 0,
+			e: 0,
+		};
+		var controlKeyPressed = false; // Shared between processKeyDown() and processKeyUp().
+
+		Array.matrix = function (numrows, numcols, initial) {
+			var arr = [];
+			for (let i = 0; i < numrows; ++i) {
+				var columns = [];
+				for (let j = 0; j < numcols; ++j) {
+					columns[j] = initial;
+				}
+				arr[i] = columns;
+			}
+			return arr;
+		}
+
+		// vertices - points
+		var cubo = [
+		// left leg front
+		[  -9,   3,  -1,  1], // p0
+		[  -9, -11,  -1,  1], // p1
+		[  -4, -11,  -1,  1], // p2
+		[  -7,  -9,  -1,  1], // p3
+		[  -7,   3,  -1,  1], // p4
+		// left leg back
+		[  -9,   3,   1,  1], // p5
+		[  -9, -11,   1,  1], // p6
+		[  -4, -11,   1,  1], // p7
+		[  -7,  -9,   1,  1], // p8
+		[  -7,   3,   1,  1], // p9
+		// right leg front
+		[   9,   3,  -1,  1], // p10
+		[   9, -11,  -1,  1], // p11
+		[   4, -11,  -1,  1], // p12
+		[   7,  -9,  -1,  1], // p13
+		[   7,   3,  -1,  1], // p14
+		// right leg back
+		[   9,    3,  1,  1], // p15
+		[   9,  -11,  1,  1], // p16
+		[   4,  -11,  1,  1], // p17
+		[   7,   -9,  1,  1], // p18
+		[   7,    3,  1,  1], // p19
+		// bar 1 front
+		[  -9,   5,   1,  1], // p20
+		[  -9,   4,   1,  1], // p21
+		[   9,   4,   1,  1], // p22
+		[   9,   5,   1,  1], // p23
+		// bar 1 back
+		[  -9,   5,  -1,  1], // p24
+		[  -9,   4,  -1,  1], // p25
+		[   9,   4,  -1,  1], // p26
+		[   9,   5,  -1,  1], // p27
+		// left block front
+		[  -9,   8,   1,  1], // p28
+		[  -9,   6,   1,  1], // p29
+		[  -7,   6,   1,  1], // p30
+		[  -7,   8,   1,  1], // p31
+		// left block back
+		[  -9,   8,  -1,  1], // p32
+		[  -9,   6,  -1,  1], // p33
+		[  -7,   6,  -1,  1], // p34
+		[  -7,   8,  -1,  1], // p35
+		// right block front
+		[   9,   8,   1,  1], // p36
+		[   9,   6,   1,  1], // p37
+		[   7,   6,   1,  1], // p38
+		[   7,   8,   1,  1], // p39
+		// right block back
+		[   9,   8,  -1,  1], // p40
+		[   9,   6,  -1,  1], // p41
+		[   7,   6,  -1,  1], // p42
+		[   7,   8,  -1,  1], // p43
+		// bar 2 front
+		[ -10,  10,   1,  1], // p44
+		[ -10,   9,   1,  1], // p45
+		[  10,   9,   1,  1], // p46
+		[  10,  10,   1,  1], // p47
+		// bar 2 back
+		[ -10,  10,  -1,  1], // p48
+		[ -10,   9,  -1,  1], // p49
+		[  10,   9,  -1,  1], // p50
+		[  10,  10,  -1,  1], // p51
+		// top triangle front
+		[  -5,  11,   1,  1], // p52
+		[   5,  11,   1,  1], // p53
+		[   1,  13,   1,  1], // p54
+		[  -1,  13,   1,  1], // p55
+		// top triangle back
+		[  -5,  11,  -1,  1], // p56
+		[   5,  11,  -1,  1], // p57
+		[   1,  13,  -1,  1], // p58
+		[  -1,  13,  -1,  1], // p59
+		// center triangle front
+		[  -6,   8,   1,  1], // p60
+		[  -4,   6,   1,  1], // p61
+		[   4,   6,   1,  1], // p62
+		[   6,   8,   1,  1], // p63
+		// center triangle back
+		[  -6,   8,  -1,  1], // p64
+		[  -4,   6,  -1,  1], // p65
+		[   4,   6,  -1,  1], // p66
+		[   6,   8,  -1,  1], // p67
+	];
+
+		// arestas - edges
+		// p0 => p1
+		var edge = [
+			// left leg front
+			[0, 1],
+			[1, 2],
+			[2, 3],
+			[3, 4],
+			[4, 0],
+			// left leg back
+			[5, 6],
+			[6, 7],
+			[7, 8],
+			[8, 9],
+			[9, 5],
+			// left leg f2b
+			[0, 5],
+			[1, 6],
+			[2, 7],
+			[3, 8],
+			[4, 9],
+			// right leg front
+			[10, 11],
+			[11, 12],
+			[12, 13],
+			[13, 14],
+			[14, 10],
+			// right leg back
+			[15, 16],
+			[16, 17],
+			[17, 18],
+			[18, 19],
+			[19, 15],
+			// right leg f2b
+			[10, 15],
+			[11, 16],
+			[12, 17],
+			[13, 18],
+			[14, 19],
+			// bar 1 front
+			[20, 21],
+			[21, 22],
+			[22, 23],
+			[23, 20],
+			// bar 1 back
+			[24, 25],
+			[25, 26],
+			[26, 27],
+			[27, 24],
+			// bar 1 f2b
+			[20, 24],
+			[21, 25],
+			[22, 26],
+			[23, 27],
+			// left block front
+			[28, 29],
+			[29, 30],
+			[30, 31],
+			[31, 28],
+			// left block back
+			[32, 33],
+			[33, 34],
+			[34, 35],
+			[35, 32],
+			// left block f2b
+			[28, 32],
+			[29, 33],
+			[30, 34],
+			[31, 35],
+			// right block front
+			[36, 37],
+			[37, 38],
+			[38, 39],
+			[39, 36],
+			// right block back
+			[40, 41],
+			[41, 42],
+			[42, 43],
+			[43, 40],
+			// right block f2b
+			[36, 40],
+			[37, 41],
+			[38, 42],
+			[39, 43],
+			// bar 2 front
+			[44, 45],
+			[45, 46],
+			[46, 47],
+			[47, 44],
+			// bar 2 back
+			[48, 49],
+			[49, 50],
+			[50, 51],
+			[51, 48],
+			// bar 2 f2b
+			[44, 48],
+			[45, 49],
+			[46, 50],
+			[47, 51],
+			// top front
+			[52, 53],
+			[53, 54],
+			[54, 55],
+			[55, 52],
+			// top back
+			[56, 57],
+			[57, 58],
+			[58, 59],
+			[59, 56],
+			// top f2b
+			[52, 56],
+			[53, 57],
+			[54, 58],
+			[55, 59],
+			// center front
+			[60, 61],
+			[61, 62],
+			[62, 63],
+			[63, 60],
+			// center back
+			[64, 65],
+			[65, 66],
+			[66, 67],
+			[67, 64],
+			// center f2b
+			[60, 64],
+			[61, 65],
+			[62, 66],
+			[63, 67],
+		];
+
+		var myCanvas = document.getElementById("myCanvas");
+		var myContext = myCanvas.getContext("2d");
+
+		function ClearCanvas() {
+			myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+		}
+
+		function DrawLine(x1, y1, x2, y2) {
+			myContext.fillStyle = "#00FF00";
+			myContext.strokeStyle = "#00FF00";
+			myContext.lineWidth = 1;
+			myContext.beginPath();
+			myContext.moveTo(320 + x1, 240 - y1);
+			myContext.lineTo(320 + x2, 240 - y2);
+			myContext.closePath();
+			myContext.fill();
+			myContext.stroke();
+		}
+
+		function Draw(p1, p2) {
+			DrawLine(p1[0], p1[1], p2[0], p2[1]);
+		}
+
+		function DrawCube() {
+			// draw edges
+			for (let i = 0; i < edge.length; i++) {
+				let p = edge[i];
+				let p1 = p[0]; // from pt
+				let p2 = p[1]; // to pt
+
+				Draw(cubo[p1], cubo[p2]);
+			}
+		}
+
+		function MultPtoMat(Pto, Mtx) {
+			// multiplicar um ponto P[4] por uma matriz M[4][4]
+			// o resultado P[1][4] x M[4][4] é P1[1][4], ou seja, um ponto
+
+			var AUX = [0, 0, 0, 0];
+			var AUX2;
+			var j, k;
+
+			for (j = 0; j < 4; j++) {
+				AUX2 = 0;
+				for (k = 0; k < 4; k++)
+					AUX2 = AUX2 + (Pto[k] * Mtx[k][j]);
+				AUX[j] = AUX2;
+			}
+
+			for (j = 0; j < 4; j++)
+				Pto[j] = AUX[j];
+		}
+
+		function MultMat(M1, M2, M3) {
+			// M1 x M2 = M3
+
+			// AUX; cria uma matriz auxiliar para armazenar o resultado
+			var AUX = Array.matrix(4, 4, 0);
+			var i, j, k;
+			for (i = 0; i < 4; i++) {
+				for (j = 0; j < 4; j++) {
+					AUX[i][j] = 0;
+					for (k = 0; k < 4; k++) {
+						AUX[i][j] = AUX[i][j] + (M1[i][k] * M2[k][j]);
+					}
+				}
+			}
+			// copiar a matriz resultante (AUX) para a matriz de retorno M3
+			for (i = 0; i < 4; i++) {
+				for (j = 0; j < 4; j++) {
+					M3[i][j] = AUX[i][j];
+				}
+			}
+		}
+
+		function TransladaPonto(P, DX, DY, DZ) {
+			// translada um ponto
+			// multiplica um ponto P[4] pela matriz de deslocamento MT
+			// deslocamento no eixo X => DX
+			// deslocamento no eixo Y => DY
+			// deslocamento no eixo Z => DZ
+			// devolve o resultado em P[4]
+
+			var MT = [
+				[1, 0, 0, 0],
+				[0, 1, 0, 0],
+				[0, 0, 1, 0],
+				[DX, DY, DZ, 1]
+			];
+
+			MultPtoMat(P, MT);
+		}
+
+		function TransladaCubo(CB, DX, DY, DZ) {
+			for (let pto = 0; pto < cubo.length; pto++) {
+				TransladaPonto(CB[pto], DX, DY, DZ);
+			}
+		}
+
+		function EscalaPonto(pto, scale) {
+			// scale matrix
+			var mtxZ = [
+				[scale, 0, 0, 0],
+				[0, scale, 0, 0],
+				[0, 0, scale, 0],
+				[0, 0, 0, scale]
+			];
+			MultPtoMat(pto, mtxZ);
+		}
+
+		function EscalaCubo(scale) {
+			for (let pto = 0; pto < cubo.length; pto++) {
+				EscalaPonto(cubo[pto], scale);
+			}
+		}
+
+		// Scale
+		function scaleCube(val) {
+			ClearCanvas();
+			EscalaCubo(val);
+			DrawCube();
+		}
+
+		// ok
+		function scaleUp() {
+			let val = document.getElementById("scUp").value;
+			scaleCube(val);
+		}
+		// ok
+		function scaleDown() {
+			let val = document.getElementById("scDown").value;
+			scaleCube(val);
+		}
+
+
+		function RotacionaCubo(CB, RX, RY, RZ) {
+			// Para rotacionar o cubo nos ângulos RX, RY e RZ:
+			// primeiro criar as matrizes de rotação nos eixos X, Y e Z
+			// depois efetuar a composição de movimentos:
+			// multiplicar a matriz MX pela matriz MY e colocar na matriz M
+			// depois, multiplicar a matriz M obitda, pela matriz MZ e colocar o resultado em M
+			// com isto obtemos uma matriz M, que combina os movimentos de rotação no eixo X, Y e Z
+			// e por último, multiplicar os 8 pontos do cubo CB pela matriz M
+			// devolvendo o resultado em CB1
+
+			var i;
+			//var M = Array.matrix(4, 4, 0);
+
+			var M = [
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+				[0, 0, 0, 0]
+			];
+
+			var angulo = RX;
+
+			var Mx = [
+				[1, 0, 0, 0],
+				[0, Math.cos(angulo), Math.sin(angulo), 0],
+				[0, -Math.sin(angulo), Math.cos(angulo), 0],
+				[0, 0, 0, 1]
+			];
+
+			angulo = RY;
+			var My = [
+				[Math.cos(angulo), 0, Math.sin(angulo), 0],
+				[0, 1, 0, 0],
+				[-Math.sin(angulo), 0, Math.cos(angulo), 0],
+				[0, 0, 0, 1]
+			];
+
+			angulo = RZ;
+			var Mz = [
+				[Math.cos(angulo), -Math.sin(angulo), 0, 0],
+				[Math.sin(angulo), Math.cos(angulo), 0, 0],
+				[0, 0, 1, 0],
+				[0, 0, 0, 1]
+			];
+
+			MultMat(Mx, My, M);
+			MultMat(M, Mz, M);
+
+			for (i = 0; i < cubo.length; i++) {
+				MultPtoMat(CB[i], M);
+			}
+		}
+
+
+		// Rotate all
+		function rotate() {
+			var rx = document.getElementById("rx").value;
+			var ry = document.getElementById("ry").value;
+			var rz = document.getElementById("rz").value;
+
+			ClearCanvas();
+			RotacionaCubo(cubo, rx, ry, rz);
+			DrawCube();
+		}
+
+		function rotX(d) {
+			let val = document.getElementById("rotInc").value;
+			val *= d;
+			ClearCanvas();
+			RotacionaCubo(cubo, val, 0, 0);
+			DrawCube();
+		}
+		function rotY(d) {
+			let val = document.getElementById("rotInc").value;
+			val *= d;
+			ClearCanvas();
+			RotacionaCubo(cubo, 0, val, 0);
+			DrawCube();
+		}
+		function rotZ(d) {
+			let val = document.getElementById("rotInc").value;
+			val *= d;
+			ClearCanvas();
+			RotacionaCubo(cubo, 0, 0, val);
+			DrawCube();
+		}
+
+		// Move
+		function moveUp() {
+			let val = document.getElementById("moveInc").value;
+			ClearCanvas();
+			TransladaCubo(cubo, 0, val, 0);
+			DrawCube();
+		}
+
+		function moveDown() {
+			let val = document.getElementById("moveInc").value;
+			ClearCanvas();
+			TransladaCubo(cubo, 0, -val, 0);
+			DrawCube();
+		}
+
+		function moveLeft() {
+			let val = document.getElementById("moveInc").value;
+			ClearCanvas();
+			TransladaCubo(cubo, -val, 0, 0);
+			DrawCube();
+		}
+
+		function moveRight() {
+			let val = document.getElementById("moveInc").value;
+			ClearCanvas();
+			TransladaCubo(cubo, val, 0, 0);
+			DrawCube();
+		}
+
+		/* loop
+		window.onload = init;
+		function init() {
+			let step = 500;
+			setInterval(onEachStep, step); // 60 fps = 1000 / 60
+		};
+		function onEachStep() {
+			rotate()
+			DrawCube();
+		};
+		const loopInterval = setInterval(onEachStep, 500);
+		function stopPlay()
+		{
+			clearInterval(loopInterval);
+		}
+		*/
+
+		function onEachStep() {
+			rotate()
+			DrawCube();
+		};
+
+		let loopId = 0;
+		let isRunning = false;
+
+		function startLoop() {
+			if(!isRunning) {
+				loopId = setInterval(onEachStep, 500);
+				isRunning = true;
+			}
+		}
+		function stopLoop() {
+			if (isRunning){
+				clearInterval(loopId);
+				isRunning = false;
+			}
+		}
+
+		// initial draw after load
+		window.onload = function () {
+			// adjust scale first
+			scaleCube(10);
+			DrawCube();
+			// Used to detect if the control key has been pressed.
+			document.addEventListener('keydown', processKeyDown, false);
+		};
+
+		// -----------------------------------------------------------------------------------------------------
+		function processKeyDown(evt)
+		{
+			// console.log('event.key: ', evt.key);
+			// console.log('Physical event.code:', evt.code);
+			// console.log('Deprecated event.KeyCode:', evt.keyCode); // Or event.which
+
+			if (evt.ctrlKey) {
+				switch (evt.keyCode) {
+					case constants.upArrow:
+						// No operation other than preventing the default behavior of the arrow key.
+						evt.preventDefault(); // This prevents the default behavior of the arrow keys, which is to scroll the browser window when scroll bars are present. The user can still scroll the window with the mouse.
+						break;
+					case constants.downArrow:
+						// No operation other than preventing the default behavior of the arrow key.
+						evt.preventDefault();
+						break;
+					case constants.leftArrow:
+						// console.log("ctrl+leftArrow");
+						surface.zRotate(-1); // The sign determines if the surface rotates "clockwise" or "counterclockwise".
+						evt.preventDefault();
+						break;
+					case constants.rightArrow:
+						// console.log("ctrl+rightArrow");
+						surface.zRotate(1);
+						evt.preventDefault();
+						break;
+				}
+				return; // When the control key is pressed, only the left and right arrows have meaning, no need to process any other key strokes (i.e., bail now).
+			}
+
+			// Assert: The control key is not pressed.
+
+			switch (evt.key) {
+				//case constants.upArrow:
+				case "ArrowUp":
+					moveUp();
+					evt.preventDefault();
+					break;
+				case "ArrowDown":
+					moveDown();
+					evt.preventDefault();
+					break;
+				case "ArrowLeft":
+					moveLeft();
+					evt.preventDefault();
+					break;
+				case "ArrowRight":
+					moveRight();
+					evt.preventDefault();
+					break;
+				case "p":
+					scaleUp();
+					evt.preventDefault();
+					break;
+				case "l":
+					scaleDown();
+					evt.preventDefault();
+					break;
+
+				case "q":
+					rotX(1);
+					evt.preventDefault();
+					break;
+				case "w":
+					rotY(1);
+					evt.preventDefault();
+					break;
+				case "e":
+					rotZ(1);
+					evt.preventDefault();
+					break;
+
+				case "a":
+					rotX(-1);
+					evt.preventDefault();
+					break;
+				case "s":
+					rotY(-1);
+					evt.preventDefault();
+					break;
+				case "d":
+					rotZ(-1);
+					evt.preventDefault();
+					break;
+
+			}
+		}
+
+</script>
+</body>
+
+</html>
