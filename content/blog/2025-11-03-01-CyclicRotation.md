@@ -1,3 +1,10 @@
+---
+title: Codility Lesson - Cyclic Rotation
+date: 2025-11-03
+author: Jonatas
+tags: ["code", "codility"]
+---
+
 ### Lesson-02 - Arrays
 
 ---------------------------------------------------------------------------------------------------

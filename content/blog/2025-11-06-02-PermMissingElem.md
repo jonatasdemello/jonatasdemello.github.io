@@ -1,3 +1,10 @@
+---
+title: Codility Lesson - PermMissingElem
+date: 2025-06-02
+author: Jonatas
+tags: ["code", "codility"]
+---
+
 ### Lesson-03 - Time Complexity
 
 ---------------------------------------------------------------------------------------------------

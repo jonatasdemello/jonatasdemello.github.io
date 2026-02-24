@@ -1,3 +1,10 @@
+---
+title: Codility Lesson - Odd Occurrences In Array
+date: 2025-11-04
+author: Jonatas
+tags: ["code", "codility"]
+---
+
 ### Lesson-02 - Arrays
 
 ---------------------------------------------------------------------------------------------------
