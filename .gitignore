@@ -1,8 +1,0 @@
-_site/
-node_modules/
-.cache
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
-Gemfile.lock
