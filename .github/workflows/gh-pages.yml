@@ -1,13 +1,13 @@
 # If you’d like to deploy this to GitHub pages, rename this
 # file to `gh-pages.yml` and read the mini-tutorial on
 # https://www.11ty.dev/docs/deployment/#deploy-an-eleventy-project-to-github-pages
+
 name: Deploy to GitHub Pages (gh-pages.yml)
 
 on:
   push:
     branches:
-      - eleventy
-      # - main
+      - gh-pages
   pull_request:
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Step Setup Node
         uses: actions/setup-node@v3
@@ -45,8 +45,7 @@ jobs:
 
       - name: Step Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/eleventy'
-        # 'refs/heads/main'
+        if: github.ref == 'refs/heads/gh-pages'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
