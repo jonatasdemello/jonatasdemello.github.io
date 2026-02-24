@@ -3,18 +3,18 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <title>Jonatas Blog Title</title>
   <subtitle>This is a longer description about your blog.</subtitle>
-  <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/feed/feed.xml" rel="self" />
-  <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/" />
+  <link href="https://jonatasdemello.github.io/feed/feed.xml" rel="self" />
+  <link href="https://jonatasdemello.github.io/" />
   <updated>2025-12-04T00:00:00Z</updated>
-  <id>https://jonatasdemello.github.io/jonatasdemello.github.io/</id>
+  <id>https://jonatasdemello.github.io/</id>
   <author>
     <name>Jonatas</name>
   </author>
   <entry>
     <title>A Good (and Fun) Use Case for AI</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/" />
+    <link href="https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/" />
     <updated>2025-12-04T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/</id>
+    <id>https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/</id>
     <content type="html">&lt;h1 id=&quot;a-good-and-fun-use-case-for-ai&quot;&gt;A Good (and Fun) Use Case for AI&lt;/h1&gt;
 &lt;p&gt;One thing I learned is that AI is good it to write unit tests for enterprise level applications. Another good use is to convert programs between different languages. It works well with modern languages like Python, JavaScript, C/C++, but what about the BASIC language for 8-bit computers?&lt;/p&gt;
 &lt;h2 id=&quot;the-past&quot;&gt;The Past&lt;/h2&gt;
@@ -40,13 +40,13 @@
 &lt;p&gt;My brain is not wired to create new things out of thin air, so I prefer to take something, break it apart, learn how it works, modify it, improve it, make it run faster and so on.&lt;/p&gt;
 &lt;p&gt;However, converting these programs can be fun, but sometimes can be very hard to untangle the nested &amp;quot;GOTO&amp;quot; jumps. Here is where AI comes into play. I am using AI tools for my job and I think there are some interesting use cases for it and this is one of them.&lt;/p&gt;
 &lt;p&gt;I started with this game that can be found in this page: &lt;a href=&quot;https://www.calormen.com/jsbasic/&quot;&gt;Applesoft BASIC in JavaScript&lt;/a&gt; called &amp;quot;ARTILLERY&amp;quot; - select &lt;strong&gt;Artillery (Michael &amp;quot;Moose&amp;quot; O&#39;Malley)&lt;/strong&gt; in the dropdown and click &amp;quot;Run&amp;quot;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/content/assets/images/01-jsbasic.png&quot; alt=&quot;Applesoft Basic in JavaScript&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;picture&gt;&lt;source type=&quot;image/avif&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/zJ5MGA3c8Q-1382.avif 1382w&quot;&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/zJ5MGA3c8Q-1382.webp 1382w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/zJ5MGA3c8Q-1382.png&quot; alt=&quot;Applesoft Basic in JavaScript&quot; width=&quot;1382&quot; height=&quot;710&quot;&gt;&lt;/picture&gt;&lt;/p&gt;
 &lt;p&gt;I copied the code and asked Copilot to convert it to JavaScript and HTML5 using canvas so it can be played in the browser. And it worked - kind of - here is the result:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/content/assets/images/02-htmlv1.png&quot; alt=&quot;Game in HTML5&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;picture&gt;&lt;source type=&quot;image/avif&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/-jdSNUZlXS-756.avif 756w&quot;&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/-jdSNUZlXS-756.webp 756w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/-jdSNUZlXS-756.png&quot; alt=&quot;Game in HTML5&quot; width=&quot;756&quot; height=&quot;747&quot;&gt;&lt;/picture&gt;&lt;/p&gt;
 &lt;p&gt;The UI needs improvement and there was a bug: the trajectory was wrong and not plotting the lines.&lt;/p&gt;
 &lt;p&gt;It took me some time to debug the jumps and I found out that one of the GOSUB-RETURN was mistakenly replaced by a &amp;quot;break&amp;quot; statement in one of the JavaScript loops.&lt;/p&gt;
 &lt;p&gt;But then I thought: can AI help me to understand this? So I asked it to generate a flowchart diagram of the code and present it in an HTML page. Here is the result:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/content/assets/images/diagram_1.png&quot; alt=&quot;Flowchart 1&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;picture&gt;&lt;source type=&quot;image/avif&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/xb1oEwpmru-1477.avif 1477w&quot;&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/xb1oEwpmru-1477.webp 1477w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/xb1oEwpmru-1477.png&quot; alt=&quot;Flowchart 1&quot; width=&quot;1477&quot; height=&quot;895&quot;&gt;&lt;/picture&gt;&lt;/p&gt;
 &lt;p&gt;Nice, but the lines overlap and some boxes are not in a good position. I tried to organize it but each box is made of a couple of html elements, not really easy to move.&lt;/p&gt;
 &lt;pre class=&quot;language-html&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-html&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;&amp;lt;!-- SUB 1160: Draw Explosion --&gt;&lt;/span&gt;
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;rect&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;660&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;60&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;140&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;80&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;block-subroutine&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;rx&lt;/span&gt;&lt;span class=&quot;token attr-value&quot;&gt;&lt;span class=&quot;token punctuation attr-equals&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;5&lt;span class=&quot;token punctuation&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;/&gt;&lt;/span&gt;&lt;/span&gt;
@@ -58,11 +58,11 @@
 &lt;p&gt;I guess that is my fault since I was not specific enough (remember Aladdin&#39;s request: &amp;quot;make me a prince&amp;quot; to the Genie in the movie)...&lt;/p&gt;
 &lt;p&gt;So I asked Copilot to generate the diagram again, but this time using the &lt;a href=&quot;https://mermaid.js.org/&quot;&gt;Mermaid.js&lt;/a&gt; diagramming and charting tool.&lt;/p&gt;
 &lt;p&gt;And so I got this:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/content/assets/images/diagram_3.png&quot; alt=&quot;Flowchart 2&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;picture&gt;&lt;source type=&quot;image/avif&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/BWyxSq-X0h-869.avif 869w&quot;&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/BWyxSq-X0h-869.webp 869w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/BWyxSq-X0h-869.png&quot; alt=&quot;Flowchart 2&quot; width=&quot;869&quot; height=&quot;848&quot;&gt;&lt;/picture&gt;&lt;/p&gt;
 &lt;p&gt;Which is much better than the previous one! But there was a bug. Copilot broke the diagram in 3 tabs, I assume because the content is too long and only the first tab was showing correctly:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/content/assets/images/diagram_4.png&quot; alt=&quot;Flowchart tab 1&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;picture&gt;&lt;source type=&quot;image/avif&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/kBAuKdzAKp-874.avif 874w&quot;&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/kBAuKdzAKp-874.webp 874w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/kBAuKdzAKp-874.png&quot; alt=&quot;Flowchart tab 1&quot; width=&quot;874&quot; height=&quot;438&quot;&gt;&lt;/picture&gt;&lt;/p&gt;
 &lt;p&gt;And the second tab:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/content/assets/images/diagram_5.png&quot; alt=&quot;Flowchart tab 1&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;picture&gt;&lt;source type=&quot;image/avif&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/X_Wt9us_O5-874.avif 874w&quot;&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/X_Wt9us_O5-874.webp 874w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/X_Wt9us_O5-874.png&quot; alt=&quot;Flowchart tab 1&quot; width=&quot;874&quot; height=&quot;463&quot;&gt;&lt;/picture&gt;&lt;/p&gt;
 &lt;p&gt;At first I thought the error could be in one of the texts that it used from the basic program to create the Mermaid diagram. I did some Google digging but there was nothing interesting there, just some suggestions to update the Mermaid version.&lt;/p&gt;
 &lt;p&gt;My next step was to copy the diagrams to Mermaid&#39;s online editor &lt;a href=&quot;https://mermaid.live/&quot;&gt;here&lt;/a&gt; and check if it worked there. Surprisingly it did, so a quick look a the documentation followed. Nothing suspicious...&lt;/p&gt;
 &lt;p&gt;That&#39;s when something came to my mind. The tabs were grouping multiple containers (one for each diagram) and the CSS was:&lt;/p&gt;
@@ -73,7 +73,7 @@
             &lt;span class=&quot;token property&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; block&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
         &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;And the solution was to make &lt;code&gt;display: block&lt;/code&gt; for both. Hiding part of the diagram was not working well with Mermaid&#39;s rendering system, maybe because it was treated as one piece only. Either way, the problem was solved!&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-12-04-Retro-AI/content/assets/images/diagram_6.png&quot; alt=&quot;Flowchart Correct&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;picture&gt;&lt;source type=&quot;image/avif&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/R6D-C_V94M-846.avif 846w&quot;&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/R6D-C_V94M-846.webp 846w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://jonatasdemello.github.io/blog/2025-12-04-Retro-AI/R6D-C_V94M-846.png&quot; alt=&quot;Flowchart Correct&quot; width=&quot;846&quot; height=&quot;872&quot;&gt;&lt;/picture&gt;&lt;/p&gt;
 &lt;h2 id=&quot;next-steps&quot;&gt;Next steps&lt;/h2&gt;
 &lt;p&gt;I still want to double check the game logic and probably make some improvements in the UI, but an improved (still in progress) version can be found &lt;a href=&quot;https://jonatasdemello.github.io/static/index.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
@@ -98,9 +98,9 @@
   </entry>
   <entry>
     <title>Codility Lesson - Odd Occurrences In Array</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-04-02-OddOccurrencesInArray/" />
+    <link href="https://jonatasdemello.github.io/blog/2025-11-04-02-OddOccurrencesInArray/" />
     <updated>2025-11-04T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-04-02-OddOccurrencesInArray/</id>
+    <id>https://jonatasdemello.github.io/blog/2025-11-04-02-OddOccurrencesInArray/</id>
     <content type="html">&lt;h3 id=&quot;lesson-02-arrays&quot;&gt;Lesson-02 - Arrays&lt;/h3&gt;
 &lt;hr&gt;
 &lt;p&gt;https://app.codility.com/programmers/lessons/2-arrays/&lt;/p&gt;
@@ -306,9 +306,9 @@ Having more than one odd element in the array means that the input is invalid.&l
   </entry>
   <entry>
     <title>Codility Lesson - Cyclic Rotation</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-03-01-CyclicRotation/" />
+    <link href="https://jonatasdemello.github.io/blog/2025-11-03-01-CyclicRotation/" />
     <updated>2025-11-03T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-03-01-CyclicRotation/</id>
+    <id>https://jonatasdemello.github.io/blog/2025-11-03-01-CyclicRotation/</id>
     <content type="html">&lt;h3 id=&quot;lesson-02-arrays&quot;&gt;Lesson-02 - Arrays&lt;/h3&gt;
 &lt;hr&gt;
 &lt;p&gt;https://app.codility.com/programmers/lessons/2-arrays/&lt;/p&gt;
@@ -705,9 +705,9 @@ Test Suites&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span 
   </entry>
   <entry>
     <title>Codility Lesson - Binary Gap</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-02-01-BinaryGap/" />
+    <link href="https://jonatasdemello.github.io/blog/2025-11-02-01-BinaryGap/" />
     <updated>2025-11-02T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-02-01-BinaryGap/</id>
+    <id>https://jonatasdemello.github.io/blog/2025-11-02-01-BinaryGap/</id>
     <content type="html">&lt;h3 id=&quot;lesson-01-iterations&quot;&gt;Lesson-01 - Iterations&lt;/h3&gt;
 &lt;hr&gt;
 &lt;p&gt;https://app.codility.com/programmers/lessons/1-iterations/&lt;/p&gt;
@@ -1311,9 +1311,9 @@ Ran all test suites related to changed files&lt;/code&gt;&lt;/pre&gt;
   </entry>
   <entry>
     <title>Codility Lessons Using TDD</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/" />
+    <link href="https://jonatasdemello.github.io/blog/2025-11-01-Codility/" />
     <updated>2025-11-01T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/</id>
+    <id>https://jonatasdemello.github.io/blog/2025-11-01-Codility/</id>
     <content type="html">&lt;h1 id=&quot;codility-lessons-using-tdd&quot;&gt;Codility Lessons Using TDD&lt;/h1&gt;
 &lt;p&gt;The goal of this project is to show how to solve coding problems using &lt;a href=&quot;https://martinfowler.com/bliki/TestDrivenDevelopment.html&quot;&gt;TDD - Test Driven Development&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In the process of learning or during a coding interview, the process (how) is much more important than the result itself.
@@ -1438,117 +1438,117 @@ Ran all test suites.
 &lt;ul&gt;
 &lt;li&gt;Lesson-01 - Iterations
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/01-Iterations/01-BinaryGap.md&quot;&gt;BinaryGap&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/01-Iterations/01-BinaryGap.md&quot;&gt;BinaryGap&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-02 - Arrays
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/02-Arrays/01-CyclicRotation.md&quot;&gt;CyclicRotation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/02-Arrays/02-OddOccurrencesInArray.md&quot;&gt;OddOccurrencesInArray&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/02-Arrays/01-CyclicRotation.md&quot;&gt;CyclicRotation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/02-Arrays/02-OddOccurrencesInArray.md&quot;&gt;OddOccurrencesInArray&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-03 - Time Complexity
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/03-Time-Complexity/01-FrogJmp.md&quot;&gt;FrogJump&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/03-Time-Complexity/02-PermMissingElem.md&quot;&gt;PermMissingElem&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/03-Time-Complexity/03-TapeEquilibrium.md&quot;&gt;TapeEquilibrium&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/03-Time-Complexity/01-FrogJmp.md&quot;&gt;FrogJump&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/03-Time-Complexity/02-PermMissingElem.md&quot;&gt;PermMissingElem&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/03-Time-Complexity/03-TapeEquilibrium.md&quot;&gt;TapeEquilibrium&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-04 - Counting Elements
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/04-Counting-Elements/01-FrogRiverOne.md&quot;&gt;FrogRiverOne&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/04-Counting-Elements/02-PermCheck.md&quot;&gt;PermCheck&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/04-Counting-Elements/03-MaxCounters.md&quot;&gt;MaxCounters&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/04-Counting-Elements/04-MissingInteger.md&quot;&gt;MissingInteger&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/04-Counting-Elements/01-FrogRiverOne.md&quot;&gt;FrogRiverOne&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/04-Counting-Elements/02-PermCheck.md&quot;&gt;PermCheck&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/04-Counting-Elements/03-MaxCounters.md&quot;&gt;MaxCounters&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/04-Counting-Elements/04-MissingInteger.md&quot;&gt;MissingInteger&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-05 - Prefix Sums
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/05-Prefix-Sums/01-PassingCars.md&quot;&gt;PassingCars&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/05-Prefix-Sums/02-CountDiv.md&quot;&gt;CountDiv&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/05-Prefix-Sums/03-GenomicRangeQuery.md&quot;&gt;GenomicRangeQuery&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/05-Prefix-Sums/04-MinAvgTwoSlice.md&quot;&gt;MinAvgTwoSlice&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/05-Prefix-Sums/01-PassingCars.md&quot;&gt;PassingCars&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/05-Prefix-Sums/02-CountDiv.md&quot;&gt;CountDiv&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/05-Prefix-Sums/03-GenomicRangeQuery.md&quot;&gt;GenomicRangeQuery&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/05-Prefix-Sums/04-MinAvgTwoSlice.md&quot;&gt;MinAvgTwoSlice&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-06 - Sorting
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/06-Sorting/01-Distinct.md&quot;&gt;Distinct&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/06-Sorting/02-MaxProductOfThree.md&quot;&gt;MaxProductOfThree&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/06-Sorting/03-Triangle.md&quot;&gt;Triangle&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/06-Sorting/04-NumberOfDiscIntersections.md&quot;&gt;NumberOfDiscIntersections&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/06-Sorting/01-Distinct.md&quot;&gt;Distinct&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/06-Sorting/02-MaxProductOfThree.md&quot;&gt;MaxProductOfThree&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/06-Sorting/03-Triangle.md&quot;&gt;Triangle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/06-Sorting/04-NumberOfDiscIntersections.md&quot;&gt;NumberOfDiscIntersections&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-07 - Stacks and Queues
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/07-Stacks-and-Queues/01-Brackets.md&quot;&gt;Brackets&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/07-Stacks-and-Queues/02-Fish.md&quot;&gt;Fish&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/07-Stacks-and-Queues/03-Nesting.md&quot;&gt;Nesting&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/07-Stacks-and-Queues/04-StoneWall.md&quot;&gt;StoneWall&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/07-Stacks-and-Queues/01-Brackets.md&quot;&gt;Brackets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/07-Stacks-and-Queues/02-Fish.md&quot;&gt;Fish&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/07-Stacks-and-Queues/03-Nesting.md&quot;&gt;Nesting&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/07-Stacks-and-Queues/04-StoneWall.md&quot;&gt;StoneWall&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-08 - Leader
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/08-Leader/01-Dominator.md&quot;&gt;Dominator&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/08-Leader/02-EquiLeader.md&quot;&gt;EquiLeader&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/08-Leader/01-Dominator.md&quot;&gt;Dominator&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/08-Leader/02-EquiLeader.md&quot;&gt;EquiLeader&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-09 - Maximum slice problem
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/09-Maximum-Slice-Problem/01-MaxProfit.md&quot;&gt;MaxProfit&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/09-Maximum-Slice-Problem/02-MaxSliceSum.md&quot;&gt;MaxSliceSum&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/09-Maximum-Slice-Problem/03-MaxDoubleSliceSum.md&quot;&gt;MaxDoubleSliceSum&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/09-Maximum-Slice-Problem/01-MaxProfit.md&quot;&gt;MaxProfit&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/09-Maximum-Slice-Problem/02-MaxSliceSum.md&quot;&gt;MaxSliceSum&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/09-Maximum-Slice-Problem/03-MaxDoubleSliceSum.md&quot;&gt;MaxDoubleSliceSum&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-10 - Prime and composite numbers
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/10-Prime-and-Composite-Numbers/01-CountFactors.md&quot;&gt;CountFactors&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/10-Prime-and-Composite-Numbers/02-MinPerimeterRectangle.md&quot;&gt;MinPerimeterRectangle&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/10-Prime-and-Composite-Numbers/03-Flags.md&quot;&gt;Flags&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/10-Prime-and-Composite-Numbers/04-Peaks.md&quot;&gt;Peaks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/10-Prime-and-Composite-Numbers/01-CountFactors.md&quot;&gt;CountFactors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/10-Prime-and-Composite-Numbers/02-MinPerimeterRectangle.md&quot;&gt;MinPerimeterRectangle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/10-Prime-and-Composite-Numbers/03-Flags.md&quot;&gt;Flags&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/10-Prime-and-Composite-Numbers/04-Peaks.md&quot;&gt;Peaks&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-11 - Sieve of Eratosthenes
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/11-Sieve-of-Eratosthenes/02-CountNonDivisible.md&quot;&gt;CountNonDivisible&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/11-Sieve-of-Eratosthenes/03-CountSemiprimes.md&quot;&gt;CountSemiprimes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/11-Sieve-of-Eratosthenes/02-CountNonDivisible.md&quot;&gt;CountNonDivisible&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/11-Sieve-of-Eratosthenes/03-CountSemiprimes.md&quot;&gt;CountSemiprimes&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-12 - Euclidean algorithm
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/12-Euclidean-Algorithm/01-ChocolatesByNumbers.md&quot;&gt;ChocolatesByNumbers&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/12-Euclidean-Algorithm/02-CommonPrimeDivisors.md&quot;&gt;CommonPrimeDivisors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/12-Euclidean-Algorithm/01-ChocolatesByNumbers.md&quot;&gt;ChocolatesByNumbers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/12-Euclidean-Algorithm/02-CommonPrimeDivisors.md&quot;&gt;CommonPrimeDivisors&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-13 - Fibonacci numbers
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/13-Fibonacci-Nnumbers/01-FibFrog.md&quot;&gt;FibFrog&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/13-Fibonacci-Nnumbers/02-Ladder.md&quot;&gt;Ladder&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/13-Fibonacci-Nnumbers/01-FibFrog.md&quot;&gt;FibFrog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/13-Fibonacci-Nnumbers/02-Ladder.md&quot;&gt;Ladder&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-14 - Binary search algorithm
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/14-Binary-Search-Algorithm/01-MinMaxDivision.md&quot;&gt;MinMaxDivision&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/14-Binary-Search-Algorithm/02-NailingPlanks.md&quot;&gt;NailingPlanks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/14-Binary-Search-Algorithm/01-MinMaxDivision.md&quot;&gt;MinMaxDivision&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/14-Binary-Search-Algorithm/02-NailingPlanks.md&quot;&gt;NailingPlanks&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-15 - Caterpillar method
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/15-Caterpillar-Method/01-AbsDistinct.md&quot;&gt;AbsDistinct&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/15-Caterpillar-Method/02-CountDistinctSlices.md&quot;&gt;CountDistinctSlices&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/15-Caterpillar-Method/03-CountTriangles.md&quot;&gt;CountTriangles&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/15-Caterpillar-Method/04-MinAbsSumOfTwo.md&quot;&gt;MinAbsSumOfTwo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/15-Caterpillar-Method/01-AbsDistinct.md&quot;&gt;AbsDistinct&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/15-Caterpillar-Method/02-CountDistinctSlices.md&quot;&gt;CountDistinctSlices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/15-Caterpillar-Method/03-CountTriangles.md&quot;&gt;CountTriangles&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/15-Caterpillar-Method/04-MinAbsSumOfTwo.md&quot;&gt;MinAbsSumOfTwo&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-16 - Greedy algorithms
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/16-Greedy-Algorithms/01-MaxNonoverlappingSegments.md&quot;&gt;MaxNonoverlappingSegments&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/16-Greedy-Algorithms/02-TieRopes.md&quot;&gt;TieRopes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/16-Greedy-Algorithms/01-MaxNonoverlappingSegments.md&quot;&gt;MaxNonoverlappingSegments&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/16-Greedy-Algorithms/02-TieRopes.md&quot;&gt;TieRopes&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Lesson-17 - Dynamic programming
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/17-Dynamic-Programming/01-NumberSolitaire.md&quot;&gt;NumberSolitaire&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-01-Codility/17-Dynamic-Programming/02-MinAbsSum.md&quot;&gt;MinAbsSum&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/17-Dynamic-Programming/01-NumberSolitaire.md&quot;&gt;NumberSolitaire&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jonatasdemello.github.io/blog/2025-11-01-Codility/17-Dynamic-Programming/02-MinAbsSum.md&quot;&gt;MinAbsSum&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -1556,9 +1556,9 @@ Ran all test suites.
   </entry>
   <entry>
     <title>Codility Lesson - PermMissingElem</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-06-02-PermMissingElem/" />
+    <link href="https://jonatasdemello.github.io/blog/2025-11-06-02-PermMissingElem/" />
     <updated>2025-06-02T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-06-02-PermMissingElem/</id>
+    <id>https://jonatasdemello.github.io/blog/2025-11-06-02-PermMissingElem/</id>
     <content type="html">&lt;h3 id=&quot;lesson-03-time-complexity&quot;&gt;Lesson-03 - Time Complexity&lt;/h3&gt;
 &lt;hr&gt;
 &lt;p&gt;https://app.codility.com/programmers/lessons/3-time_complexity/&lt;/p&gt;
@@ -1642,9 +1642,9 @@ Missing element = Expected sum - Actual sum&lt;/p&gt;
   </entry>
   <entry>
     <title>Codility Lesson - FrogJmp</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-05-01-FrogJmp/" />
+    <link href="https://jonatasdemello.github.io/blog/2025-11-05-01-FrogJmp/" />
     <updated>2025-05-01T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2025-11-05-01-FrogJmp/</id>
+    <id>https://jonatasdemello.github.io/blog/2025-11-05-01-FrogJmp/</id>
     <content type="html">&lt;h3 id=&quot;lesson-03-time-complexity&quot;&gt;Lesson-03 - Time Complexity&lt;/h3&gt;
 &lt;hr&gt;
 &lt;p&gt;https://app.codility.com/programmers/lessons/3-time_complexity/&lt;/p&gt;
@@ -1704,9 +1704,9 @@ After 3 jumps: 10 + (3 × 30) = 100 &amp;gt;= 85&lt;/p&gt;
   </entry>
   <entry>
     <title>SOLID Principles</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2019-10-06-SOLID/" />
+    <link href="https://jonatasdemello.github.io/blog/2019-10-06-SOLID/" />
     <updated>2019-10-06T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2019-10-06-SOLID/</id>
+    <id>https://jonatasdemello.github.io/blog/2019-10-06-SOLID/</id>
     <content type="html">&lt;h1 id=&quot;solid-principles&quot;&gt;SOLID Principles&lt;/h1&gt;
 &lt;h2 id=&quot;single-responsibility-principle-s-r-p&quot;&gt;Single Responsibility Principle (S.R.P)&lt;/h2&gt;
 &lt;p&gt;A class should have one, and only one, reason to change.&lt;/p&gt;
@@ -1808,9 +1808,9 @@ The result is fined grained interfaces&lt;/p&gt;
   </entry>
   <entry>
     <title>WebService vs WebApi</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/" />
+    <link href="https://jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/" />
     <updated>2018-10-21T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/</id>
+    <id>https://jonatasdemello.github.io/blog/2018-10-21-WebService-vs-WebApi/</id>
     <content type="html">&lt;h1 id=&quot;web-service-vs-web-api&quot;&gt;Web Service vs Web API&lt;/h1&gt;
 &lt;p&gt;What are the differences between a WebService and Web API?&lt;/p&gt;
 &lt;p&gt;Both are means of communication between consumers and providers over a network.&lt;/p&gt;
@@ -1978,9 +1978,9 @@ https://modeling-languages.com/modeling-web-api-comparing/&lt;/p&gt;
   </entry>
   <entry>
     <title>Learn a New Skill</title>
-    <link href="https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/" />
+    <link href="https://jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/" />
     <updated>2016-01-08T00:00:00Z</updated>
-    <id>https://jonatasdemello.github.io/jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/</id>
+    <id>https://jonatasdemello.github.io/blog/2016-01-08-Learn-new-skill/</id>
     <content type="html">&lt;h1 id=&quot;learn-a-new-skill&quot;&gt;Learn a New Skill&lt;/h1&gt;
 &lt;p&gt;Here are some steps to help you learn a new skill:&lt;/p&gt;
 &lt;ol&gt;
