@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Codility Lessons Using TDD</title>
+		<meta name="description" content="My personal page and blog posts.">
+		<link rel="alternate" href="/jonatasdemello.github.io/feed/feed.xml" type="application/atom+xml" title="Jonatas Blog">
+		
+		
+		
+		<style>/* This is an arbitrary CSS string added to the bundle */
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #C0C0C0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050F;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #C0C0C0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--background-color: #15202b;
+	}
+}
+
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+html {
+	overflow-y: scroll;
+}
+body {
+	max-width: 40em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Fluid images via https://www.zachleat.com/web/fluid-images/ */
+img{
+  max-width: 100%;
+}
+img[width][height] {
+  height: auto;
+}
+img[src$=".svg"] {
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+video,
+iframe {
+	width: 100%;
+	height: auto;
+}
+iframe {
+	aspect-ratio: 16/9;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main,
+footer {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+
+#skip-link {
+	text-decoration: none;
+	background: var(--background-color);
+	color: var(--text-color);
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--color-gray-90);
+	border-radius: 2px;
+}
+
+/* Prevent visually-hidden skip link fom pushing content around when focused */
+#skip-link.visually-hidden:focus {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	/* Ensure it is positioned on top of everything else when it is shown */
+	z-index: 999;
+}
+
+.links-nextprev {
+	display: flex;
+	justify-content: space-between;
+	gap: .5em 1em;
+	list-style: "";
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+.links-nextprev > * {
+	flex-grow: 1;
+}
+.links-nextprev-next {
+	text-align: right;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: .5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	overflow-x: auto;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	flex-grow: 1;
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	gap: .5em 1em;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	counter-reset: start-from var(--postlist-index);
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: .25em;
+	padding-right: .5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: .5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}</style>
+		
+	</head>
+	<body>
+		<a href="#main" id="skip-link" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/jonatasdemello.github.io/" class="home-link">Jonatas Blog</a>
+			<nav>
+				<h2 class="visually-hidden" id="top-level-navigation-menu">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/jonatasdemello.github.io/">Home</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/blog/">Archive</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/about/">About</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/feed/feed.xml">Feed</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/tags/">Tags</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="main">
+			<heading-anchors>
+				
+
+
+<h1 id="codility-lessons-using-tdd">Codility Lessons Using TDD</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2025-11-01">01 November 2025</time></li>
+	<li><a href="/jonatasdemello.github.io/tags/code/" class="post-tag">code</a>, </li>
+	<li><a href="/jonatasdemello.github.io/tags/codility/" class="post-tag">codility</a></li>
+</ul>
+
+<h1 id="codility-lessons-using-tdd-2">Codility Lessons Using TDD</h1>
+<p>The goal of this project is to show how to solve coding problems using <a href="https://martinfowler.com/bliki/TestDrivenDevelopment.html">TDD - Test Driven Development</a>.</p>
+<p>In the process of learning or during a coding interview, the process (how) is much more important than the result itself.
+If I only needed a solution I could simply Google it or use AI.
+Your final solution may not even be complete, but through multiple iterations it can always be improved.
+There are many ways to solve a problem as you will see if you look for solutions on the Internet.
+In a real world scenario, the solution may not be easily available, and some exploration,  thinking and refactoring may be necessary.</p>
+<p>I will take a step-by-step approach showing the steps that any interviewer would like to see, providing explanations along the way.
+In order to solve any problem, you need to understand it first. Then take gradual iterations, sometimes by trial and error, until a solution is achieved.
+This is how things work in a company or the real world.</p>
+<p>For the purpose of this exercise, I will use JavaScript since it is one of the most popular languages and requires less setup and tools.
+Maybe later I will expand it to other languages like C# or Python.
+I like to do this exercise to learn other languages or understand how it works.</p>
+<p>I will use the Test Driven Development (TDD) approach, writing the tests first then the code.
+This allows for more experimentation and helps with correctness.
+The Codility tool will generate a suite of tests to validate the solution, but I can start with the information provided in the problem description.
+Codility also has a timer, which I don't like - so running it locally can be less stressful.</p>
+<h2 id="lessons">Lessons</h2>
+<p>For this I will use the <a href="https://app.codility.com/programmers/">Codility Developer Training</a> site lessons.
+Please go ahead visit the site, create an account there and start exploring the lessons.</p>
+<p>Each problem description will be copied here to make it easier to follow.</p>
+<h2 id="setup">Setup</h2>
+<p>I assume you have a computer and access to the Internet. A Windows, Linux or MacOS machine and some familiarity with the console (command line or terminal).</p>
+<h3 id="tools">Tools</h3>
+<p>First, install the development tools. If you don't have it, please install:</p>
+<ul>
+<li>Node.JS (any LTS version is good).</li>
+<li>Visual Studio Code (or any other IDE that you like, even Notepad++ will do).</li>
+</ul>
+<p>I decided to use Node.JS and JavaScript so it can run on Mac, Windows or Linux.
+Also, it can run on &quot;watch mode&quot; re-running tests automatically after any file changed.</p>
+<h3 id="project">Project</h3>
+<p>Next, I create a new project and install <a href="https://jestjs.io/">Jest</a> to run the tests
+(you can use Mocha or Jasmine if you like).
+Open the console or terminal, create a new folder for the project and then type (inside the project folder):</p>
+<p><code>npm init --yes</code></p>
+<p><code>npm install --save-dev jest</code></p>
+<p>Then modify the <code>package.json</code> file to run the tests:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token string-property property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string-property property">"test"</span><span class="token operator">:</span> <span class="token string">"jest"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span></code></pre>
+<p>Then you can run the tests with:</p>
+<p><code>npm test</code></p>
+<p>To run in &quot;watch mode&quot;:</p>
+<p><code>npm run test -- --watch</code></p>
+<p>Or to show more information:</p>
+<p><code>npm run test -- --verbose</code></p>
+<p>Next, create sub-folders, one for each lesson (to make it easy to find and keep it organized):</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token function">mkdir</span> 01-Iterations
+<span class="token function">mkdir</span> 02-Arrays
+<span class="token function">mkdir</span> 03-Time-Complexity
+<span class="token function">mkdir</span> 04-Counting-Elements
+<span class="token function">mkdir</span> 05-Prefix-Sums
+<span class="token function">mkdir</span> 06-Sorting
+<span class="token function">mkdir</span> 07-Stacks-and-Queues
+<span class="token function">mkdir</span> 08-Leader
+<span class="token function">mkdir</span> 09-Maximum-Slice-Problem
+<span class="token function">mkdir</span> <span class="token number">10</span>-Prime-and-Composite-Numbers
+<span class="token function">mkdir</span> <span class="token number">11</span>-Sieve-of-Eratosthenes
+<span class="token function">mkdir</span> <span class="token number">12</span>-Euclidean-Algorithm
+<span class="token function">mkdir</span> <span class="token number">13</span>-Fibonacci-Nnumbers
+<span class="token function">mkdir</span> <span class="token number">14</span>-Binary-Search-Algorithm
+<span class="token function">mkdir</span> <span class="token number">15</span>-Caterpillar-Method
+<span class="token function">mkdir</span> <span class="token number">16</span>-Greedy-Algorithms
+<span class="token function">mkdir</span> <span class="token number">17</span>-Dynamic-Programming</code></pre>
+<p>Now I am ready to starting solving some problems using TDD.
+Here I will start with the first lesson (warm-up), but the setup process will be the same for all.</p>
+<h3 id="template">Template</h3>
+<p>Since I will be working on multiple problems and they all start the same way,
+I will create a template so I can duplicate it for each new problem and start from there.</p>
+<p>The first file is the solution code and it is called <strong>&quot;solution-template.js&quot;</strong>:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// solution-template.js</span>
+<span class="token string">'use strict'</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span><span class="token function-variable function">exports</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token function">solution</span><span class="token punctuation">(</span><span class="token parameter"><span class="token constant">N</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// your code here</span>
+  <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>The other file is the test suite for this problem called <strong>&quot;solution-template.test.js&quot;</strong>:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// solution-template.test.js</span>
+<span class="token string">'use strict'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> solution <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"./solution-template"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'solution-template tests'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'given 1 should return 1.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token constant">X</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token constant">Y</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>And with that I can just run <code>npm test</code> and see the results:</p>
+<pre><code>PS &gt; npm test
+
+&gt; codility-javascript@1.0.0 test
+&gt; jest
+
+ PASS  00-template/solution-template.test.js
+  Template Tests
+    √ given 1 should return 1. (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:    0.492 s, estimated 1 s
+Ran all test suites.
+</code></pre>
+<p>Here I have</p>
+<ul>
+<li>
+<p>one Test Suite defined with &quot;describe()&quot; and</p>
+</li>
+<li>
+<p>one Unit Test defined with &quot;test()&quot;.</p>
+</li>
+</ul>
+<h2 id="the-problems">The Problems</h2>
+<p>The problems were copied from the  <a href="https://app.codility.com/programmers/lessons/1-iterations/binary_gap/">Codility</a> web site. I recommend you go there create an account and try to solve the problems there too.</p>
+<p>For detailed step-by-step approach, analysis and solution to each problem, check the links bellow:</p>
+<hr>
+<h3 id="solutions">Solutions</h3>
+<ul>
+<li>Lesson-01 - Iterations
+<ul>
+<li><a href="01-Iterations/01-BinaryGap.md">BinaryGap</a></li>
+</ul>
+</li>
+<li>Lesson-02 - Arrays
+<ul>
+<li><a href="02-Arrays/01-CyclicRotation.md">CyclicRotation</a></li>
+<li><a href="02-Arrays/02-OddOccurrencesInArray.md">OddOccurrencesInArray</a></li>
+</ul>
+</li>
+<li>Lesson-03 - Time Complexity
+<ul>
+<li><a href="03-Time-Complexity/01-FrogJmp.md">FrogJump</a></li>
+<li><a href="03-Time-Complexity/02-PermMissingElem.md">PermMissingElem</a></li>
+<li><a href="03-Time-Complexity/03-TapeEquilibrium.md">TapeEquilibrium</a></li>
+</ul>
+</li>
+<li>Lesson-04 - Counting Elements
+<ul>
+<li><a href="04-Counting-Elements/01-FrogRiverOne.md">FrogRiverOne</a></li>
+<li><a href="04-Counting-Elements/02-PermCheck.md">PermCheck</a></li>
+<li><a href="04-Counting-Elements/03-MaxCounters.md">MaxCounters</a></li>
+<li><a href="04-Counting-Elements/04-MissingInteger.md">MissingInteger</a></li>
+</ul>
+</li>
+<li>Lesson-05 - Prefix Sums
+<ul>
+<li><a href="05-Prefix-Sums/01-PassingCars.md">PassingCars</a></li>
+<li><a href="05-Prefix-Sums/02-CountDiv.md">CountDiv</a></li>
+<li><a href="05-Prefix-Sums/03-GenomicRangeQuery.md">GenomicRangeQuery</a></li>
+<li><a href="05-Prefix-Sums/04-MinAvgTwoSlice.md">MinAvgTwoSlice</a></li>
+</ul>
+</li>
+<li>Lesson-06 - Sorting
+<ul>
+<li><a href="06-Sorting/01-Distinct.md">Distinct</a></li>
+<li><a href="06-Sorting/02-MaxProductOfThree.md">MaxProductOfThree</a></li>
+<li><a href="06-Sorting/03-Triangle.md">Triangle</a></li>
+<li><a href="06-Sorting/04-NumberOfDiscIntersections.md">NumberOfDiscIntersections</a></li>
+</ul>
+</li>
+<li>Lesson-07 - Stacks and Queues
+<ul>
+<li><a href="07-Stacks-and-Queues/01-Brackets.md">Brackets</a></li>
+<li><a href="07-Stacks-and-Queues/02-Fish.md">Fish</a></li>
+<li><a href="07-Stacks-and-Queues/03-Nesting.md">Nesting</a></li>
+<li><a href="07-Stacks-and-Queues/04-StoneWall.md">StoneWall</a></li>
+</ul>
+</li>
+<li>Lesson-08 - Leader
+<ul>
+<li><a href="08-Leader/01-Dominator.md">Dominator</a></li>
+<li><a href="08-Leader/02-EquiLeader.md">EquiLeader</a></li>
+</ul>
+</li>
+<li>Lesson-09 - Maximum slice problem
+<ul>
+<li><a href="09-Maximum-Slice-Problem/01-MaxProfit.md">MaxProfit</a></li>
+<li><a href="09-Maximum-Slice-Problem/02-MaxSliceSum.md">MaxSliceSum</a></li>
+<li><a href="09-Maximum-Slice-Problem/03-MaxDoubleSliceSum.md">MaxDoubleSliceSum</a></li>
+</ul>
+</li>
+<li>Lesson-10 - Prime and composite numbers
+<ul>
+<li><a href="10-Prime-and-Composite-Numbers/01-CountFactors.md">CountFactors</a></li>
+<li><a href="10-Prime-and-Composite-Numbers/02-MinPerimeterRectangle.md">MinPerimeterRectangle</a></li>
+<li><a href="10-Prime-and-Composite-Numbers/03-Flags.md">Flags</a></li>
+<li><a href="10-Prime-and-Composite-Numbers/04-Peaks.md">Peaks</a></li>
+</ul>
+</li>
+<li>Lesson-11 - Sieve of Eratosthenes
+<ul>
+<li><a href="11-Sieve-of-Eratosthenes/02-CountNonDivisible.md">CountNonDivisible</a></li>
+<li><a href="11-Sieve-of-Eratosthenes/03-CountSemiprimes.md">CountSemiprimes</a></li>
+</ul>
+</li>
+<li>Lesson-12 - Euclidean algorithm
+<ul>
+<li><a href="12-Euclidean-Algorithm/01-ChocolatesByNumbers.md">ChocolatesByNumbers</a></li>
+<li><a href="12-Euclidean-Algorithm/02-CommonPrimeDivisors.md">CommonPrimeDivisors</a></li>
+</ul>
+</li>
+<li>Lesson-13 - Fibonacci numbers
+<ul>
+<li><a href="13-Fibonacci-Nnumbers/01-FibFrog.md">FibFrog</a></li>
+<li><a href="13-Fibonacci-Nnumbers/02-Ladder.md">Ladder</a></li>
+</ul>
+</li>
+<li>Lesson-14 - Binary search algorithm
+<ul>
+<li><a href="14-Binary-Search-Algorithm/01-MinMaxDivision.md">MinMaxDivision</a></li>
+<li><a href="14-Binary-Search-Algorithm/02-NailingPlanks.md">NailingPlanks</a></li>
+</ul>
+</li>
+<li>Lesson-15 - Caterpillar method
+<ul>
+<li><a href="15-Caterpillar-Method/01-AbsDistinct.md">AbsDistinct</a></li>
+<li><a href="15-Caterpillar-Method/02-CountDistinctSlices.md">CountDistinctSlices</a></li>
+<li><a href="15-Caterpillar-Method/03-CountTriangles.md">CountTriangles</a></li>
+<li><a href="15-Caterpillar-Method/04-MinAbsSumOfTwo.md">MinAbsSumOfTwo</a></li>
+</ul>
+</li>
+<li>Lesson-16 - Greedy algorithms
+<ul>
+<li><a href="16-Greedy-Algorithms/01-MaxNonoverlappingSegments.md">MaxNonoverlappingSegments</a></li>
+<li><a href="16-Greedy-Algorithms/02-TieRopes.md">TieRopes</a></li>
+</ul>
+</li>
+<li>Lesson-17 - Dynamic programming
+<ul>
+<li><a href="17-Dynamic-Programming/01-NumberSolitaire.md">NumberSolitaire</a></li>
+<li><a href="17-Dynamic-Programming/02-MinAbsSum.md">MinAbsSum</a></li>
+</ul>
+</li>
+</ul>
+
+<ul class="links-nextprev"><li class="links-nextprev-prev">← Previous<br> <a href="/jonatasdemello.github.io/blog/2025-11-06-02-PermMissingElem/">Codility Lesson - PermMissingElem</a></li><li class="links-nextprev-next">Next →<br><a href="/jonatasdemello.github.io/blog/2025-11-02-01-BinaryGap/">Codility Lesson - Binary Gap</a></li>
+</ul>
+
+			</heading-anchors>
+		</main>
+
+		<footer>
+			<p>
+				
+			</p>
+		</footer>
+
+		<!-- This page `/blog/2025-11-01-Codility/` was built on 2026-02-24T14:22:25.724Z -->
+		<script type="module" src="/jonatasdemello.github.io/dist/cC8wS6ZjFU.js"></script>
+	</body>
+</html>

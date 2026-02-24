@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Codility Lesson - Binary Gap</title>
+		<meta name="description" content="My personal page and blog posts.">
+		<link rel="alternate" href="/jonatasdemello.github.io/feed/feed.xml" type="application/atom+xml" title="Jonatas Blog">
+		
+		
+		
+		<style>/* This is an arbitrary CSS string added to the bundle */
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #C0C0C0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050F;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #C0C0C0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--background-color: #15202b;
+	}
+}
+
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+html {
+	overflow-y: scroll;
+}
+body {
+	max-width: 40em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Fluid images via https://www.zachleat.com/web/fluid-images/ */
+img{
+  max-width: 100%;
+}
+img[width][height] {
+  height: auto;
+}
+img[src$=".svg"] {
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+video,
+iframe {
+	width: 100%;
+	height: auto;
+}
+iframe {
+	aspect-ratio: 16/9;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main,
+footer {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+
+#skip-link {
+	text-decoration: none;
+	background: var(--background-color);
+	color: var(--text-color);
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--color-gray-90);
+	border-radius: 2px;
+}
+
+/* Prevent visually-hidden skip link fom pushing content around when focused */
+#skip-link.visually-hidden:focus {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	/* Ensure it is positioned on top of everything else when it is shown */
+	z-index: 999;
+}
+
+.links-nextprev {
+	display: flex;
+	justify-content: space-between;
+	gap: .5em 1em;
+	list-style: "";
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+.links-nextprev > * {
+	flex-grow: 1;
+}
+.links-nextprev-next {
+	text-align: right;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: .5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	overflow-x: auto;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	flex-grow: 1;
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	gap: .5em 1em;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	counter-reset: start-from var(--postlist-index);
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: .25em;
+	padding-right: .5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: .5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}</style>
+		
+	</head>
+	<body>
+		<a href="#main" id="skip-link" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/jonatasdemello.github.io/" class="home-link">Jonatas Blog</a>
+			<nav>
+				<h2 class="visually-hidden" id="top-level-navigation-menu">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/jonatasdemello.github.io/">Home</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/blog/">Archive</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/about/">About</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/feed/feed.xml">Feed</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/tags/">Tags</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="main">
+			<heading-anchors>
+				
+
+
+<h1 id="codility-lesson-binary-gap">Codility Lesson - Binary Gap</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2025-11-02">02 November 2025</time></li>
+	<li><a href="/jonatasdemello.github.io/tags/code/" class="post-tag">code</a>, </li>
+	<li><a href="/jonatasdemello.github.io/tags/codility/" class="post-tag">codility</a></li>
+</ul>
+
+<h3 id="lesson-01-iterations">Lesson-01 - Iterations</h3>
+<hr>
+<p>https://app.codility.com/programmers/lessons/1-iterations/</p>
+<hr>
+<p>[easy]</p>
+<h1 id="binary-gap">Binary Gap</h1>
+<p>Find longest sequence of zeros in binary representation of an integer.</p>
+<p>A binary gap within a positive integer N is any maximal sequence of consecutive zeros that is surrounded by ones at both ends in the binary representation of N.</p>
+<p>For example,</p>
+<ul>
+<li>number 9 has binary representation 1001 and contains a binary gap of length 2.</li>
+<li>The number 529 has binary representation 1000010001 and contains two binary gaps: one of length 4 and one of length 3.</li>
+<li>The number 20 has binary representation 10100 and contains one binary gap of length 1.</li>
+<li>The number 15 has binary representation 1111 and has no binary gaps.</li>
+<li>The number 32 has binary representation 100000 and has no binary gaps.</li>
+</ul>
+<p>Write a function:</p>
+<p>function solution(N);</p>
+<p>that, given a positive integer N, returns the length of its longest binary gap.</p>
+<p>The function should return 0 if N doesn't contain a binary gap.</p>
+<p>For example,</p>
+<ul>
+<li>given N = 1041 the function should return 5, because N has binary representation 10000010001 and so its longest binary gap is of length 5.</li>
+<li>Given N = 32 the function should return 0, because N has binary representation '100000' and thus no binary gaps.</li>
+</ul>
+<p>Write an efficient algorithm for the following assumptions:</p>
+<p>N is an integer within the range [1..2,147,483,647].</p>
+<hr>
+<h2 id="solution">Solution</h2>
+<p><strong>BinaryGap</strong></p>
+<p>Find longest sequence of zeros in binary representation of an integer.</p>
+<p>A binary gap within a positive integer N is any maximal sequence of consecutive zeros that is surrounded by ones at both ends in the binary representation of N.</p>
+<p>For example,</p>
+<ul>
+<li>number 9 has binary representation 1001 and contains a binary gap of length 2.</li>
+<li>The number 529 has binary representation 1000010001 and contains two binary gaps: one of length 4 and one of length 3.</li>
+<li>The number 20 has binary representation 10100 and contains one binary gap of length 1.</li>
+<li>The number 15 has binary representation 1111 and has no binary gaps.</li>
+<li>The number 32 has binary representation 100000 and has no binary gaps.</li>
+</ul>
+<p>Write a function:</p>
+<p>function solution(N);</p>
+<p>that, given a positive integer N, returns the length of its longest binary gap.</p>
+<p>The function should return 0 if N doesn't contain a binary gap.</p>
+<p>For example,</p>
+<ul>
+<li>given N = 1041 the function should return 5, because N has binary representation 10000010001 and so its longest binary gap is of length 5.</li>
+<li>Given N = 32 the function should return 0, because N has binary representation '100000' and thus no binary gaps.</li>
+</ul>
+<p>Write an efficient algorithm for the following assumptions:</p>
+<p>N is an integer within the range [1..2,147,483,647].</p>
+<hr>
+<h2 id="logical-thinking-in-programming">Logical Thinking in Programming</h2>
+<p>Before starting to write a solution for any problem it is necessary to better understand it first.
+Many junior developers or people new to code fail in this step.
+The urge to start writing code is strong.
+I found the quotes below (don't ask me about the historical accuracy, focus on the idea instead):</p>
+<blockquote>
+<p>&quot;If I had an hour to solve a problem I’d spend 55 minutes thinking about the problem and 5 minutes thinking about solutions&quot; - Albert Einstein</p>
+<p>&quot;Give me six hours to chop down a tree and I will spend the first four sharpening the axe&quot; - Abraham Lincoln</p>
+<p>&quot;A problem well defined is a problem half solved&quot; - Dan Martell</p>
+</blockquote>
+<p>Logical thinking involves using systematic reasoning to solve problems efficiently.
+In programming, this means applying clear, structured thought processes to debugging, algorithm optimization, and feature design tasks.
+The primary methods include deductive reasoning, inductive reasoning, and problem decomposition.</p>
+<ul>
+<li>Deductive Reasoning: Deductive reasoning involves drawing specific conclusions from general premises.</li>
+<li>Inductive Reasoning: Inductive reasoning is the process of forming general conclusions from specific instances or observations.</li>
+<li>Problem Decomposition: Problem decomposition breaks down complex problems into smaller, more manageable parts, making it easier to solve them.</li>
+</ul>
+<p>With that in mind, let's take a look at our first problem.</p>
+<h2 id="the-problem-solution-thinking">The Problem/Solution Thinking</h2>
+<p>Based on the problem description: I will assume the input is &quot;positive integer N&quot;,
+and that the parameter <strong>N</strong> passed to the <strong>solution(N)</strong> is decimal.
+Then in order to find a binary gap in a given number, I need to convert it from decimal to binary.</p>
+<p>To understand it and make things more clear, I created the table below.
+I like to visualize and look for patterns before writing the code.</p>
+<p>Each decimal number has its binary representation and now I can see the '0' gaps.
+Some numbers have more than one gap and some have none.</p>
+<pre><code>+--------+-----------------------+------------+--------+
+| Number | Binary Representation | Binary Gap | Result |
++--------+-----------------------+------------+--------+
+|      9 |                  1001 | 2          |      2 |
+|    529 |            1000010001 | 4 &amp; 3      |      4 |
+|     20 |                 10100 | 1          |      1 |
+|     15 |                  1111 | 0          |      0 |
+|     32 |                100000 | 0          |      0 |
+|   1041 |           10000010001 | 5 &amp; 3      |      5 |
++--------+-----------------------+------------+--------+
+</code></pre>
+<h2 id="write-some-code">Write Some Code</h2>
+<p>Before jumping into the solution, I need to create my code and test files.
+So I copied the template files <code>solution-template.js</code> and <code>solution-template.test.js</code> in the &quot;01-Iterations&quot; folder.</p>
+<p>The first file is the code (solution) itself and it was renamed from <code>solution-template.js</code> to  <code>binary-gap.js</code>:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// binary-gap.js</span>
+<span class="token string">'use strict'</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span><span class="token function-variable function">exports</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token function">solution</span><span class="token punctuation">(</span><span class="token parameter"><span class="token constant">N</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> maxGap <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> maxGap<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>I will return -1 as an invalid value for now.</p>
+<p>The other file is the unit test suite for this problem, which was renamed from <code>solution-template.test.js</code> to <code>binary-gap.test.js</code>:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// binary-gap.test.js</span>
+<span class="token string">'use strict'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> solution <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"./binary-gap"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'BinaryGap Tests'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'given 1 should return 1.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Now I can start writing unit tests and solution code.</p>
+<h2 id="adding-unit-tests-first">Adding Unit Tests First</h2>
+<p>TDD is called Test Driven Development, which means the development is driven by tests.</p>
+<p>The process follows a cycle called &quot;Red-Green-Refactor&quot;: write a failing test (Red), write just enough code for the test to pass (Green), and then clean up the code while ensuring tests remain green (Refactor). This iterative approach helps create higher-quality, more maintainable code by ensuring every new piece of functionality is built upon a passing test.</p>
+<p>Based on the instructions provided in the problem description, I can start adding the test cases.</p>
+<p>Feel free to add more, start simple and add more as you go and look for edge cases or potential issues. It is good to also add test cases to check conditions outside the scope or boundaries too.</p>
+<p>Start with the requirements from the problem description:</p>
+<ul>
+<li>The number 9 has binary representation 1001 and contains a binary gap of length 2.</li>
+<li>The number 529 has binary representation 1000010001 and contains two binary gaps: one of length 4 and one of length 3.</li>
+<li>The number 20 has binary representation 10100 and contains one binary gap of length 1.</li>
+<li>The number 15 has binary representation 1111 and has no binary gaps.</li>
+<li>The number 32 has binary representation 100000 and has no binary gaps.</li>
+<li>Given N = 1041 the function should return 5, because N has binary representation 10000010001 and so its longest binary gap is of length 5.</li>
+<li>Given N = 32 the function should return 0, because N has binary representation '100000' and thus no binary gaps.</li>
+</ul>
+<p>The test syntax is pretty straightforward, but in doubt check the <a href="https://jestjs.io/docs/getting-started">Jest documentation</a>.</p>
+<p>The problem description does not say anything about errors, so I will assume that an invalid parameter will throw an error.</p>
+<p>The first tests will cover boundaries and invalid numbers from this statement in the problem description:</p>
+<blockquote>
+<p>N is an integer within the range [1 .. 2,147,483,647].</p>
+</blockquote>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// binary-gap.test.js</span>
+<span class="token string">'use strict'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> solution <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"./binary-gap"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'BinaryGap Tests'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+
+  <span class="token comment">// valid input: negative number</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given -1 should throw an error.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">solution</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// valid input: zero</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 0 should throw an error.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// valid input: big number</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 2,147,483,648 should throw an error.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">2147483648</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// valid input boundary: 1</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 1 [0001] should return 0.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// valid input boundary: 2,147,483,647</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 2147483647 [0111.1111.1111.1111.1111.1111.1111.1111] should return 0.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">2147483647</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>After adding the test cases to <code>binary-gap.test.js</code>, run the tests with:</p>
+<p><code>npm test</code></p>
+<p>or using the &quot;watch mode&quot; so the tests will run automatically and also using &quot;verbose&quot; to display more information about the test cases being executed:</p>
+<p><code>npm run test -- --watch --verbose</code></p>
+<p>And the test result is:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">PASS</span>  <span class="token number">00</span><span class="token operator">-</span>template<span class="token operator">/</span>solution<span class="token operator">-</span>template<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  Template Tests
+    √ given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an <span class="token function">error</span> <span class="token punctuation">(</span><span class="token number">9</span> ms<span class="token punctuation">)</span>
+    √ given <span class="token number">1</span> should <span class="token keyword">return</span> <span class="token number">1.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+
+ <span class="token constant">FAIL</span>  <span class="token number">01</span><span class="token operator">-</span>Iterations<span class="token operator">/</span>binary<span class="token operator">-</span>gap<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  BinaryGap Tests
+    × Given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">4</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">0</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span>
+    × Given <span class="token number">2</span><span class="token punctuation">,</span><span class="token number">147</span><span class="token punctuation">,</span><span class="token number">483</span><span class="token punctuation">,</span><span class="token number">648</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span>
+    × Given <span class="token number">1</span> <span class="token punctuation">[</span><span class="token number">0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">2147483647</span> <span class="token punctuation">[</span><span class="token number">0111.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+
+Test Suites<span class="token operator">:</span> <span class="token number">1</span> failed<span class="token punctuation">,</span> <span class="token number">1</span> passed<span class="token punctuation">,</span> <span class="token number">2</span> total
+<span class="token literal-property property">Tests</span><span class="token operator">:</span>       <span class="token number">5</span> failed<span class="token punctuation">,</span> <span class="token number">2</span> passed<span class="token punctuation">,</span> <span class="token number">7</span> total
+<span class="token literal-property property">Snapshots</span><span class="token operator">:</span>   <span class="token number">0</span> total
+<span class="token literal-property property">Time</span><span class="token operator">:</span>    <span class="token number">0.732</span> s<span class="token punctuation">,</span> estimated <span class="token number">1</span> s</code></pre>
+<p>The <code>solution-template.tests.js</code> has 1 test suite and 2 unit tests - all passing.</p>
+<p>The <code>binary-gap.tests.js</code> has 1 test suite and 5 unit tests - all failing.</p>
+<p>A total of 2 test suites and 7 unit tests.</p>
+<p>With the validations and boundaries in place, I can add more tests using the requirements in the problem description.
+Lets check some other numbers. These will be valid input numbers that should return valid output results. For example: 9, 529, 20, 15, 32, 1041.</p>
+<p>In the test name, I added the converted binary number inside the backets to make it easier to understand: 9 decimal = [1001] binary.</p>
+<p>Like this: 'Given 9 [1001] should return 2.'</p>
+<p>Here are the unit tests:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">  <span class="token comment">// valid input boundary: 1</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 1 [0001] should return 0.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// valid input boundary: 2,147,483,647</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 2147483647 [0111.1111.1111.1111.1111.1111.1111.1111] should return 0.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">2147483647</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// test numbers from the problem description:</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 9 [1001] should return 2.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 529 [0010.0001.0001] should return 4.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">529</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 20 [0001.0100] should return 1.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 15 [1111] should return 0.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 32 [0010.0000] should return 0.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 1041 [0100.0001.0001] should return 5.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">1041</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Run the tests again, and some of the tests will fail. This is expected.</p>
+<p>I removed part of the results because they are very similar and I will focus on fixing one error at a time.
+Here is the test output:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">PASS</span>  <span class="token number">00</span><span class="token operator">-</span>template<span class="token operator">/</span>solution<span class="token operator">-</span>template<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  Template Tests
+    √ given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an <span class="token function">error</span> <span class="token punctuation">(</span><span class="token number">10</span> ms<span class="token punctuation">)</span>
+    √ given <span class="token number">1</span> should <span class="token keyword">return</span> <span class="token number">1.</span>
+
+ <span class="token constant">FAIL</span>  <span class="token number">01</span><span class="token operator">-</span>Iterations<span class="token operator">/</span>binary<span class="token operator">-</span>gap<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  BinaryGap Tests
+    × Given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">5</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">0</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">2</span><span class="token punctuation">,</span><span class="token number">147</span><span class="token punctuation">,</span><span class="token number">483</span><span class="token punctuation">,</span><span class="token number">648</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">1</span> <span class="token punctuation">[</span><span class="token number">0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">2</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">2147483647</span> <span class="token punctuation">[</span><span class="token number">0111.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">9</span> <span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span>
+    × Given <span class="token number">529</span> <span class="token punctuation">[</span><span class="token number">0010.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">20</span> <span class="token punctuation">[</span><span class="token number">0001.0100</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span>
+    × Given <span class="token number">15</span> <span class="token punctuation">[</span><span class="token number">1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    × Given <span class="token number">32</span> <span class="token punctuation">[</span><span class="token number">0010.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    × Given <span class="token number">1041</span> <span class="token punctuation">[</span><span class="token number">0100.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">5.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+
+<span class="token operator">...</span> more errors <span class="token operator">...</span>
+
+Test Suites<span class="token operator">:</span> <span class="token number">1</span> failed<span class="token punctuation">,</span> <span class="token number">1</span> passed<span class="token punctuation">,</span> <span class="token number">2</span> total
+<span class="token literal-property property">Tests</span><span class="token operator">:</span>       <span class="token number">11</span> failed<span class="token punctuation">,</span> <span class="token number">2</span> passed<span class="token punctuation">,</span> <span class="token number">13</span> total
+<span class="token literal-property property">Snapshots</span><span class="token operator">:</span>   <span class="token number">0</span> total
+<span class="token literal-property property">Time</span><span class="token operator">:</span>    <span class="token number">0.725</span> s<span class="token punctuation">,</span> estimated <span class="token number">1</span> s</code></pre>
+<h2 id="write-some-code-2">Write Some Code</h2>
+<p>Now it is time to start writing some functional code.</p>
+<p>Note that I don't have a &quot;main&quot; or &quot;index&quot; as an application entry point calling the <strong>solution(N)</strong> function.
+This is intended and if I run <code>npm start</code> I will get an error.
+I want to test my function in isolation, provide multiple inputs and evaluate the results.
+This would be more difficult and time consuming to do without a test framework.</p>
+<p>With the tests in place, I can now start writing the code to solve the problem.
+I may even go back and add more tests for other uses cases, but this is enough for now. TDD is an incremental approach.</p>
+<p>The first thing I usually do is to add some validations to test the input parameters in the <strong>solution(N)</strong> function inside the <code>binary-gap.js</code> file.</p>
+<p>First, for this statement in the problem description:</p>
+<blockquote>
+<p>N is an integer within the range [1 .. 2,147,483,647].</p>
+</blockquote>
+<p>I already have the unit tests, now it is time to write the functional code to address that.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// `binary-gap.js`</span>
+<span class="token string">'use strict'</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span><span class="token function-variable function">exports</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token function">solution</span><span class="token punctuation">(</span><span class="token parameter"><span class="token constant">N</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> maxGap <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// validations</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">N</span> <span class="token operator">&lt;</span> <span class="token number">1</span> <span class="token operator">||</span> <span class="token constant">N</span> <span class="token operator">></span> <span class="token number">2147483647</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Parameter is invalid!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> maxGap<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Then run the tests again with:</p>
+<p><code>npm test</code></p>
+<p>And he result is:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">FAIL</span>  <span class="token number">01</span><span class="token operator">-</span>Iterations<span class="token operator">/</span>binary<span class="token operator">-</span>gap<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  BinaryGap Tests
+    √ Given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">11</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">0</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">2</span><span class="token punctuation">,</span><span class="token number">147</span><span class="token punctuation">,</span><span class="token number">483</span><span class="token punctuation">,</span><span class="token number">648</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">1</span> <span class="token punctuation">[</span><span class="token number">0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">2</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">2147483647</span> <span class="token punctuation">[</span><span class="token number">0111.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    × Given <span class="token number">9</span> <span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span>
+    × Given <span class="token number">529</span> <span class="token punctuation">[</span><span class="token number">0010.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">20</span> <span class="token punctuation">[</span><span class="token number">0001.0100</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">15</span> <span class="token punctuation">[</span><span class="token number">1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">32</span> <span class="token punctuation">[</span><span class="token number">0010.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">1041</span> <span class="token punctuation">[</span><span class="token number">0100.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">5.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span></code></pre>
+<p>Now I have some progress and the first 3 tests as passing! They check for numbers outside the scope (invalid inputs).</p>
+<p>Next, I will start the problem/solution logic.</p>
+<hr>
+<p>The first thing to consider is that my input number is a decimal number.
+I need to convert it to its binary representation.</p>
+<p>In JavaScript, the simplest and most common method to convert a decimal number to its binary representation is by using the built-in toString() method with a radix of 2.</p>
+<p>See Javascript Number.prototype.toString() reference at <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString">MDN</a>.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// `binary-gap.js`</span>
+<span class="token string">'use strict'</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span><span class="token function-variable function">exports</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token function">solution</span><span class="token punctuation">(</span><span class="token parameter"><span class="token constant">N</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> maxGap <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// validations</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">N</span> <span class="token operator">&lt;</span> <span class="token number">1</span> <span class="token operator">||</span> <span class="token constant">N</span> <span class="token operator">></span> <span class="token number">2147483647</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Parameter is invalid!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// first, convert the number to binary</span>
+  bin <span class="token operator">=</span> <span class="token constant">N</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>bin<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> maxGap<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>And run the tests again.</p>
+<p>Looking at the test results again, I can plan the next steps.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">FAIL</span>  <span class="token number">01</span><span class="token operator">-</span>Iterations<span class="token operator">/</span>binary<span class="token operator">-</span>gap<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  BinaryGap Tests
+    √ Given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">11</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">0</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">2</span><span class="token punctuation">,</span><span class="token number">147</span><span class="token punctuation">,</span><span class="token number">483</span><span class="token punctuation">,</span><span class="token number">648</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">1</span> <span class="token punctuation">[</span><span class="token number">0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">2</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">2147483647</span> <span class="token punctuation">[</span><span class="token number">0111.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    × Given <span class="token number">9</span> <span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span>
+    × Given <span class="token number">529</span> <span class="token punctuation">[</span><span class="token number">0010.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">20</span> <span class="token punctuation">[</span><span class="token number">0001.0100</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">15</span> <span class="token punctuation">[</span><span class="token number">1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">32</span> <span class="token punctuation">[</span><span class="token number">0010.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">1041</span> <span class="token punctuation">[</span><span class="token number">0100.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">5.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+
+  ● BinaryGap Tests › Given <span class="token number">1</span> <span class="token punctuation">[</span><span class="token number">0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+
+    <span class="token function">expect</span><span class="token punctuation">(</span>received<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span>expected<span class="token punctuation">)</span> <span class="token comment">// Object.is equality</span>
+
+    <span class="token literal-property property">Expected</span><span class="token operator">:</span> <span class="token number">0</span>
+    <span class="token literal-property property">Received</span><span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span>
+
+      <span class="token number">28</span> <span class="token operator">|</span>   <span class="token comment">// valid input boundary: 1</span>
+      <span class="token number">29</span> <span class="token operator">|</span>   <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'Given 1 [0001] should return 0.'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token operator">></span> <span class="token number">30</span> <span class="token operator">|</span>     <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token operator">|</span>             <span class="token operator">^</span>
+      <span class="token number">31</span> <span class="token operator">|</span>   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token number">32</span> <span class="token operator">|</span>
+      <span class="token number">33</span> <span class="token operator">|</span>   <span class="token comment">// valid input boundary: 2,147,483,647</span>
+
+      at Object<span class="token punctuation">.</span><span class="token function">toBe</span> <span class="token punctuation">(</span><span class="token number">01</span><span class="token operator">-</span>Iterations<span class="token operator">/</span>binary<span class="token operator">-</span>gap<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js<span class="token operator">:</span><span class="token number">30</span><span class="token operator">:</span><span class="token number">25</span><span class="token punctuation">)</span></code></pre>
+<p>The test results show which tests failed and some other important information:</p>
+<blockquote>
+<p>BinaryGap Tests › Given 1 [0001] should return 0.</p>
+</blockquote>
+<p>This tells me that:</p>
+<ul>
+<li><strong>Test Suite:</strong> 'BinaryGap Tests'</li>
+<li><strong>Unit Test:</strong> 'Given 1 [0001] should return 0.'</li>
+<li><strong>Expected:</strong> 0</li>
+<li><strong>Received:</strong> -1</li>
+<li><strong>test code:</strong> expect(solution(1)).toBe(0);</li>
+</ul>
+<p>In summary: the test received the input parameter &quot;1&quot; and expected the result to be &quot;0&quot; but received &quot;-1&quot; instead.</p>
+<p>The output will show where the <strong>unit test</strong> failed, not the functional code (there is no code yet!).
+So the first thing to do is look at this condition and write the functional code to fix this test.</p>
+<h3 id="problem-logic">Problem Logic</h3>
+<p>Note that I added the <code>console.log(bin);</code> after the conversion.
+The reason for that is to see what the result of the decimal to binary conversion is.
+This is important because depending on the language or the result returned from the binary conversion function, I may need to remove the trailing zeros (they can be discarded).</p>
+<table>
+<thead>
+<tr>
+<th>dec</th>
+<th>bin</th>
+<th>bytes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0001</td>
+</tr>
+<tr>
+<td>5</td>
+<td>101</td>
+<td>0101</td>
+</tr>
+<tr>
+<td>7</td>
+<td>111</td>
+<td>0111</td>
+</tr>
+<tr>
+<td>9</td>
+<td>1001</td>
+<td>1001</td>
+</tr>
+<tr>
+<td>32</td>
+<td>100000</td>
+<td>0010.0000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong></p>
+<blockquote>
+<p>Here is one situation where it is OK to do a Google search.
+I usually work with multiple languages and environments (C#, C, C++, Python, JavaScript, PowerShell, T-SQL, TypeScript just to name a few) and there is no way to know all the syntaxes and parameters for all languages and functions.</p>
+<p>But there is a difference between asking &quot;how to convert decimal to binary in JavaScript&quot; to &quot;give me the solution to this problem so I can copy it&quot;.
+Sometimes in a real work situation it is necessary to just get one solution and apply it, instead of reinventing the wheel and creating your own solution. Viewer discretion is advised.</p>
+</blockquote>
+<p>I will remove the <code>console.log(bin);</code> now, because it affects performance.
+It is OK to have it while developing/debugging, but it is ideal to remove before shipping the code (when the work is done).</p>
+<p>Assuming there are no trailing 0's so that all binary numbers will start with 1 (see table above, column 'bin') and the converted binary number can be accessed as an array, I can use the index/array syntax:</p>
+<pre><code>  N = 5 (decimal)
+  bin = 101 (binary)
+then
+  bin[0] = 1
+  bin[1] = 0
+  bin[2] = 1
+</code></pre>
+<p>Algorithm:</p>
+<ul>
+<li>convert the decimal number to binary</li>
+<li>iterate over the binary digits counting the 0's</li>
+</ul>
+<p>Next, I will iterate over the binary digits and count the 0's.
+I added a new variable <code>zeros = 0</code> to hold the count of 0's.
+After the loop, I need to assign <code>maxGap = zeros;</code> because I return <code>maxGap</code>.</p>
+<pre class="language-js" tabindex="0"><code class="language-js">    <span class="token keyword">let</span> maxGap <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> zeros <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token comment">// now iterate over the 0's and 1's and count</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> x <span class="token operator">&lt;</span> bin<span class="token punctuation">.</span>length<span class="token punctuation">;</span> x<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>bin<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        zeros<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    maxGap <span class="token operator">=</span> zeros<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> maxGap<span class="token punctuation">;</span></code></pre>
+<p>Run the tests again:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">FAIL</span>  <span class="token number">01</span><span class="token operator">-</span>Iterations<span class="token operator">/</span>binary<span class="token operator">-</span>gap<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  BinaryGap Tests
+    √ Given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">10</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">0</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span>
+    √ Given <span class="token number">2</span><span class="token punctuation">,</span><span class="token number">147</span><span class="token punctuation">,</span><span class="token number">483</span><span class="token punctuation">,</span><span class="token number">648</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span>
+    √ Given <span class="token number">1</span> <span class="token punctuation">[</span><span class="token number">0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">2147483647</span> <span class="token punctuation">[</span><span class="token number">0111.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">9</span> <span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span>
+    × Given <span class="token number">529</span> <span class="token punctuation">[</span><span class="token number">0010.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span> <span class="token punctuation">(</span><span class="token number">4</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">20</span> <span class="token punctuation">[</span><span class="token number">0001.0100</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">15</span> <span class="token punctuation">[</span><span class="token number">1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">32</span> <span class="token punctuation">[</span><span class="token number">0010.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">2</span> ms<span class="token punctuation">)</span>
+    × Given <span class="token number">1041</span> <span class="token punctuation">[</span><span class="token number">0100.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">5.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+
+  ● BinaryGap Tests › Given <span class="token number">529</span> <span class="token punctuation">[</span><span class="token number">0010.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span></code></pre>
+<p>This is interesting, the failed tests tell me that the returned value is wrong when
+I have more than one gap: 529 [0010.0001.0001] and 20 [0001.0100]
+or when there is no 1 closing the last gap [100000].</p>
+<p>To fix that I will need to modify my main loop and add some more checks.
+I need to check for 1's too (closing gap).</p>
+<pre class="language-js" tabindex="0"><code class="language-js">    <span class="token comment">// now iterate over the 0's and 1's and count</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> x <span class="token operator">&lt;</span> bin<span class="token punctuation">.</span>length<span class="token punctuation">;</span> x<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>bin<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// means that there is gap</span>
+        zeros<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>bin<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// means that the gap ended</span>
+        <span class="token comment">// if the gap ended, check if this is biggest found</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>zeros <span class="token operator">></span> maxGap<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        maxGap <span class="token operator">=</span> zeros<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// reset the zero counter</span>
+        zeros <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> maxGap<span class="token punctuation">;</span></code></pre>
+<p>Run the tests again:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">PASS</span>  <span class="token number">00</span><span class="token operator">-</span>template<span class="token operator">/</span>solution<span class="token operator">-</span>template<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  Template Tests
+    √ given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an <span class="token function">error</span> <span class="token punctuation">(</span><span class="token number">10</span> ms<span class="token punctuation">)</span>
+    √ given <span class="token number">1</span> should <span class="token keyword">return</span> <span class="token number">1.</span>
+
+ <span class="token constant">PASS</span>  <span class="token number">01</span><span class="token operator">-</span>Iterations<span class="token operator">/</span>binary<span class="token operator">-</span>gap<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  BinaryGap Tests
+    √ Given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">11</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">0</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">2</span><span class="token punctuation">,</span><span class="token number">147</span><span class="token punctuation">,</span><span class="token number">483</span><span class="token punctuation">,</span><span class="token number">648</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span>
+    √ Given <span class="token number">1</span> <span class="token punctuation">[</span><span class="token number">0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">2147483647</span> <span class="token punctuation">[</span><span class="token number">0111.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">9</span> <span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">529</span> <span class="token punctuation">[</span><span class="token number">0010.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span>
+    √ Given <span class="token number">20</span> <span class="token punctuation">[</span><span class="token number">0001.0100</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">15</span> <span class="token punctuation">[</span><span class="token number">1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">32</span> <span class="token punctuation">[</span><span class="token number">0010.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">1041</span> <span class="token punctuation">[</span><span class="token number">0100.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">5.</span>
+
+Test Suites<span class="token operator">:</span> <span class="token number">2</span> passed<span class="token punctuation">,</span> <span class="token number">2</span> total
+<span class="token literal-property property">Tests</span><span class="token operator">:</span>       <span class="token number">13</span> passed<span class="token punctuation">,</span> <span class="token number">13</span> total
+<span class="token literal-property property">Snapshots</span><span class="token operator">:</span>   <span class="token number">0</span> total
+<span class="token literal-property property">Time</span><span class="token operator">:</span>    <span class="token number">0.854</span> s<span class="token punctuation">,</span> estimated <span class="token number">1</span> s</code></pre>
+<p>And we have a solution!</p>
+<p>Now I can start improving the solution, cleaning up the code, adding more tests.</p>
+<p>Just to be sure, I went back to the Codility site and tested my solution there.
+The site also show some other unit tests, so I added them to my test suite too.</p>
+<p>And ran the tests again.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">PASS</span>  <span class="token number">00</span><span class="token operator">-</span>template<span class="token operator">/</span>solution<span class="token operator">-</span>template<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  Template Tests
+    √ given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an <span class="token function">error</span> <span class="token punctuation">(</span><span class="token number">10</span> ms<span class="token punctuation">)</span>
+    √ given <span class="token number">1</span> should <span class="token keyword">return</span> <span class="token number">1.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+
+ <span class="token constant">PASS</span>  <span class="token number">01</span><span class="token operator">-</span>Iterations<span class="token operator">/</span>binary<span class="token operator">-</span>gap<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  BinaryGap Tests
+    √ Given <span class="token operator">-</span><span class="token number">1</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">13</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">0</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">2</span><span class="token punctuation">,</span><span class="token number">147</span><span class="token punctuation">,</span><span class="token number">483</span><span class="token punctuation">,</span><span class="token number">648</span> should <span class="token keyword">throw</span> an error<span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">1</span> <span class="token punctuation">[</span><span class="token number">0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">2147483647</span> <span class="token punctuation">[</span><span class="token number">0111.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token number">.1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">9</span> <span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span>
+    √ Given <span class="token number">529</span> <span class="token punctuation">[</span><span class="token number">0010.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">20</span> <span class="token punctuation">[</span><span class="token number">0001.0100</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span>
+    √ Given <span class="token number">15</span> <span class="token punctuation">[</span><span class="token number">1111</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">32</span> <span class="token punctuation">[</span><span class="token number">0010.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">1041</span> <span class="token punctuation">[</span><span class="token number">0100.0001</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">5.</span>
+    √ Given <span class="token number">64</span> <span class="token punctuation">[</span><span class="token number">0100.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">132</span> <span class="token punctuation">[</span><span class="token number">1000.0100</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span>
+    √ Given <span class="token number">133</span> <span class="token punctuation">[</span><span class="token number">1000.0101</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span>
+    √ Given <span class="token number">5</span> <span class="token punctuation">[</span><span class="token number">0101</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span>
+    √ Given <span class="token number">6</span> <span class="token punctuation">[</span><span class="token number">0110</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">9</span> <span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span>
+    √ Given <span class="token number">11</span> <span class="token punctuation">[</span><span class="token number">1011</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">16</span> <span class="token punctuation">[</span><span class="token number">0001.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">19</span> <span class="token punctuation">[</span><span class="token number">0001.0011</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">42</span> <span class="token punctuation">[</span><span class="token number">0010.1010</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">1.</span>
+    √ Given <span class="token number">328</span> <span class="token punctuation">[</span><span class="token number">0001.0100</span><span class="token number">.1000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">1024</span> <span class="token punctuation">[</span><span class="token number">0100.0000</span><span class="token number">.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">0.</span>
+    √ Given <span class="token number">1162</span> <span class="token punctuation">[</span><span class="token number">0100.1000</span><span class="token number">.1010</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">3.</span>
+    √ Given <span class="token number">51712</span> <span class="token punctuation">[</span><span class="token number">0110.0101</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">2.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">561892</span> <span class="token punctuation">[</span><span class="token number">1000.1001</span><span class="token number">.0010</span><span class="token number">.1110</span><span class="token number">.0100</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">3.</span>
+    √ Given <span class="token number">66561</span> <span class="token punctuation">[</span><span class="token number">0001.0000</span><span class="token number">.0100</span><span class="token number">.0000</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">9.</span>
+    √ Given <span class="token number">6291457</span> <span class="token punctuation">[</span><span class="token number">0110.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">20.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">74901729</span> <span class="token punctuation">[</span><span class="token number">0100.0111</span><span class="token number">.0110</span><span class="token number">.1110</span><span class="token number">.1000</span><span class="token number">.1110</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">4.</span>
+    √ Given <span class="token number">805306373</span> <span class="token punctuation">[</span><span class="token number">0011.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0101</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">25.</span>
+    √ Given <span class="token number">1376796946</span> <span class="token punctuation">[</span><span class="token number">0101.0010</span><span class="token number">.0001</span><span class="token number">.0000</span><span class="token number">.0100</span><span class="token number">.0001</span><span class="token number">.0001</span><span class="token number">.0010</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">5.</span>
+    √ Given <span class="token number">1073741825</span> <span class="token punctuation">[</span><span class="token number">0100.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">29.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ Given <span class="token number">1610612737</span> <span class="token punctuation">[</span><span class="token number">0110.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0000</span><span class="token number">.0001</span><span class="token punctuation">]</span> should <span class="token keyword">return</span> <span class="token number">28.</span>
+
+Test Suites<span class="token operator">:</span> <span class="token number">2</span> passed<span class="token punctuation">,</span> <span class="token number">2</span> total
+<span class="token literal-property property">Tests</span><span class="token operator">:</span>       <span class="token number">35</span> passed<span class="token punctuation">,</span> <span class="token number">35</span> total
+<span class="token literal-property property">Snapshots</span><span class="token operator">:</span>   <span class="token number">0</span> total
+<span class="token literal-property property">Time</span><span class="token operator">:</span>    <span class="token number">0.882</span> s<span class="token punctuation">,</span> estimated <span class="token number">1</span> s
+Ran all test suites related to changed files</code></pre>
+<h3 id="suggestions">Suggestions</h3>
+<p>Sometimes, when working on a problem it is better to use <strong>Pseudocode</strong> to think about the algorithm logic, this way I don't have to worry about the syntax or language construction rules.</p>
+<p>Something like this:</p>
+<pre>
+  let maxGap = 0; // max gap found
+  let zeros = 0; // zero counter
+
+  // convert input N to bin
+  let n = ConvertToBinary(N);
+
+  // example:
+  // N = 5 (decimal) => n = 101 (binary)
+  // so
+  // n[0] = 1
+  // n[1] = 0
+  // n[2] = 1
+
+  // loop through all binary digits
+  for x = 0 to n.length:
+    if x == 0 then
+      // n[0] = 1 first digit
+      skip // do nothing
+    end if
+    if x > 0 then
+      // second digit and on
+      // check if is 0
+      if n[x] == 0 then // it is a 0 gap
+    // increase out counter
+    zeros++
+      end if
+      // save the maxGap number
+      maxGap = zeros
+    end if
+  next x
+  return maxGap
+</pre>
+<p>Then it is easier later to find the correct syntax for the language I am using.</p>
+
+<ul class="links-nextprev"><li class="links-nextprev-prev">← Previous<br> <a href="/jonatasdemello.github.io/blog/2025-11-01-Codility/">Codility Lessons Using TDD</a></li><li class="links-nextprev-next">Next →<br><a href="/jonatasdemello.github.io/blog/2025-11-03-01-CyclicRotation/">Codility Lesson - Cyclic Rotation</a></li>
+</ul>
+
+			</heading-anchors>
+		</main>
+
+		<footer>
+			<p>
+				
+			</p>
+		</footer>
+
+		<!-- This page `/blog/2025-11-02-01-BinaryGap/` was built on 2026-02-24T14:22:25.724Z -->
+		<script type="module" src="/jonatasdemello.github.io/dist/cC8wS6ZjFU.js"></script>
+	</body>
+</html>

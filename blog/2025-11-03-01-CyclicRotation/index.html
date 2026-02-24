@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Codility Lesson - Cyclic Rotation</title>
+		<meta name="description" content="My personal page and blog posts.">
+		<link rel="alternate" href="/jonatasdemello.github.io/feed/feed.xml" type="application/atom+xml" title="Jonatas Blog">
+		
+		
+		
+		<style>/* This is an arbitrary CSS string added to the bundle */
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #C0C0C0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050F;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #C0C0C0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--background-color: #15202b;
+	}
+}
+
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+html {
+	overflow-y: scroll;
+}
+body {
+	max-width: 40em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Fluid images via https://www.zachleat.com/web/fluid-images/ */
+img{
+  max-width: 100%;
+}
+img[width][height] {
+  height: auto;
+}
+img[src$=".svg"] {
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+video,
+iframe {
+	width: 100%;
+	height: auto;
+}
+iframe {
+	aspect-ratio: 16/9;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main,
+footer {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+
+#skip-link {
+	text-decoration: none;
+	background: var(--background-color);
+	color: var(--text-color);
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--color-gray-90);
+	border-radius: 2px;
+}
+
+/* Prevent visually-hidden skip link fom pushing content around when focused */
+#skip-link.visually-hidden:focus {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	/* Ensure it is positioned on top of everything else when it is shown */
+	z-index: 999;
+}
+
+.links-nextprev {
+	display: flex;
+	justify-content: space-between;
+	gap: .5em 1em;
+	list-style: "";
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+.links-nextprev > * {
+	flex-grow: 1;
+}
+.links-nextprev-next {
+	text-align: right;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: .5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	overflow-x: auto;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	flex-grow: 1;
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	gap: .5em 1em;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	counter-reset: start-from var(--postlist-index);
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: .25em;
+	padding-right: .5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: .5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}</style>
+		
+	</head>
+	<body>
+		<a href="#main" id="skip-link" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/jonatasdemello.github.io/" class="home-link">Jonatas Blog</a>
+			<nav>
+				<h2 class="visually-hidden" id="top-level-navigation-menu">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/jonatasdemello.github.io/">Home</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/blog/">Archive</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/about/">About</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/feed/feed.xml">Feed</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/tags/">Tags</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="main">
+			<heading-anchors>
+				
+
+
+<h1 id="codility-lesson-cyclic-rotation">Codility Lesson - Cyclic Rotation</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2025-11-03">03 November 2025</time></li>
+	<li><a href="/jonatasdemello.github.io/tags/code/" class="post-tag">code</a>, </li>
+	<li><a href="/jonatasdemello.github.io/tags/codility/" class="post-tag">codility</a></li>
+</ul>
+
+<h3 id="lesson-02-arrays">Lesson-02 - Arrays</h3>
+<hr>
+<p>https://app.codility.com/programmers/lessons/2-arrays/</p>
+<hr>
+<p>[easy]</p>
+<h1 id="cyclic-rotation">Cyclic Rotation</h1>
+<p>Given the problem description:</p>
+<p>Rotate an array to the right by a given number of steps.</p>
+<p>An array A consisting of N integers is given.
+Rotation of the array means that each element is shifted right by one index, and the last element of the array is moved to the first place.</p>
+<p>For example, the rotation of array A = [3, 8, 9, 7, 6] is [6, 3, 8, 9, 7] (elements are shifted right by one index and 6 is moved to the first place).</p>
+<p>The goal is to rotate array A K times; that is, each element of A will be shifted to the right K times.</p>
+<p>Write a function:</p>
+<p>function solution(A, K);</p>
+<p>that, given an array A consisting of N integers and an integer K, returns the array A rotated K times.</p>
+<p>For example, given:</p>
+<p>A = [3, 8, 9, 7, 6]
+K = 3
+the function should return [9, 7, 6, 3, 8].</p>
+<p>Three rotations were made:</p>
+<p>[3, 8, 9, 7, 6] -&gt; [6, 3, 8, 9, 7]
+[6, 3, 8, 9, 7] -&gt; [7, 6, 3, 8, 9]
+[7, 6, 3, 8, 9] -&gt; [9, 7, 6, 3, 8]</p>
+<p>For another example, given:</p>
+<p>A = [0, 0, 0]
+K = 1
+the function should return [0, 0, 0]</p>
+<p>Given</p>
+<p>A = [1, 2, 3, 4]
+K = 4
+the function should return [1, 2, 3, 4]</p>
+<p>Assume that:</p>
+<p>N and K are integers within the range [0..100];
+each element of array A is an integer within the range [−1,000..1,000].</p>
+<p>In your solution, focus on correctness.
+The performance of your solution will not be the focus of the assessment.</p>
+<hr>
+<h2 id="problem-analysis">Problem Analysis</h2>
+<p>I will start with the boundaries test, from the problem description:</p>
+<p>N and K are integers within the range [0..100];
+each element of array A is an integer within the range [-1,000..1,000].</p>
+<p>I will start a new test case and test K (number or rotations) first. K should be between 0 and 100. Next test is N (number of elements in the array) and because an array cannot have a negative number of elements, I can skip this test. So I will test an array with more than 100 elements.</p>
+<p>The following test is to check if each element of the array is within the range -1k..1k. In order to do that, I will follow a standard practice in Unit Test: the Arrange, Act and Assert (AAA) Pattern. This means that the unit test contain 3 parts:</p>
+<ul>
+<li>
+<p>Arrange: setup and prepare things needed by the test. Create objects, assign values or set expectations.</p>
+</li>
+<li>
+<p>Act: invoke the method being tested.</p>
+</li>
+<li>
+<p>Assert: verify the results and check if the expectations were met.</p>
+</li>
+</ul>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// cyclic-rotation.js</span>
+
+  <span class="token comment">// N and K are integers within the range [0..100];</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'N and K are integers within the range [0..100];'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+
+    <span class="token comment">// K: rotations = less than 0 or greater than 100</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">solution</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token string">"Parameter K is invalid!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">solution</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">101</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token string">"Parameter K is invalid!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// N: number of elements in A[] = less than 0 or greater than 100</span>
+    <span class="token comment">// an array cannot have less than 0 elements, so we skip that test</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">solution</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span><span class="token number">150</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// each element of array A is an integer within the range [−1,000..1,000].</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'each element of array A is an integer within the range [-1,000..1,000].'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// arrange</span>
+    <span class="token keyword">const</span> <span class="token constant">N</span> <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token constant">A</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">// values added are A[0, 500, 1000, 1500, 2000]</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token constant">N</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token constant">A</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>i <span class="token operator">*</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// act &amp; assert</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">solution</span><span class="token punctuation">(</span><span class="token constant">A</span><span class="token punctuation">,</span> <span class="token constant">K</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>With the validations and boundaries in place, I can add more unit tests using the requirements in the problem description.</p>
+<p>The next test will be to test one valid input array and the correct result expected.</p>
+<p>I can start with a basic rotation:</p>
+<p>input: A = [1, 2, 3]
+rotation: K = 1
+output: A = [2, 3, 1]</p>
+<p>But I like to use the same from the problem description:</p>
+<p><em>&quot;Given an array A consisting of N integers and an integer K, returns the array A rotated K times.&quot;</em></p>
+<p>input:  A = [3, 8, 9, 7, 6]
+rotation:  K = 3
+output: A = [9, 7, 6, 3, 8]</p>
+<p>In this test, I will need to provide the input Array, the number of rotations K and the expected result Array to compare.</p>
+<p>The good thing here is that the Jest framework offers this method from it's <a href="https://jestjs.io/docs/using-matchers">matchers</a>.</p>
+<ul>
+<li>toEqual(): This matcher performs a deep comparison, checking if both arrays have the same elements in the same order. It works for arrays of primitives and objects.</li>
+</ul>
+<p>Since my arrays only contain integers, this should work. I could chain the calls to make the code more short, but for now I will keep it separated so I can <code>console.log</code> the results to make sure it is working. If I didn't have a method to compare the arrays, I would need to loop/iterate to both and compare the values.</p>
+<p>Here is the Unit Test:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">  <span class="token comment">// test case to rotate A[1,2,3,4,5] K=2 return should be A[4,5,1,2,3]</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'rotate A[1,2,3,4,5] with K=2 should return A[4,5,1,2,3]'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// arrange</span>
+    <span class="token keyword">const</span> <span class="token constant">A</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> expected <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// act</span>
+    <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">solution</span><span class="token punctuation">(</span><span class="token constant">A</span><span class="token punctuation">,</span> <span class="token constant">K</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// assert</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span>expected<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>I can add more tests. One nice feature of the Jest test framework is the possibility to send a list (or table, or array) of different test data to the same test function - this is useful when we want to use the same Unit Test to check different sets of data.</p>
+<p>In the example bellow I am using <a href="https://jestjs.io/docs/api#testeachtablename-fn-timeout">test.each</a> to keep duplicating the same unit test with different data sets. I also merged the test and expect in the same statement: <code>expect(solution(A, K)).toEqual(expected);</code>.</p>
+<pre class="language-js" tabindex="0"><code class="language-js">  test<span class="token punctuation">.</span><span class="token function">each</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token string">'array: %s and K: %i => %s'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token constant">A</span><span class="token punctuation">,</span> <span class="token constant">K</span><span class="token punctuation">,</span> expected</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// each parameter goes into the test function: A, K, expected</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">solution</span><span class="token punctuation">(</span><span class="token constant">A</span><span class="token punctuation">,</span> <span class="token constant">K</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span>expected<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>and run the tests</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">FAIL</span>  <span class="token number">02</span><span class="token operator">-</span>Arrays<span class="token operator">/</span>cyclic<span class="token operator">-</span>rotation<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  CyclicRotation Tests
+    × <span class="token constant">N</span> and <span class="token constant">K</span> are integers within the range <span class="token punctuation">[</span><span class="token number">0.</span><span class="token number">.100</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token punctuation">(</span><span class="token number">6</span> ms<span class="token punctuation">)</span>
+    × each element <span class="token keyword">of</span> array <span class="token constant">A</span> is an integer within the range <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">000.</span><span class="token number">.1</span><span class="token punctuation">,</span><span class="token number">000</span><span class="token punctuation">]</span><span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × rotate <span class="token constant">A</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token keyword">with</span> <span class="token constant">K</span><span class="token operator">=</span><span class="token number">2</span> should <span class="token keyword">return</span> <span class="token constant">A</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">3</span> ms<span class="token punctuation">)</span>
+    × array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">2</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token punctuation">]</span>
+    × array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span> <span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">3</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span> <span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+
+Test Suites<span class="token operator">:</span> <span class="token number">1</span> failed<span class="token punctuation">,</span> <span class="token number">1</span> total
+<span class="token literal-property property">Tests</span><span class="token operator">:</span>       <span class="token number">6</span> failed<span class="token punctuation">,</span> <span class="token number">6</span> total
+<span class="token literal-property property">Snapshots</span><span class="token operator">:</span>   <span class="token number">0</span> total
+<span class="token literal-property property">Time</span><span class="token operator">:</span>    <span class="token number">0.938</span> s<span class="token punctuation">,</span> estimated <span class="token number">1</span> s</code></pre>
+<p>So the next step is to implement the validations.</p>
+<pre class="language-js" tabindex="0"><code class="language-js">    <span class="token comment">// k: integer representing number of rotations;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">K</span> <span class="token operator">&lt;</span> <span class="token number">1</span> <span class="token operator">||</span> <span class="token constant">K</span> <span class="token operator">></span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Parameter K is invalid!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// N: number of elements in A[];</span>
+    <span class="token keyword">let</span> <span class="token constant">N</span> <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">N</span> <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> <span class="token constant">N</span> <span class="token operator">></span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Parameter N is invalid!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// each element of array A is an integer within the range [-1,000..1,000].</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token constant">N</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">A</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&lt;</span> <span class="token operator">-</span><span class="token number">1000</span> <span class="token operator">||</span> <span class="token constant">A</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">></span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Element A["</span> <span class="token operator">+</span> i <span class="token operator">+</span> <span class="token string">"] is invalid!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span></code></pre>
+<p>and run the tests again</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">FAIL</span>  <span class="token number">02</span><span class="token operator">-</span>Arrays<span class="token operator">/</span>cyclic<span class="token operator">-</span>rotation<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  CyclicRotation Tests
+    √ <span class="token constant">N</span> and <span class="token constant">K</span> are integers within the range <span class="token punctuation">[</span><span class="token number">0.</span><span class="token number">.100</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token punctuation">(</span><span class="token number">11</span> ms<span class="token punctuation">)</span>
+    √ each element <span class="token keyword">of</span> array <span class="token constant">A</span> is an integer within the range <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">000.</span><span class="token number">.1</span><span class="token punctuation">,</span><span class="token number">000</span><span class="token punctuation">]</span><span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × rotate <span class="token constant">A</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token keyword">with</span> <span class="token constant">K</span><span class="token operator">=</span><span class="token number">2</span> should <span class="token keyword">return</span> <span class="token constant">A</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">6</span> ms<span class="token punctuation">)</span>
+    × array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">2</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span> <span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    × array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">3</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span> <span class="token punctuation">]</span>
+
+Test Suites<span class="token operator">:</span> <span class="token number">1</span> failed<span class="token punctuation">,</span> <span class="token number">1</span> total
+<span class="token literal-property property">Tests</span><span class="token operator">:</span>       <span class="token number">4</span> failed<span class="token punctuation">,</span> <span class="token number">2</span> passed<span class="token punctuation">,</span> <span class="token number">6</span> total
+<span class="token literal-property property">Snapshots</span><span class="token operator">:</span>   <span class="token number">0</span> total
+<span class="token literal-property property">Time</span><span class="token operator">:</span>    <span class="token number">0.901</span> s<span class="token punctuation">,</span> estimated <span class="token number">1</span> s</code></pre>
+<p>the failing tests now are for the actual solution array - which I have not implemented anything yet.</p>
+<h3 id="solution-1">Solution 1</h3>
+<p>I have to start thinking about the problem and how to find a solution.
+The problem description says:</p>
+<p>Rotate an array to the right by a given number of steps.
+Rotation of the array means that each element is shifted right by one index, and the last element of the array is moved to the first place.</p>
+<p>So if I rotate the array by 1 step, the last element is removed and added to the beginning of the array.
+To do that in JavaScript I looked at the Array methods and saw that I can use pop() and unshift():</p>
+<ul>
+<li>The pop() method of Array instances removes the last element from an array and returns that element. This method changes the length of the array.</li>
+<li>The unshift() method of Array instances adds the specified elements to the beginning of an array and returns the new length of the array.</li>
+</ul>
+<p>OK, so if I want to do it K times, here is the code I added to my <code>cyclic-rotation.js</code> file:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// cyclic-rotation.js</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token constant">K</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> item <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token constant">A</span><span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span></code></pre>
+<p>and run the tests again:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">PASS</span>  <span class="token number">02</span><span class="token operator">-</span>Arrays<span class="token operator">/</span>cyclic<span class="token operator">-</span>rotation<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  CyclicRotation Tests
+    √ <span class="token constant">N</span> and <span class="token constant">K</span> are integers within the range <span class="token punctuation">[</span><span class="token number">0.</span><span class="token number">.100</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token punctuation">(</span><span class="token number">12</span> ms<span class="token punctuation">)</span>
+    √ each element <span class="token keyword">of</span> array <span class="token constant">A</span> is an integer within the range <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">000.</span><span class="token number">.1</span><span class="token punctuation">,</span><span class="token number">000</span><span class="token punctuation">]</span><span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ rotate <span class="token constant">A</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token keyword">with</span> <span class="token constant">K</span><span class="token operator">=</span><span class="token number">2</span> should <span class="token keyword">return</span> <span class="token constant">A</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">2</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span> <span class="token punctuation">]</span>
+    √ array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">3</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span> <span class="token punctuation">]</span>
+
+Test Suites<span class="token operator">:</span> <span class="token number">1</span> passed<span class="token punctuation">,</span> <span class="token number">1</span> total
+<span class="token literal-property property">Tests</span><span class="token operator">:</span>       <span class="token number">6</span> passed<span class="token punctuation">,</span> <span class="token number">6</span> total
+<span class="token literal-property property">Snapshots</span><span class="token operator">:</span>   <span class="token number">0</span> total
+<span class="token literal-property property">Time</span><span class="token operator">:</span>    <span class="token number">0.746</span> s<span class="token punctuation">,</span> estimated <span class="token number">1</span> s</code></pre>
+<p>Nice! all my tests are passing now.</p>
+<p><strong>Note:</strong> this is a solution that match the criteria in the problem description but it is not an optimized solution yet and this is fine. First I solve the problem, then I iterate over it trying to find ways to optimize it (use less memory, space or computing time). Sometimes this is not necessary - for example when the code is not used very often or something needs to be deployed fast to fix a bug. And sometimes there are spots where memory and processing time are really important.</p>
+<p>In order to find a better solution, lets look at what happens in each iteration and draw some conclusions.</p>
+<h3 id="problem-exploration">Problem Exploration</h3>
+<p>For example, given:</p>
+<p>A = [3, 8, 9, 7, 6]
+K = 3
+the function should return [9, 7, 6, 3, 8]</p>
+<p>Step by step:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">Rotation <span class="token number">1</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">]</span>
+Rotation <span class="token number">2</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">]</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">]</span>
+Rotation <span class="token number">3</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">]</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">[</span><span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">]</span>
+
+or
+
+<span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span> rotations
+Initial <span class="token parameter">Arr</span><span class="token operator">=></span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span>
+Rotation <span class="token number">1</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">]</span>
+Rotation <span class="token number">2</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">]</span>
+Rotation <span class="token number">3</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">]</span>
+
+idx  <span class="token number">0</span>  <span class="token number">1</span>  <span class="token number">2</span>  <span class="token number">3</span>  <span class="token number">4</span>
+<span class="token constant">A</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span>
+<span class="token constant">O</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">]</span>
+<span class="token constant">K</span><span class="token operator">=</span><span class="token number">3</span>  <span class="token operator">|</span>________<span class="token operator">^</span></code></pre>
+<p>I can draw some conclusions: given K (rotation), if K &lt;= A.length, then K is the new index of the first element. Item 3 was at position 0, after 3 rotations it was moved to position 3 (remember indexes in JavaScript arrays start with 0)</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span>
+idx  <span class="token number">0</span>  <span class="token number">1</span>  <span class="token number">2</span>  <span class="token number">3</span>  <span class="token number">4</span>
+<span class="token constant">A</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span>
+<span class="token constant">O</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">]</span>
+     <span class="token operator">|</span>________<span class="token operator">^</span></code></pre>
+<p>This will be true only when K &lt;= A.length. But what happens if K &gt; A.length?</p>
+<p>Looks like it goes back to 0 index and start again...</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span>
+<span class="token constant">K</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span> <span class="token punctuation">]</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token operator">:</span> <span class="token number">5</span> <span class="token punctuation">(</span><span class="token constant">K</span> <span class="token operator">%</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token number">1</span>
+<span class="token literal-property property">i</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span> <span class="token punctuation">]</span>
+<span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span>
+<span class="token constant">K</span><span class="token operator">:</span> <span class="token number">6</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span> <span class="token punctuation">]</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token operator">:</span> <span class="token number">5</span> <span class="token punctuation">(</span><span class="token constant">K</span> <span class="token operator">%</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token number">1</span>
+<span class="token literal-property property">i</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span> <span class="token punctuation">]</span>
+<span class="token literal-property property">i</span><span class="token operator">:</span> <span class="token number">2</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span> <span class="token punctuation">]</span>
+<span class="token literal-property property">i</span><span class="token operator">:</span> <span class="token number">3</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span> <span class="token punctuation">]</span>
+<span class="token literal-property property">i</span><span class="token operator">:</span> <span class="token number">4</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token punctuation">]</span>
+<span class="token literal-property property">i</span><span class="token operator">:</span> <span class="token number">5</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span> <span class="token punctuation">]</span>
+<span class="token literal-property property">i</span><span class="token operator">:</span> <span class="token number">6</span> <span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span> <span class="token punctuation">]</span></code></pre>
+<p>If A.length = 5, both K=1 and K=6 produce the same result.
+This tells me that I can use the remainder of a division to reduce the number or rotations - why do 6 rotations if I can do just 1 and get the same result?</p>
+<p>So if K &gt; A.length, then use (K MOD A.length)</p>
+<p>MOD: is the &quot;modulus&quot; (the remainder of a division)</p>
+<p>The first improvement I can do is:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">    <span class="token keyword">let</span> <span class="token constant">N</span> <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+    <span class="token comment">// if K > N, we can reduce the number of rotations</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">K</span> <span class="token operator">></span> <span class="token constant">N</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token constant">K</span> <span class="token operator">=</span> <span class="token constant">K</span> <span class="token operator">%</span> <span class="token constant">N</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token constant">K</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> item <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token constant">A</span><span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span></code></pre>
+<p>And run the tests again. Tests pass! This is the beauty of TDD and Unit Tests - I can make changes to my code and see it still returns the correct results.
+If I made a breaking change or introduced any bugs, the tests will show me.
+If you understand this then my job is done!</p>
+<p>I could stop here because my requirement says: &quot;N and K are integers within the range [0..100];&quot; which means the biggest array I may have will contain 100 items.
+If the requirements were different and I could have thousands or millions or items, improving this would be a must.</p>
+<p>Another thing to consider is memory usage. In some languages array sizes are fixed (immutable) which means that an operation to resize (remove or add elements) will return a new array in memory and the old one must be released of freed by the garbage collector.
+For example if I have an array with 100 integers and each integer use 8 bytes of memory, my array takes 800 bytes of memory.
+This is not much, but if I do that operation 100x twice (one for pop and another for unshift) that is 800 x 200 = 160,000 bytes or 160k (ish).
+Now if my array has 10,000 integers: x8 bytes each = 80,000 bytes x200 = 16,000,000 or 16 Mbytes of space (even if temporary).
+Many times this type of optimization is not relevant, but there are times when the application is slow or the site is down and you have no clue why.
+Or when working with limited resources such as IoT devices where every byte counts!</p>
+<h3 id="further-exploration">Further Exploration</h3>
+<p>What if instead of modifying the array every step we could calculate the final state and then split the array in a way that matches the expected result?</p>
+<p>Let's take a look in this particular case:</p>
+<p>A = [1, 2, 3, 4, 5]
+K = 3
+the function should return [3, 4, 5, 1, 2]</p>
+<p>For K = 3 rotations, the array can be split into: [1, 2] and [3, 4, 5]</p>
+<p>And then merged again as: [3, 4, 5] + [1, 2]</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token constant">K</span><span class="token operator">:</span> <span class="token number">3</span>
+<span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span>
+<span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token operator">:</span> <span class="token number">5</span>
+<span class="token constant">R</span> <span class="token operator">=</span> <span class="token constant">K</span> <span class="token operator">%</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token operator">:</span> <span class="token number">3</span>  <span class="token operator">=></span> split point
+result <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span>
+
+     <span class="token number">0</span>  <span class="token number">1</span>  <span class="token number">2</span>  <span class="token number">3</span>  <span class="token number">4</span>  <span class="token operator">=</span> <span class="token function">index</span> <span class="token punctuation">(</span>start at <span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token constant">A</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span>
+
+split at <span class="token number">2</span> <span class="token punctuation">(</span><span class="token constant">R</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
+   <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span>
+flip
+   <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span></code></pre>
+<p>if K=3 then split the array at position (K-1) = 2 (remember that array index start at 0)</p>
+<p>Split point R is A[2] : [1, 2] + [3, 4, 5]</p>
+<p>Flip and join: [3, 4, 5] + [1, 2]</p>
+<p>R is the &quot;rotation point&quot;.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// if K is bigger than the array size, the use the remainder</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">K</span> <span class="token operator">></span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token constant">K</span> <span class="token operator">=</span> <span class="token constant">K</span> <span class="token operator">%</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// calculate where to split</span>
+<span class="token keyword">let</span> <span class="token constant">R</span> <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token constant">K</span><span class="token punctuation">;</span> <span class="token comment">// from end the until the split point</span>
+
+<span class="token comment">// split the array:</span>
+<span class="token keyword">let</span> arrLeft <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token constant">R</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// from start to R</span>
+<span class="token keyword">let</span> arrRight <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token constant">R</span><span class="token punctuation">,</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// from R to end</span>
+
+<span class="token comment">// merge new array: R .. L</span>
+<span class="token keyword">let</span> result <span class="token operator">=</span> arrRight<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>arrLeft<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">return</span> result<span class="token punctuation">;</span></code></pre>
+<p><strong>Document</strong> about Arrays from the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice">MDN documentation site</a>:</p>
+<ul>
+<li>The <strong><code>slice()</code></strong> method of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"><code>Array</code></a> instances returns a <a href="https://developer.mozilla.org/en-US/docs/Glossary/Shallow_copy">shallow copy</a> of a portion of an array into a new array object selected from <code>start</code> to <code>end</code> (<code>end</code> not included) where <code>start</code> and <code>end</code> represent the index of items in that array. The original array will not be modified.</li>
+</ul>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> animals <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"ant"</span><span class="token punctuation">,</span> <span class="token string">"bison"</span><span class="token punctuation">,</span> <span class="token string">"camel"</span><span class="token punctuation">,</span> <span class="token string">"duck"</span><span class="token punctuation">,</span> <span class="token string">"elephant"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>animals<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Expected output: Array ["camel", "duck"]</span></code></pre>
+<ul>
+<li>The <strong><code>concat()</code></strong> method of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"><code>Array</code></a> instances is used to merge two or more arrays. This method does not change the existing arrays, but instead returns a new array.</li>
+</ul>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token string">"b"</span><span class="token punctuation">,</span> <span class="token string">"c"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> array2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"d"</span><span class="token punctuation">,</span> <span class="token string">"e"</span><span class="token punctuation">,</span> <span class="token string">"f"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> array3 <span class="token operator">=</span> array1<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>array2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Expected output: Array ["a", "b", "c", "d", "e", "f"]</span></code></pre>
+<p>Time complexity: O(N) Where n is the number of elements in the input array nums. This is because we are iterating through the array twice, once to copy the elements to a new array and once to update the original array with the rotated elements.</p>
+<p>Space complexity: O(N) We are creating a copy of the input array nums with the same size, which requires additional space.</p>
+<h3 id="extras">Extras</h3>
+<p>One thing to keep in mind is that there is always a different way to solve the same problem, so here it is.</p>
+<p>Since the array rotation does not change the array size, another approach is to just reorganize the items to their new location in a new array of the same size. This is much more efficient in terms of space and processing.</p>
+<p>The idea is to iterate over the array and set each item in the new array and position, calculating the new index of that element.</p>
+<p>The new position is the current position (i) + the number of rotations (K), but it is necessary to use the MOD because if it passes the number of elements, it need to start at 0 again.</p>
+<p>It is easy to see bellow</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span>
+<span class="token constant">N</span> <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span>length <span class="token operator">=</span> <span class="token number">5</span>
+<span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">=</span>
+i <span class="token operator">=</span> <span class="token number">0</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">0</span>
+i <span class="token operator">=</span> <span class="token number">1</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">1</span>
+i <span class="token operator">=</span> <span class="token number">2</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">2</span>
+i <span class="token operator">=</span> <span class="token number">3</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">3</span>
+i <span class="token operator">=</span> <span class="token number">4</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">4</span>
+i <span class="token operator">=</span> <span class="token number">5</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">0</span>
+i <span class="token operator">=</span> <span class="token number">6</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">1</span>
+i <span class="token operator">=</span> <span class="token number">7</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">2</span>
+i <span class="token operator">=</span> <span class="token number">8</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">3</span>
+i <span class="token operator">=</span> <span class="token number">9</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">4</span>
+i <span class="token operator">=</span> <span class="token number">10</span> mod <span class="token number">5</span> <span class="token operator">=</span>  <span class="token number">0</span>
+<span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">=</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">3</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">4</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">0</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">3</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">1</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">4</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">2</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">5</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">3</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">6</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">4</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">7</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">0</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">8</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">1</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">9</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">2</span>
+<span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">10</span> <span class="token operator">+</span> <span class="token constant">K</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> mod <span class="token number">5</span> <span class="token operator">=></span>  <span class="token number">3</span>
+<span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">===</span><span class="token operator">=</span></code></pre>
+<p>Here is the code:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">    <span class="token comment">// rotate the array</span>
+    <span class="token keyword">let</span> <span class="token constant">N</span> <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token constant">N</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> newIndex <span class="token operator">=</span> <span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token constant">K</span><span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token constant">N</span><span class="token punctuation">;</span>
+    result<span class="token punctuation">[</span>newIndex<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token constant">A</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span></code></pre>
+<p>run the tests again</p>
+<pre class="language-js" tabindex="0"><code class="language-js"> <span class="token constant">PASS</span>  <span class="token number">02</span><span class="token operator">-</span>Arrays<span class="token operator">/</span>cyclic<span class="token operator">-</span>rotation<span class="token punctuation">.</span>test<span class="token punctuation">.</span>js
+  CyclicRotation Tests
+    √ <span class="token constant">N</span> and <span class="token constant">K</span> are integers within the range <span class="token punctuation">[</span><span class="token number">0.</span><span class="token number">.100</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token punctuation">(</span><span class="token number">16</span> ms<span class="token punctuation">)</span>
+    √ each element <span class="token keyword">of</span> array <span class="token constant">A</span> is an integer within the range <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">000.</span><span class="token number">.1</span><span class="token punctuation">,</span><span class="token number">000</span><span class="token punctuation">]</span><span class="token punctuation">.</span> <span class="token punctuation">(</span><span class="token number">2</span> ms<span class="token punctuation">)</span>
+    √ rotate <span class="token constant">A</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token keyword">with</span> <span class="token constant">K</span><span class="token operator">=</span><span class="token number">2</span> should <span class="token keyword">return</span> <span class="token constant">A</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">2</span> ms<span class="token punctuation">)</span>
+    √ array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">2</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+    √ array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span> <span class="token punctuation">]</span>
+    √ array<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">]</span> and <span class="token constant">K</span><span class="token operator">:</span> <span class="token number">3</span> <span class="token operator">=></span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span> <span class="token punctuation">]</span> <span class="token punctuation">(</span><span class="token number">1</span> ms<span class="token punctuation">)</span>
+
+Test Suites<span class="token operator">:</span> <span class="token number">1</span> passed<span class="token punctuation">,</span> <span class="token number">1</span> total
+<span class="token literal-property property">Tests</span><span class="token operator">:</span>       <span class="token number">6</span> passed<span class="token punctuation">,</span> <span class="token number">6</span> total
+<span class="token literal-property property">Snapshots</span><span class="token operator">:</span>   <span class="token number">0</span> total
+<span class="token literal-property property">Time</span><span class="token operator">:</span>    <span class="token number">0.713</span> s<span class="token punctuation">,</span> estimated <span class="token number">1</span> s</code></pre>
+
+<ul class="links-nextprev"><li class="links-nextprev-prev">← Previous<br> <a href="/jonatasdemello.github.io/blog/2025-11-02-01-BinaryGap/">Codility Lesson - Binary Gap</a></li><li class="links-nextprev-next">Next →<br><a href="/jonatasdemello.github.io/blog/2025-11-04-02-OddOccurrencesInArray/">Codility Lesson - Odd Occurrences In Array</a></li>
+</ul>
+
+			</heading-anchors>
+		</main>
+
+		<footer>
+			<p>
+				
+			</p>
+		</footer>
+
+		<!-- This page `/blog/2025-11-03-01-CyclicRotation/` was built on 2026-02-24T14:22:25.724Z -->
+		<script type="module" src="/jonatasdemello.github.io/dist/cC8wS6ZjFU.js"></script>
+	</body>
+</html>

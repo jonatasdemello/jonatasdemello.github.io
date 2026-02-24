@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>A Good (and Fun) Use Case for AI</title>
+		<meta name="description" content="My personal page and blog posts.">
+		<link rel="alternate" href="/jonatasdemello.github.io/feed/feed.xml" type="application/atom+xml" title="Jonatas Blog">
+		
+		
+		
+		<style>/* This is an arbitrary CSS string added to the bundle */
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #C0C0C0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050F;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #C0C0C0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--background-color: #15202b;
+	}
+}
+
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+html {
+	overflow-y: scroll;
+}
+body {
+	max-width: 40em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Fluid images via https://www.zachleat.com/web/fluid-images/ */
+img{
+  max-width: 100%;
+}
+img[width][height] {
+  height: auto;
+}
+img[src$=".svg"] {
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+video,
+iframe {
+	width: 100%;
+	height: auto;
+}
+iframe {
+	aspect-ratio: 16/9;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main,
+footer {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+
+#skip-link {
+	text-decoration: none;
+	background: var(--background-color);
+	color: var(--text-color);
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--color-gray-90);
+	border-radius: 2px;
+}
+
+/* Prevent visually-hidden skip link fom pushing content around when focused */
+#skip-link.visually-hidden:focus {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	/* Ensure it is positioned on top of everything else when it is shown */
+	z-index: 999;
+}
+
+.links-nextprev {
+	display: flex;
+	justify-content: space-between;
+	gap: .5em 1em;
+	list-style: "";
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+.links-nextprev > * {
+	flex-grow: 1;
+}
+.links-nextprev-next {
+	text-align: right;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: .5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	overflow-x: auto;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	flex-grow: 1;
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	gap: .5em 1em;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	counter-reset: start-from var(--postlist-index);
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: .25em;
+	padding-right: .5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: .5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}</style>
+		
+	</head>
+	<body>
+		<a href="#main" id="skip-link" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/jonatasdemello.github.io/" class="home-link">Jonatas Blog</a>
+			<nav>
+				<h2 class="visually-hidden" id="top-level-navigation-menu">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/jonatasdemello.github.io/">Home</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/blog/">Archive</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/about/">About</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/feed/feed.xml">Feed</a></li>
+					<li class="nav-item"><a href="/jonatasdemello.github.io/tags/">Tags</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="main">
+			<heading-anchors>
+				
+
+
+<h1 id="a-good-and-fun-use-case-for-ai">A Good (and Fun) Use Case for AI</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2025-12-04">04 December 2025</time></li>
+	<li><a href="/jonatasdemello.github.io/tags/code/" class="post-tag">code</a>, </li>
+	<li><a href="/jonatasdemello.github.io/tags/retrocomputing/" class="post-tag">retrocomputing</a></li>
+</ul>
+
+<h1 id="a-good-and-fun-use-case-for-ai-2">A Good (and Fun) Use Case for AI</h1>
+<p>One thing I learned is that AI is good it to write unit tests for enterprise level applications. Another good use is to convert programs between different languages. It works well with modern languages like Python, JavaScript, C/C++, but what about the BASIC language for 8-bit computers?</p>
+<h2 id="the-past">The Past</h2>
+<p>My first contact with computers was in the 80's when I learned how to program using BASIC in the 8 bit computers such as the <a href="https://en.wikipedia.org/wiki/Sinclair_ZX81" title="Sinclair ZX81">Sinclair ZX81</a> clone model <a href="https://en.wikipedia.org/wiki/CP-200">CP-200</a> and then later an <a href="https://en.wikipedia.org/wiki/Apple_IIe">Apple II</a> clone called <a href="https://en.wikipedia.org/wiki/TK-3000_IIe">TK-3000 IIe</a>.</p>
+<p>If you never saw a BASIC program, it looks like this:</p>
+<pre class="language-basic" tabindex="0"><code class="language-basic"><span class="token number">05</span> HOME <span class="token punctuation">:</span> <span class="token function">TEXT</span> <span class="token punctuation">:</span> <span class="token comment"><span class="token keyword">REM</span> Fibonacci numbers</span>
+<span class="token number">10</span> <span class="token function">LET</span> <span class="token function">MAX</span> <span class="token operator">=</span> <span class="token number">5000</span>
+<span class="token number">20</span> <span class="token function">LET</span> X <span class="token operator">=</span> <span class="token number">1</span> <span class="token punctuation">:</span> <span class="token function">LET</span> Y <span class="token operator">=</span> <span class="token number">1</span>
+<span class="token number">30</span> <span class="token keyword">IF</span> <span class="token punctuation">(</span>X <span class="token operator">></span> <span class="token function">MAX</span><span class="token punctuation">)</span> <span class="token keyword">GOTO</span> <span class="token number">100</span>
+<span class="token number">40</span> <span class="token function">PRINT</span> X
+<span class="token number">50</span> X <span class="token operator">=</span> X <span class="token operator">+</span> Y
+<span class="token number">60</span> <span class="token keyword">IF</span> <span class="token punctuation">(</span>Y <span class="token operator">></span> <span class="token function">MAX</span><span class="token punctuation">)</span> <span class="token keyword">GOTO</span> <span class="token number">100</span>
+<span class="token number">70</span> <span class="token function">PRINT</span> Y
+<span class="token number">80</span> Y <span class="token operator">=</span> X <span class="token operator">+</span> Y
+<span class="token number">90</span> <span class="token keyword">GOTO</span> <span class="token number">30</span>
+<span class="token number">100</span> <span class="token keyword">END</span></code></pre>
+<p>The lines are numbered and the computer executes them in order. They usually increase by 10 (10, 20, 30, 40, 50) and not by 1 and the reason is to facilitate the inclusion of new lines in between without having to renumber the whole program. For example I can add a new line <code>15 PRINT MAX</code> and it will work. The only rule is for them to be sequential.</p>
+<p>We also have the dreadful &quot;GOTO&quot; statements. Some BASIC  implementations or versions may have a &quot;GOSUB&quot; and &quot;RETURN&quot; which is similar to a modern function structure (kind of). This is where the term &quot;spaghetti code&quot; was coined.</p>
+<p>For a simple program like this it is easy to see and follow the jumps but for programs with thousands of lines this becomes a big problem...</p>
+<p>To learn more about the <strong>BASIC</strong> language check this <a href="https://en.wikipedia.org/wiki/BASIC">Wikipedia</a> link.</p>
+<h2 id="the-future">The Future</h2>
+<p>One of the things I like to do for fun is to play with those old BASIC programs. And since the only way to run them today is to use an emulator - which can be cumbersome sometimes - I try to convert them to new, more modern languages like JavaScript or Python.</p>
+<p>My brain is not wired to create new things out of thin air, so I prefer to take something, break it apart, learn how it works, modify it, improve it, make it run faster and so on.</p>
+<p>However, converting these programs can be fun, but sometimes can be very hard to untangle the nested &quot;GOTO&quot; jumps. Here is where AI comes into play. I am using AI tools for my job and I think there are some interesting use cases for it and this is one of them.</p>
+<p>I started with this game that can be found in this page: <a href="https://www.calormen.com/jsbasic/">Applesoft BASIC in JavaScript</a> called &quot;ARTILLERY&quot; - select <strong>Artillery (Michael &quot;Moose&quot; O'Malley)</strong> in the dropdown and click &quot;Run&quot;</p>
+<p><img src="content/assets/images/01-jsbasic.png" alt="Applesoft Basic in JavaScript"></p>
+<p>I copied the code and asked Copilot to convert it to JavaScript and HTML5 using canvas so it can be played in the browser. And it worked - kind of - here is the result:</p>
+<p><img src="content/assets/images/02-htmlv1.png" alt="Game in HTML5"></p>
+<p>The UI needs improvement and there was a bug: the trajectory was wrong and not plotting the lines.</p>
+<p>It took me some time to debug the jumps and I found out that one of the GOSUB-RETURN was mistakenly replaced by a &quot;break&quot; statement in one of the JavaScript loops.</p>
+<p>But then I thought: can AI help me to understand this? So I asked it to generate a flowchart diagram of the code and present it in an HTML page. Here is the result:</p>
+<p><img src="content/assets/images/diagram_1.png" alt="Flowchart 1"></p>
+<p>Nice, but the lines overlap and some boxes are not in a good position. I tried to organize it but each box is made of a couple of html elements, not really easy to move.</p>
+<pre class="language-html" tabindex="0"><code class="language-html"><span class="token comment">&lt;!-- SUB 1160: Draw Explosion --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>rect</span> <span class="token attr-name">x</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>660<span class="token punctuation">"</span></span> <span class="token attr-name">y</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>60<span class="token punctuation">"</span></span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>140<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>80<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>block-subroutine<span class="token punctuation">"</span></span> <span class="token attr-name">rx</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>text</span> <span class="token attr-name">x</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>730<span class="token punctuation">"</span></span> <span class="token attr-name">y</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>75<span class="token punctuation">"</span></span> <span class="token attr-name">text-anchor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>middle<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line-num<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>1160-1280<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>text</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>text</span> <span class="token attr-name">x</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>730<span class="token punctuation">"</span></span> <span class="token attr-name">y</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>90<span class="token punctuation">"</span></span> <span class="token attr-name">text-anchor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>middle<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span>12px<span class="token punctuation">;</span><span class="token property">font-weight</span><span class="token punctuation">:</span>bold<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">></span></span>SUB 1160<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>text</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>text</span> <span class="token attr-name">x</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>730<span class="token punctuation">"</span></span> <span class="token attr-name">y</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>105<span class="token punctuation">"</span></span> <span class="token attr-name">text-anchor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>middle<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Draw Explosion<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>text</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>text</span> <span class="token attr-name">x</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>730<span class="token punctuation">"</span></span> <span class="token attr-name">y</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>120<span class="token punctuation">"</span></span> <span class="token attr-name">text-anchor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>middle<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>FOR Z=1 TO 5<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>text</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>text</span> <span class="token attr-name">x</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>730<span class="token punctuation">"</span></span> <span class="token attr-name">y</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>133<span class="token punctuation">"</span></span> <span class="token attr-name">text-anchor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>middle<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span>10px<span class="token punctuation">;</span><span class="token property">fill</span><span class="token punctuation">:</span>#7b1fa2<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">></span></span>RETURN<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>text</span><span class="token punctuation">></span></span></code></pre>
+<p>I guess that is my fault since I was not specific enough (remember Aladdin's request: &quot;make me a prince&quot; to the Genie in the movie)...</p>
+<p>So I asked Copilot to generate the diagram again, but this time using the <a href="https://mermaid.js.org/">Mermaid.js</a> diagramming and charting tool.</p>
+<p>And so I got this:</p>
+<p><img src="content/assets/images/diagram_3.png" alt="Flowchart 2"></p>
+<p>Which is much better than the previous one! But there was a bug. Copilot broke the diagram in 3 tabs, I assume because the content is too long and only the first tab was showing correctly:</p>
+<p><img src="content/assets/images/diagram_4.png" alt="Flowchart tab 1"></p>
+<p>And the second tab:</p>
+<p><img src="content/assets/images/diagram_5.png" alt="Flowchart tab 1"></p>
+<p>At first I thought the error could be in one of the texts that it used from the basic program to create the Mermaid diagram. I did some Google digging but there was nothing interesting there, just some suggestions to update the Mermaid version.</p>
+<p>My next step was to copy the diagrams to Mermaid's online editor <a href="https://mermaid.live/">here</a> and check if it worked there. Surprisingly it did, so a quick look a the documentation followed. Nothing suspicious...</p>
+<p>That's when something came to my mind. The tabs were grouping multiple containers (one for each diagram) and the CSS was:</p>
+<pre class="language-css" tabindex="0"><code class="language-css"><span class="token selector">.diagram-container</span> <span class="token punctuation">{</span>
+            <span class="token property">display</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+<span class="token selector">.diagram-container.active</span> <span class="token punctuation">{</span>
+            <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span></code></pre>
+<p>And the solution was to make <code>display: block</code> for both. Hiding part of the diagram was not working well with Mermaid's rendering system, maybe because it was treated as one piece only. Either way, the problem was solved!</p>
+<p><img src="content/assets/images/diagram_6.png" alt="Flowchart Correct"></p>
+<h2 id="next-steps">Next steps</h2>
+<p>I still want to double check the game logic and probably make some improvements in the UI, but an improved (still in progress) version can be found <a href="https://jonatasdemello.github.io/static/index.html">here</a>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>AI tools can help in many ways:</p>
+<ul>
+<li>
+<p>converting code</p>
+</li>
+<li>
+<p>explaining  it</p>
+</li>
+<li>
+<p>generating unit tests</p>
+</li>
+<li>
+<p>creating diagrams and flowcharts</p>
+</li>
+</ul>
+<p>but it is not perfect - such as the box positioning or the bugs due to hiding elements.</p>
+<p>The more specific you are when writing your prompts the better, but that does not guarantee 100% correct behavior - always check and evaluate the output.</p>
+
+<ul class="links-nextprev"><li class="links-nextprev-prev">← Previous<br> <a href="/jonatasdemello.github.io/blog/2025-11-04-02-OddOccurrencesInArray/">Codility Lesson - Odd Occurrences In Array</a></li>
+</ul>
+
+			</heading-anchors>
+		</main>
+
+		<footer>
+			<p>
+				
+			</p>
+		</footer>
+
+		<!-- This page `/blog/2025-12-04-Retro-AI/` was built on 2026-02-24T14:22:25.726Z -->
+		<script type="module" src="/jonatasdemello.github.io/dist/cC8wS6ZjFU.js"></script>
+	</body>
+</html>
