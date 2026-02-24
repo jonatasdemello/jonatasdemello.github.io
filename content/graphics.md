@@ -1,12 +1,12 @@
+---js
+const eleventyNavigation = {
+	key: "Graphics",
+	order: 3
+};
 ---
-layout: page
-title: Graphics
-permalink: /graphics/
----
+# Static Content
 
 A collection of graphics, demos and experiments with HTML5 Canvas.
 
 [check here](/static/index.html)
 
-
-(this is the jekyll page inside /static/index.md)
