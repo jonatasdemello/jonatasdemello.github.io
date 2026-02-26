@@ -76,8 +76,8 @@ export default async function(eleventyConfig) {
 		},
 		metadata: {
 			language: "en",
-			title: "Jonatas Blog Title",
-			subtitle: "This is a longer description about your blog.",
+			title: "Jonatas Blog",
+			subtitle: "My personal page.",
 			base: "https://jonatasdemello.github.io/",
 			author: {
 				name: "Jonatas"
@@ -165,4 +165,5 @@ export const config = {
 	// folder name and does **not** affect where things go in the output folder.
 
 	// pathPrefix: "/",
+	pathPrefix: ""
 };

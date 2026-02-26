@@ -8,9 +8,9 @@ const eleventyNavigation = {
 
 This is a collection of posts, thoughts, ideas, projects and everything else.
 
-I am a software Developer/Engineer and an Engineering Manager.
+I am a Software Developer/Engineer and in the last 5 years an Engineering Manager.
 
-When I started my career as a Software Engineer, my goal was to write code, solve problems, improve processes and share knowledge.
+When I started my career my goal was to write code, solve problems, improve processes and share knowledge.
 
 Now as an Engineering Manager, my focus is to manage, guide and coach engineers to be their best.
 
@@ -40,6 +40,6 @@ What I am learning now:
 ----------
 
 <p>
-<em>This is an <a href="https://www.11ty.dev/">Eleventy project</a> created from the
-<a href="https://github.com/11ty/eleventy-base-blog"><code>eleventy-base-blog</code> repo</a>.</em>
+	<em>This site was created with <a href="https://www.11ty.dev/">Eleventy</a> and
+	<a href="https://github.com/11ty/eleventy-base-blog"><code>eleventy-base-blog</code></a>.</em>
 </p>

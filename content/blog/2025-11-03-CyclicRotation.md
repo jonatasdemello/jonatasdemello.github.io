@@ -1,21 +1,14 @@
 ---
-title: Codility Lesson - Cyclic Rotation
+title: Codility Lesson 02 - Arrays - CyclicRotation
 date: 2025-11-03
 author: Jonatas
 tags: ["code", "codility"]
 ---
 
-### Lesson-02 - Arrays
+> Difficulty: **[easy]**
+> Practice it [here](https://app.codility.com/programmers/lessons/2-arrays/cyclic_rotation/)
 
----------------------------------------------------------------------------------------------------
-
-https://app.codility.com/programmers/lessons/2-arrays/
-
----------------------------------------------------------------------------------------------------
-
-[easy]
-
-# Cyclic Rotation
+# CyclicRotation
 
     Given the problem description:
 
