@@ -1,19 +1,12 @@
 ---
-title: Codility Lesson - PermMissingElem
-date: 2025-06-02
+title: Codility Lesson 03 - Time Complexity - PermMissingElem
+date: 2025-11-06
 author: Jonatas
 tags: ["code", "codility"]
 ---
 
-### Lesson-03 - Time Complexity
-
----------------------------------------------------------------------------------------------------
-
-https://app.codility.com/programmers/lessons/3-time_complexity/
-
----------------------------------------------------------------------------------------------------
-
-[easy]
+> Difficulty: **[easy]**
+> Practice it [here](https://app.codility.com/programmers/lessons/3-time_complexity/perm_missing_elem/)
 
 # PermMissingElem
 

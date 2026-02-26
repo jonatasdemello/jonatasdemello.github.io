@@ -1,21 +1,14 @@
 ---
-title: Codility Lesson - Odd Occurrences In Array
+title: Codility Lesson 02 - Arrays - OddOccurrencesInArray
 date: 2025-11-04
 author: Jonatas
 tags: ["code", "codility"]
 ---
 
-### Lesson-02 - Arrays
+> Difficulty: **[easy]**
+> Practice it [here](https://app.codility.com/programmers/lessons/2-arrays/odd_occurrences_in_array/)
 
----------------------------------------------------------------------------------------------------
-
-https://app.codility.com/programmers/lessons/2-arrays/
-
----------------------------------------------------------------------------------------------------
-
-[easy]
-
-# Odd Occurrences In Array
+# OddOccurrencesInArray
 
     Find value that occurs in odd number of elements.
 

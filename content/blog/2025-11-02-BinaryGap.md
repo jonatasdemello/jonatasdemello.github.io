@@ -1,21 +1,14 @@
 ---
-title: Codility Lesson - Binary Gap
+title: Codility Lesson 01 - Iterations - BinaryGap
 date: 2025-11-02
 author: Jonatas
 tags: ["code", "codility"]
 ---
 
-### Lesson-01 - Iterations
+> Difficulty: **[easy]**
+> Practice it [here](https://app.codility.com/programmers/lessons/1-iterations/binary_gap/)
 
----------------------------------------------------------------------------------------------------
-
-https://app.codility.com/programmers/lessons/1-iterations/
-
----------------------------------------------------------------------------------------------------
-
-[easy]
-
-# Binary Gap
+# BinaryGap
 
     Find longest sequence of zeros in binary representation of an integer.
 
