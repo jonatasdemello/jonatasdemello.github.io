@@ -1,5 +1,5 @@
 export default {
-	title: "JM's Blog",
+	title: "Jonatas's Blog",
 	url: "https://jonatasdemello.github.io/",
 	language: "en",
 	description: "My personal page.",
