@@ -19,3 +19,7 @@ canvas {
 	background-color: #2a2a2a;
 	color: #02a212;
 }
+
+body main.container nav.nav a.nav-link.active {
+	padding-left: 0em;
+}
