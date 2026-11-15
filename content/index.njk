@@ -8,15 +8,20 @@ const numberOfLatestPostsToShow = 10;
 ---
 
 <div>
-	Hi, this is my personal github page site.
-	It was created using <a href="https://www.11ty.dev/">Eleventy</a>.<br>
-	I was using Jekyll before but it didn't work for me. 
-	Trying to change anything was a pain, templates got messed with package versions
-	not to mention the need to have Ruby and Gems installed.
-	Running Jekyll inside a docker container helped, but still not the most user friendly tool.<br>
+	Hi, this is my personal github page site, created using <a href="https://www.11ty.dev/">Eleventy</a>.
+	Eleventy v3.1.8 requires a JavaScript runtime, typically Node.js (version 18 or higher).
+	<br><br>
+
+	I was using Jekyll before but it didn't work for me.
+	Trying to change anything was a pain because templates got messed up with different package versions,
+	plus the need to have a new toolset installed (Ruby and Gems) only for this didn't sounds very appealing.
+	Running Jekyll inside a docker container helped, but still it is not the most user friendly tool.
+	<br><br>
+
 	I belive that tools should not into our way of getting things done.
-	I am already familiar and working with the NodeJS and Javacript toolset 
-	and it is much easier for me to get around with it.<br>
+	I am already familiar and working with .Net, Node.js and Javacript toolset 
+	and it is much easier for me to get around with it.
+	<br>
 </div>
 
 {% set postsCount = collections.posts | length %}

@@ -12,7 +12,6 @@ export default async function(eleventyConfig) {
 		if (data.draft) {
 			data.title = `${data.title} (draft)`;
 		}
-
 		if(data.draft && process.env.ELEVENTY_RUN_MODE === "build") {
 			return false;
 		}

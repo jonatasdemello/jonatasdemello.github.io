@@ -1,7 +1,7 @@
 {
 	"name": "jonatas-blog",
 	"version": "9.0.0",
-	"description": "A blog web site using the Eleventy site generator.",
+	"description": "A blog web site using the Eleventy (https://www.11ty.dev).",
 	"type": "module",
 	"scripts": {
 		"build": "npx @11ty/eleventy",
@@ -19,7 +19,7 @@
 	},
 	"license": "MIT",
 	"engines": {
-		"node": ">=18"
+		"node": ">=20"
 	},
 	"homepage": "https://jonatasdemello.github.io/",
 	"devDependencies": {
